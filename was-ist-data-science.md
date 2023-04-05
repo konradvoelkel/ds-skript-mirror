@@ -56,7 +56,7 @@ Auch im maschinellen Lernen, etwa beim Deep Learning, kann man durch Pflegen der
 
 **Karriere in Data Science**
 
-<img src="images/bookcover_buildacareerindatascience.jpg" width="105px" alt="Book Cover von Robinson und Nolis Build a Career in Data Science">
+<img src="../images/bookcover_buildacareerindatascience.jpg" width="105px" alt="Book Cover von Robinson und Nolis Build a Career in Data Science">
 
 [Robinson und Nolis: Build a Career in Data Science](https://www.manning.com/books/build-a-career-in-data-science)
 
