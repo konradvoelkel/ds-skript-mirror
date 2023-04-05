@@ -1,0 +1,9 @@
+format: jb-book
+root: landing-page
+parts:
+- caption: Einführung
+  numbered: true
+  chapters:
+  - file: was-ist-data-science
+  - file: intro-stochastik
+  - file: intro-python
