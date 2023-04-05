@@ -1,0 +1,59 @@
+.footer {
+    display:none
+}
+
+.admonition-definition {
+    border-left-color: rgba(41, 175, 127, 1) !important;
+}
+
+.admonition-definition .admonition-title:before {
+    content: '\f518' !important;
+}
+
+.admonition-satz {
+    border-left-color: rgba(253, 231, 37, 1) !important;
+}
+
+.admonition-satz .admonition-title:before {
+    content: '\f19d' !important;
+}
+
+.admonition-proposition {
+    border-left-color: rgba(184, 222, 41, 1) !important;
+}
+
+.admonition-proposition .admonition-title:before {
+    content: '\f19d' !important;
+}
+
+.admonition-lemma {
+    border-left-color: rgba(72, 87, 16, 1) !important;
+}
+
+.admonition-lemma .admonition-title:before {
+    content: '\f19d' !important;
+}
+
+.admonition-beweis {
+    border-left-color: rgba(69, 55, 129, 1) !important;
+}
+
+.admonition-beweis .admonition-title:before {
+    content: '\f543' !important;
+}
+
+.admonition-bemerkung {
+    border-left-color: rgba(15, 49, 56, 1) !important;
+}
+
+.admonition-bemerkung .admonition-title:before {
+    content: '\f075' !important;
+}
+
+.admonition-beispiel {
+    border-left-color: rgba(27, 5, 33, 1) !important;
+}
+
+.admonition-beispiel .admonition-title:before {
+    content: '\f0a4' !important;
+}
