@@ -1,0 +1,41 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+cache:
+  paths:
+    - .cache/pip
+    - venv/
+
+jupyter-build:
+  stage: build
+  image: sphinxdoc/sphinx-latexpdf
+  script:
+    - python3 -V  # Print out python version for debugging
+    - pip install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+    - pip install --upgrade pip
+    - pip install -r requirements.txt -v
+    - alias python=python3  # for jb clean ...
+    - jupyter-book clean .
+    - jupyter-book build . --builder html
+    - jupyter-book build . --builder pdflatex
+  artifacts:
+    paths:
+      - _build/
+
+pages:
+  stage: deploy
+  image: busybox:latest
+  script:
+    - mv _build/html public
+    - mv _build/latex/ds-skript.pdf public/
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
