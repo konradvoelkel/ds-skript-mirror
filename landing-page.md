@@ -1,5 +1,9 @@
 # Vorlesungsskript
 
+[Link zur PDF-Version](https://voelkel.pages.cs.uni-duesseldorf.de/ds-skript/ds-skript.pdf)
+
+[Link zur Web-Version](https://voelkel.pages.cs.uni-duesseldorf.de/ds-skript/landing-page.html)
+
 ## Voraussetzungen
 
 In diesem Text gehen wir davon aus, dass wir alle einmal 3 Semester Grundlagen der Mathematik gehört haben und wissen, was ein Vektor, eine Matrix und was die Ableitung einer Funktion in mehreren reellen Variablen sind. Außerdem haben wir alle bereits eine Programmiersprache gelernt und sind mit grundlegenden Datenstrukturen vertraut.
