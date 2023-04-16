@@ -7,3 +7,10 @@ parts:
   - file: was-ist-data-science
   - file: intro-stochastik
   - file: intro-python
+- caption: Diskrete Stochastik und Numpy
+  numbered: true
+  chapters:
+  - file: stochastik-programmieren
+  - file: zufallsvariablen-verteilungen
+  - file: erwartungswert
+  - file: numpy
