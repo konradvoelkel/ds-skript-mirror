@@ -22,8 +22,12 @@ Wenn $v = (1,2,3,4)$ und $c=2$, so ist $\texttt{mae}(v,c) = \sum_{i=1}^4 \dfrac{
 Es ist natürlich sofort für einen Vektor $v$ interessant, welcher Vektor $w$ die geringste mittlere absolute Abweichung hat. Wenn man an $w$ jedoch keine weiteren Bedingungen stellt, ist mit $w=v$ das Minimum schnell gefunden. Wir werden dieser Frage später wieder begegnen und begnügen uns jetzt damit, zu fragen, welches $c \in \mathbb{R}$ den Ausdruck $\texttt{mae}(v,c)$ minimiert. Graphisch können wir uns vorstellen, als $x$-Achse die Zahlen von $1$ bis $n$ zu verwenden, und dort jeweils die Werte $v_i$ aufzutragen. Dann entspricht die Wahl eines $c \in \mathbb{R}$ einer horizontalen Gerade, und wir fragen uns, welche solche Gerade den geringsten gemeinsamen Abstand zu allen Punkten hat.
 
 :::{admonition} Definition
-$\texttt{median}(v) := \min_{c \in \mathbb{R}} \texttt{mae}(v,c)$ ist \`\`der'' *Median* von $v$.
+$\texttt{median}(v) := \argmin_{c \in \mathbb{R}} \texttt{mae}(v,c)$ ist \`\`der'' *Median* von $v$.
 :::
+
+Das bedeutet also, der Median ist definiert als eine Zahl $c \in \mathbb{R}$ mit der Eigenschaft, dass die Zahl $\texttt{mae}(v,c)$ minimal wird.
+Das bedeutet, für alle $c$ gilt $\texttt{mae}(v,c) \geq $\texttt{mae}(v,\texttt{median}(v))$.
+Achtung: So definiert können mehrere Zahlen 'der' Median sein. It's not a bug, it's a feature.
 
 Diese Definition mag ungewohnt sein, aber sie erfüllt die folgende Eigenschaft:
 
@@ -65,7 +69,7 @@ und für $c \in \mathbb{R}^n$ schreiben wir $\texttt{mse}(v,c) := \texttt{mse}(v
 :::{admonition} Proposition
 Für einen Vektor $v \in \mathbb{R}^n$ minimiert der (arithmetische) *Mittelwert* von $v$ die mittlere quadratische Abweichung:
 
-$\texttt{mean}(v) := \sum_{i=1}^n \dfrac{v_i}{n} = \min_{c \in \mathbb{R}} \texttt{mse}(v,c)$.
+$\texttt{mean}(v) := \sum_{i=1}^n \dfrac{v_i}{n} = \argmin_{c \in \mathbb{R}} \texttt{mse}(v,c)$.
 :::
 
 :::{admonition} Beweis
