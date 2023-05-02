@@ -14,3 +14,9 @@ parts:
   - file: zufallsvariablen-verteilungen
   - file: erwartungswert
   - file: numpy
+- caption: Stetige Stochastik und Scipy
+  numbered: true
+  chapters:
+  - file: stetige-verteilungen
+  - file: normalverteilung
+  - file: wichtigste-stetige-verteilungen
