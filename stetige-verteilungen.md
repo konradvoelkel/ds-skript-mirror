@@ -10,7 +10,7 @@ Wenn $\Omega$ kein diskreter Wahrscheinlichkeitsraum ist (z.B. weil $\Omega$ ein
 Man nennt die kleinste Menge $A \subset \mathbb{R}$ mit $P(X \in A)=1$ den *Träger* von $X$ und schreibt auch
 
 $$
-supp(X) = \bigcap \{ A \subseteq \mathbb{R} : P(X \in A) = 1 \}
+supp(X) = \overline{\bigcap \{ A \subseteq \mathbb{R} : P(X \in A) = 1 \}}
 $$
 :::
 
@@ -86,7 +86,7 @@ Diese Verteilung heißt *Dirac-Verteilung* mit Masse bei $0$. Wenn man sich sehr
 :::
 
 :::{admonition} Definition
-Sei $(\Omega, P)$ ein Wahrscheinlichkeitsraum, dann nennen wir für eine Zufallsvariable $X \colon \Omega \to \mathbb{R}$x die Funktion
+Sei $(\Omega, P)$ ein Wahrscheinlichkeitsraum, dann nennen wir für eine Zufallsvariable $X \colon \Omega \to \mathbb{R}$ die Funktion
 
 $$
 F \colon \mathbb{R} \to [0,1],\qquad x \mapsto P(X \leq x)
