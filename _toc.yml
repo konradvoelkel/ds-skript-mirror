@@ -20,3 +20,9 @@ parts:
   - file: stetige-verteilungen
   - file: normalverteilung
   - file: wichtigste-stetige-verteilungen
+- caption: Explorative Datenanalyse
+  numbered: true
+  chapters:
+  - file: deskriptive-statistik
+  - file: explorative-analyse-beispiele
+  - file: iris
