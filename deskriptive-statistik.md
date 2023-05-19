@@ -110,7 +110,7 @@ Die beschreibende (deskriptive) Statistik besteht aus den Datenanalysen, die *vo
 
 Wozu visualisieren?
 
-[Alberto Cairo hat den 'Datasaurus' erfunden](http://www.thefunctionalart.com/2016/08/download-datasaurus-never-trust-summary.html) um auf den Unterschied zwischen zusammenfassender Statistik und Visualisierung hinzuweisen. [Justin Matejka und George Fitzmaurice haben die 'Datasaurus Dozen' entwickelt](https://www.autodesk.com/research/publications/same-stats-different-graphs), eine Reihe von Datensätzen, die allesamt gleiche zusammenfassende Statistiken aufweisen, aber visuell sehr deutliche Unterschiede zeigen.
+[Alberto Cairo hat den 'Datasaurus' erfunden](http://www.thefunctionalart.com/2016/08/download-datasaurus-never-trust-summary.html) um auf den Unterschied zwischen zusammenfassender Statistik und Visualisierung hinzuweisen. [Justin Matejka und George Fitzmaurice haben die 'Datasaurus Dozen' entwickelt](https://dl.acm.org/doi/10.1145/3025453.3025912), eine Reihe von Datensätzen, die allesamt gleiche zusammenfassende Statistiken aufweisen, aber visuell sehr deutliche Unterschiede zeigen.
 
 ```{figure} images/AllDinosGrey_1.png
 :width: 480px
