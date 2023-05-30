@@ -7,6 +7,7 @@ parts:
   - file: was-ist-data-science
   - file: intro-stochastik
   - file: intro-python
+
 - caption: Diskrete Stochastik und Numpy
   numbered: true
   chapters:
@@ -14,15 +15,24 @@ parts:
   - file: zufallsvariablen-verteilungen
   - file: erwartungswert
   - file: numpy
+
 - caption: Stetige Stochastik und Scipy
   numbered: true
   chapters:
   - file: stetige-verteilungen
   - file: normalverteilung
   - file: wichtigste-stetige-verteilungen
+
 - caption: Explorative Datenanalyse
   numbered: true
   chapters:
   - file: deskriptive-statistik
   - file: explorative-analyse-beispiele
   - file: iris
+
+- caption: Multivariate Stochastik
+  numbered: true
+  chapters:
+  - file: kovarianz
+  - file: multivariate-normalverteilung
+  - file: relative-entropie
