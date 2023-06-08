@@ -29,6 +29,7 @@ parts:
   - file: deskriptive-statistik
   - file: explorative-analyse-beispiele
   - file: iris
+  - file: pandas
 
 - caption: Multivariate Stochastik
   numbered: true
@@ -36,3 +37,7 @@ parts:
   - file: kovarianz
   - file: multivariate-normalverteilung
   - file: relative-entropie
+
+- caption: Maschinelles Lernen
+  numbered: true
+  - file: kmeans
