@@ -69,6 +69,7 @@ Die Hauptquellen für dieses Skript sind {cite}`georgii2015stochastik` für die 
 und {cite}`joelgrusdsfs` für den Python-Teil.
 In beiden Büchern ist Stoff für mehr als eine Vorlesung und die Zielgruppen sind nicht deckungsgleich mit unserer Vorlesung.
 Ein lesenswertes ergänzendes Buch mit einigen weiteren Mathematik-Grundlagen (gerade lineare Algebra) ist {cite}`Deisenroth2020`.
+Wer nicht gern in Paket-Dokumentationen stöbert, ist für Numpy, Pandas und Matplotlib vielleicht glücklicher mit dem Buch von Jake VanderPlas, welches sich sogar umsonst online lesen lässt {cite}`pythondsh`.
 
 ```{bibliography}
 ```
