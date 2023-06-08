@@ -40,4 +40,5 @@ parts:
 
 - caption: Maschinelles Lernen
   numbered: true
+  chapters:
   - file: kmeans
