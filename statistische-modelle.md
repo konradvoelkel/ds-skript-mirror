@@ -83,7 +83,7 @@ Die erste Komponente von $\Theta$ ist die Art der Verteilung $\{\text{uni, norm,
 :::
 
 :::{admonition} Beispiel
-$\mathcal{X}=\mathbb{R}^nN$ mit $\Theta = \mathbb{R} \times \mathbb{R}_{> 0}$ und $P_{\theta}^{\otimes N} = P_{\mu,\sigma}^{\otimes N}$ eine $n$-variate Normalverteilung ist das Standardmodell einer Stichprobe der Größe $N$ einer $n$-dimensionalen Zufallsvariable, die multivariat Normalverteilt ist.
+$\mathcal{X}=\mathbb{R}^N$ mit $\Theta = \mathbb{R} \times \mathbb{R}_{> 0}$ und $P_{\theta}^{\otimes N} = P_{\mu,\sigma}^{\otimes N}$ eine univariate Normalverteilung ist das Standardmodell einer Stichprobe der Größe $N$ einer univariaten Zufallsvariable, die normalverteilt ist.
 :::
 
 :::{admonition} Definition
