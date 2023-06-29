@@ -44,4 +44,3 @@ parts:
   - file: kmeans
   - file: statistische-modelle
   - file: dimensionsreduktion
-  - file: lineare-regression
