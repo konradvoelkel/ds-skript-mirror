@@ -45,3 +45,4 @@ parts:
   - file: statistische-modelle
   - file: dimensionsreduktion
   - file: lineare-regression
+  - file: kernel-methoden
