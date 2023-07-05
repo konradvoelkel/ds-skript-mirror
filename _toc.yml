@@ -46,3 +46,4 @@ parts:
   - file: dimensionsreduktion
   - file: lineare-regression
   - file: kernel-methoden
+  - file: statistische-tests
