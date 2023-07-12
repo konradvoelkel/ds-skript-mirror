@@ -47,3 +47,5 @@ parts:
   - file: lineare-regression
   - file: kernel-methoden
   - file: statistische-tests
+  - file: model-selection
+  - file: expectation-maximization
