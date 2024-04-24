@@ -19,6 +19,7 @@ jupyter-build:
     - virtualenv venv
     - source venv/bin/activate
     - pip install --upgrade pip
+    - pip install --upgrade setuptools # fix distutils problems?
     - pip install -r requirements.txt -v
     - alias python=python3  # for jb clean ...
     - jupyter-book clean .
