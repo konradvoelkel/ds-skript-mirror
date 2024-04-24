@@ -14,12 +14,12 @@ jupyter-build:
   stage: build
   image: sphinxdoc/sphinx-latexpdf
   script:
-    - alias python=python3.11
     - python -V  # Print out python version for debugging
     - pip install --upgrade pip
     - pip install virtualenv
-    - virtualenv venv
+    - virtualenv --python="python3.11" venv
     - source venv/bin/activate
+    - alias python=python3.11
     - pip install --upgrade setuptools # fix distutils problems?
     - pip install -r requirements.txt -v
     - jupyter-book clean .
