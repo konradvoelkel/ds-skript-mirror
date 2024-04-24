@@ -16,3 +16,4 @@ seaborn==0.12.2
 Sphinx==5.0.2
 sphinx-jupyterbook-latex==0.5.2
 sphinxcontrib-bibtex==2.5.0
+setuptools
