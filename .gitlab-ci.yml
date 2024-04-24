@@ -8,7 +8,6 @@ variables:
 cache:
   paths:
     - .cache/pip
-    - venv/
 
 jupyter-build:
   stage: build
@@ -19,7 +18,7 @@ jupyter-build:
     - pip install virtualenv
     - virtualenv --python="python3.11" venv
     - source venv/bin/activate
-    - alias python=python3.11
+    - alias python=python3
     - pip install --upgrade setuptools # fix distutils problems?
     - pip install -r requirements.txt -v
     - jupyter-book clean .
