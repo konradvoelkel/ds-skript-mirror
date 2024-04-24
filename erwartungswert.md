@@ -32,7 +32,7 @@ Achtung: So definiert können mehrere Zahlen 'der' Median sein. It's not a bug, 
 Diese Definition mag ungewohnt sein, aber sie erfüllt die folgende Eigenschaft:
 
 :::{admonition} Proposition
-Wenn $v \in \mathbb{R}^n$ sortiert ist, also $v_i < v_j$ für $ < j$, dann ist mit $v' := (v_2,\dots,v_{n-1}) \in \mathbb{R}^n$ ein neuer (kürzerer) Vektor definiert, sodass für alle $c \in \mathbb{R}$ mit $v_1 \leq c \leq v_n$ gilt:
+Wenn $n \geq 3$ und $v \in \mathbb{R}^n$ sortiert ist, also $v_i < v_j$ für $ < j$, dann ist mit $v' := (v_2,\dots,v_{n-1}) \in \mathbb{R}^{n-2}$ ein neuer (kürzerer) Vektor definiert, sodass für alle $c \in \mathbb{R}$ mit $v_1 \leq c \leq v_n$ gilt:
 
 $\texttt{mae}(v,c) = \texttt{mae}(v',c) + \dfrac{v_n - v_1}{n}$.
 :::
@@ -41,6 +41,7 @@ Da der zweite Summand nicht von $c$ abhängt, ist er für die Bestimmung des Min
 Durch induktive Anwendung dieser Erkenntnis bleibt uns nur noch, $\texttt{mae}(v,c)$ für Vektoren der Länge $1$ und $2$ zu bestimmen.
 Es ist $\texttt{mae}((v_1),c) = |v_1 - c|$, was für $c = v_1$ minimal wird,
 und $\texttt{mae}((v_1,v_2),c) = \frac{v_2 - v_1}{2}$, was für jedes $c$ zwischen $v_1$ und $v_2$ minimal wird. Also hängt der Median (einer sortierten Liste) nur vom mittleren / von den zwei mittleren Werten ab. Man definiert meist den Median so, dass in diesem Fall die Wahl $\texttt{median}((v_1,v_2)) = \dfrac{v_1+v_2}{2}$ getroffen wird (und so wollen wir es im Folgenden auch handhaben).
+Überlegen Sie sich dazu, dass für jedes $c$ mit $a \leq c \leq b$ der mittlere Abstand zu $(a,b)$ stets $\frac{b-a}{2}$ ist, es also viele Mediane für den Vektor $v = (a,b)$ gibt.
 
 :::{admonition} Beweis
 $$
