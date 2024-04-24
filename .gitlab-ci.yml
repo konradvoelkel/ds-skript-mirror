@@ -15,12 +15,14 @@ jupyter-build:
   image: sphinxdoc/sphinx-latexpdf
   script:
     - python3 -V  # Print out python version for debugging
-    - pip install virtualenv
+    - python3 -m pip install virtualenv
+    - python3 -m pip install --upgrade pip
+    - python3 -m pip install --upgrade setuptools
     - virtualenv venv
     - source venv/bin/activate
-    - pip install --upgrade pip
-    - pip install --upgrade setuptools # fix distutils problems?
-    - pip install -r requirements.txt -v
+    - python3 -m pip install --upgrade pip
+    - python3 -m pip install --upgrade setuptools # fix distutils problems?
+    - python3 -m pip install -r requirements.txt -v
     - alias python=python3  # for jb clean ...
     - jupyter-book clean .
     - jupyter-book build . --builder html
