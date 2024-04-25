@@ -269,7 +269,7 @@ Diese Zahl verrät uns, dass wir im Mittel $\log_2(n)$ bits an Information brauc
 Am besten versteht man die Entropie als eine relative Größe, und das werden wir später noch tun.
 
 
-### Unabhängigkeit
+## Unabhängigkeit
 
 :::{admonition} Definition
 Sei $\Omega$ ein Wahrscheinlichkeitsraum. Ereignisse $A,B \subseteq \Omega$ heißen *voneinander unabhängig*, wenn
