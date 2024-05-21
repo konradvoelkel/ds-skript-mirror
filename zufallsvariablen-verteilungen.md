@@ -76,9 +76,9 @@ wenn für alle $\omega \in \Omega$ gilt: $p(\omega) = P(\{\omega\})$.
 :::
 
 :::{admonition} Beispiel
-Im vorigen Beispiel haben wir $P_X(\{r\}) = 10$, $P_X(\{g\}) = 5$, $P_X(\{b\}) = 10$, $P_X(\{s\}) = 5$ und daher ist
+Im vorigen Beispiel haben wir $P_X(\{r\}) = \frac{10}{30}$, $P_X(\{g\}) = \frac{5}{30}$, $P_X(\{b\}) = \frac{10}{30}$, $P_X(\{s\}) = \frac{5}{30}$ und daher ist
 
-$$p(r):=10,\ p(g):=5,\ p(b):=10,\ p(s):=5$$
+$$p(r):=\frac{10}{30},\ p(g):=\frac{5}{30},\ p(b):=\frac{10}{30},\ p(s):=\frac{5}{30}$$
 
 die Definition einer pmf für $P_X$. Man sagt auch, $p$ ist die pmf von $X$.
 
