@@ -3,8 +3,8 @@ description: >-
   Vorlesungsskript für die Vorlesung "Data Science" an der HHU Düsseldorf
 author:         "Konrad Völkel"
 email:          "datascience@konradvoelkel.com"
-copyright:      "2023 CC-BY-SA 4.0"
-release:        "0.1"
+copyright:      "2024 CC-BY-SA 4.0"
+release:        "0.2"
 logo:           "images/logo-wide.svg"
 exclude_patterns: ["README.md", "LICENSE", ".git/*", ".venv/*"]
 only_build_toc_files: true
@@ -50,7 +50,7 @@ sphinx:
   config:
     html_show_copyright: false
     html_baseurl: "https://voelkel.pages.cs.uni-duesseldorf.de/ds-skript/"
-    execution_show_tb: True
+    nb_execution_show_tb: True
     latex_elements:
       preamble: |+
         \pgfplotsset{compat=1.17}
