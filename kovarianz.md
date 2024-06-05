@@ -151,3 +151,6 @@ Die Kovarianz ist positiv (semi)definit: $\operatorname{Cov}(X,X) \geq 0$.
 :::
 
 Damit verhält sich die Kovarianz wie ein Skalarprodukt. Man kann das rigoros machen, und die Kovarianz als Skalarprodukt in einem $\mathcal{L}^2$-Raum von Zufallsvariablen auffassen. Der Korrelationskoeffizient spielt dann die Rolle des Kosinus des Winkels zwischen zwei Zufallsvariablen. Im diskreten Fall ist es genau das, weshalb im maschinellen Lernen oft auch 'cosine similarity' als Maß für die Korrelation angegeben wird.
+
+Man kann etwas üben, in einem Scatterplot zweier Variablen den Korrelationskoeffizienten zu 'sehen',
+etwa mit dem Spiel ['Guess the Correalation' von Omar Wagih](https://www.guessthecorrelation.com).
