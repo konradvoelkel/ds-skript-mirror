@@ -139,9 +139,9 @@ Im Standardmodell einer $N$-fach wiederholten univariaten Normalverteilung ist d
 :::
 
 :::{admonition} Beispiel
-Für die Varianz ist der Schätzer $\sigma_N^2 = \frac{1}{N} \sum_{i=1}^N (X_i - \texttt{mean}(X_1))^2$ nicht erwartungstreu, denn $\mathbb{E}(s_N^2) = \frac{N-1}{N}\sigma^2(X)$. Der Bias ist also $-\frac{\sigma^2(X)}{n}$, was für $n\to\infty$ verschwindet. Damit ist der Schätzer asymptotisch erwartungstreu.
+Für die Varianz ist der Schätzer $\sigma_N^2 = \frac{1}{N} \sum_{i=1}^N (X_i - \texttt{mean}(X_j))^2$ nicht erwartungstreu, denn $\mathbb{E}(\sigma_N^2) = \frac{N-1}{N}\sigma^2(X)$. Der Bias ist also $-\frac{\sigma^2(X)}{n}$, was für $n\to\infty$ verschwindet. Damit ist der Schätzer asymptotisch erwartungstreu.
 
-Der 'korrigierte' Schätzer $\frac{N}{N-1} \sigma_N^2 = \frac{1}{N-1} \sum_{i=1}^N (X_i - \texttt{mean}(X_1))^2$ ist erwartungstreu.
+Der 'korrigierte' Schätzer $\frac{N}{N-1} \sigma_N^2 = \frac{1}{N-1} \sum_{i=1}^N (X_i - \texttt{mean}(X_j))^2$ ist erwartungstreu.
 :::
 
 :::{admonition} Definition
