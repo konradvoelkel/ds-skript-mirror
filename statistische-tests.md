@@ -51,7 +51,7 @@ Nun sehen wir, dass es sich beim grau schattierten Bereich um den Bereich handel
 Wir verweisen für die mathematische Theorie von Bereichsschätzern / Konfidenzintervallen auf Vorlesungen über Statistik. Unser Ziel soll im Folgenden vor Allem sein, den Begriff des Tests so weit verstanden zu haben, dass wir einordnen können, ob eine angebliche Interpretation eines statistischen Tests seriös ist. Wenn wir das können, wollen wir außerdem in der Lage sein, zu identifizieren, in welchen Situationen ein Hypothesentest sinnvolle Erkenntnisse liefern kann. Dafür wird es vor allem wichtig sein, den Begriff der Signifikanz zu besprechen.
 
 
-## Konfidenzintervalle
+## Ausblick: Konfidenzintervalle
 
 Hinweis: dieser Abschnitt ist vor Allem zum besseren Verständnis statistischer Tests hier, und wird für sich genommen nicht in der Klausur abgefragt.
 
@@ -251,7 +251,7 @@ Ein Test $\phi$ heißt **gleichmäßig bester Test zum Niveau $\alpha$**, wenn e
 So ein gleichmäßig bester Test hat also höchstens $\alpha$ Wahrscheinlichkeit für einen Fehler erster Art und unter allen diesen Tests die geringste Wahrscheinlichkeit für einen Fehler zweiter Art.
 
 
-## Vom Bereichsschätzer zum Test
+## Ausblick: Vom Bereichsschätzer zum Test
 
 Wir haben bereits bei der Diskussion eines Konfidenzintervalls für das Binomialmodell gesehen, dass uns dies helfen kann, zu einer Entscheidung zu kommen (konkret: soll ich eine Münze mit $45/100$ Erfolgen als 'unfair' ansehen, oder ist die Abweichung von $50/100$ mit einem Sampling Fehler zu erklären? Oder auch: wie viele weitere Stichproben benötige ich, um diese Frage eindeutig zu klären?)
 
@@ -276,7 +276,7 @@ Das Vorgehen ist also: wir schätzen den Parameter (z.B. mit einem Maximum-Likel
 
 Interessanter ist der Test natürlich, wenn wir eine andere Quelle für einen möglichen Wert $\hat{\theta}$ haben, z.B. wenn wir danach fragen, ob die Daten gleichverteilt bzw. normalverteilt sind, oder nicht.
 
-## Beste einfache Tests
+## Ausblick: Beste einfache Tests
 
 Wir haben bereits die Definition von Niveau und Macht gesehen, und das übliche Vorgehen, für festes Niveau nach dem mächtigsten Test zu suchen.
 
@@ -381,7 +381,7 @@ und mit `alternative` wird kodiert, ob ein beidseitiger oder einseitiger (`less`
 
 Wenn die Grundannahme gleicher Varianz bei zwei Samples nicht zutrifft, kann eine Skalentransformation (etwa durch einen Logarithmus) diesen Zustand manchmal herbeiführen (wenigstens approximativ) und damit den t-Test auch in diesen Fällen nützlich machen. Wenn die Varianz deutlich abweicht, sollte man auch die Finger vom t-Test lassen, weil er nicht aussagekräftig ist.
 
-## ANOVA
+## Ausblick: ANOVA
 
 Eine Verallgemeinerung des t-Tests auf mehr als $2$ Stichprobengruppen ist ANOVA, das steht für **Analysis of Variance**. Die Voraussetzungen sind dabei die gleichen wie beim t-Test:
 
@@ -457,9 +457,9 @@ Was man wiederum machen kann ist ein Test auf einen explizit beschriebenen Zusam
 
 
 
-## Anwendung weiterer nützlicher Tests
+## Ausblick: Anwendung weiterer nützlicher Tests
 
-Wir werden noch eine ganze Reihe Tests benötigen, und deren Voraussetzungen, und wie man diese mit Python auf einem Pandas Datensatz durchführt. Die Anwendungen liegen in der explorativen Datenanalyse (wie ist eine Variable verteilt?), dem Daten putzen (wo liegen Ausreißer? Welche Variablen sind so stark korreliert, dass ich nur eine davon behalte?), der Datenanalyse (welche statistischen Abhängigkeiten lassen sich modellieren?) und der Vorhersage (Kann ich eine Variable - die Targetvariable - durch die anderen ausdrücken? Das ist supervised learning).
+Wir könnten noch eine ganze Reihe Tests benötigen, und deren Voraussetzungen, und wie man diese mit Python auf einem Pandas Datensatz durchführt. Die Anwendungen liegen in der explorativen Datenanalyse (wie ist eine Variable verteilt?), dem Daten putzen (wo liegen Ausreißer? Welche Variablen sind so stark korreliert, dass ich nur eine davon behalte?), der Datenanalyse (welche statistischen Abhängigkeiten lassen sich modellieren?) und der Vorhersage (Kann ich eine Variable - die Targetvariable - durch die anderen ausdrücken? Das ist supervised learning).
 
 **Ein Sample untersuchen**
 
