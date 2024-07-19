@@ -302,7 +302,7 @@ Sei $P$ eine stetige Verteilung mit Dichtefunktion $f$, die auf einer Menge $\Om
 Dann heißt
 
 $$
-h(X) := \mathbb{E}\left( -\log(f(X)) \right) = \int_\Omega f(x) \log f(x) dx
+h(X) := \mathbb{E}\left( -\log(f(X)) \right) = - \int_\Omega f(x) \log f(x) dx
 $$
 
 die *differentielle Entropie* von $X$ (definiert ebenfalls von Claude Shannon).
