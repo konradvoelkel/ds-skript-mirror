@@ -1,16 +1,43 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
    id="svg8"
    version="1.1"
    viewBox="0 0 30 15"
    height="15mm"
-   width="30mm">
+   width="30mm"
+   sodipodi:docname="logo-wide.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   inkscape:export-filename="logo-wide.png"
+   inkscape:export-xdpi="600"
+   inkscape:export-ydpi="600"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <sodipodi:namedview
+     id="namedview222"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="11.597569"
+     inkscape:cx="49.665579"
+     inkscape:cy="28.411125"
+     inkscape:window-width="1280"
+     inkscape:window-height="1440"
+     inkscape:window-x="1920"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
   <defs
      id="defs2">
     <marker
@@ -223,7 +250,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -280,16 +307,16 @@
        xml:space="preserve"><textPath
          id="textPath3892"
          xlink:href="#path3859"><tspan
-   id="tspan3888"
-   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52777767px;font-family:'Source Sans Pro';-inkscape-font-specification:'Source Sans Pro Bold';stroke-width:0.26458332">DATA</tspan></textPath></text>
+           id="tspan3888"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:3.52777767px;font-family:'Source Sans Pro';-inkscape-font-specification:'Source Sans Pro Bold';stroke-width:0.26458332">DATA</tspan></textPath></text>
     <text
        id="text4726"
-       style="font-style:normal;font-weight:normal;font-size:2.46944453px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332;"
-       xml:space="preserve"><textPath
+       style="font-style:normal;font-weight:normal;font-size:2.24594px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
+       xml:space="preserve"
+       transform="matrix(0.89692228,0,0,1,0.55599807,0)"><textPath
          id="textPath4731"
-         xlink:href="#path3859-4"><tspan
-   id="tspan4724"
-   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.46944453px;font-family:'Source Sans Pro';-inkscape-font-specification:'Source Sans Pro';stroke-width:0.26458332;">SCIENCE</tspan></textPath></text>
+         xlink:href="#path3859-4"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.24594px;font-family:'Source Sans Pro';-inkscape-font-specification:'Source Sans Pro';stroke-width:0.264583">SCIENCE</textPath></text>
     <g
        transform="rotate(-6.1723835,16.264974,286.43352)"
        id="g4780">
@@ -433,8 +460,8 @@
        xml:space="preserve"><textPath
          id="textPath7384"
          xlink:href="#path7382"><tspan
-   id="tspan7378"
-   style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:1.41111112px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro Light';stroke-width:0.26458332">P(X=x)</tspan></textPath></text>
+           id="tspan7378"
+           style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:1.41111112px;font-family:'Source Code Pro';-inkscape-font-specification:'Source Code Pro Light';stroke-width:0.26458332">P(X=x)</tspan></textPath></text>
     <path
        id="path7382"
        d="m 17.273475,280.09329 0.956179,-0.46577 0.814522,-0.26616 0.779108,-0.0998 0.602038,-0.0665 0.672867,0.0998 0.885349,0.19961"
