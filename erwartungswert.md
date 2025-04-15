@@ -111,6 +111,10 @@ ist $\texttt{rmse}(v)^2 = \texttt{mse}(v,0) = \frac{1}{n} \sum_{i=1}^n v_i^2$ un
 Ob ein Vektor $v \in \mathbb{R}^n$ für uns Informationen enthält, hängt davon ab, wie viel wir über $v$ bereits wissen.
 Wenn wir z.B. wissen, dass $v$ ein Sample einer auf $\{0,1\}$ gleichverteilten Zufallsvariablen ist, wird uns nicht überraschen, wenn $v$ auch so aussieht. Jeder Eintrag von $v$ entspricht genau einem Bit Information. Wenn aber die Zufallsvariable nicht gleichverteilt ist, sondern z.B. auf den Zahlen $\{1,\dots, 26\}$ der Verteilungshäufigkeit der Buchstaben in der deutschen Sprache entspricht (mit $1$ für "a", $26$ für "z" usw.), so enthält ein Eintrag von $v$ potentiell weniger Informationen. Das "e" ist so häufig, dass wir wenig überrascht sind, wenn wir eins sehen. Ein "x" hingegen würde uns sehr überraschen, aber das kommt ja auch nicht so oft vor. Der mittlere Informationsgehalt ist also geringer als bei einer Gleichverteilung.
 
+### Lagemaße zentraler Tendenz
+
+Zu Median und Mittelwert gehört traditionell noch der Modus, den wir auch noch diskutieren werden.
+[Hier gibt es ein kurzes Erklärvideo (auf Englisch) vom Crash Course Statistics zu Mean, Median und Mode](https://www.youtube.com/watch?v=kn83BA7cRNM&list=PL8dPuuaLjXtNM_Y-bUAhblSAdWRnmBUcr). [Das in der Playlist folgende Video diskutiert die damit zusammenhängenden Begriffe für Streuung von Daten](https://www.youtube.com/watch?v=R4yfNi_8Kqw) (die Abweichung, mit der wir angefangen haben).
 
 
 

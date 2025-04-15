@@ -104,7 +104,8 @@ Die beschreibende (deskriptive) Statistik besteht aus den Datenanalysen, die *vo
   * Korrelationen
   
     Mit Kovarianz und Korrelation werden wir uns bald beschäftigen müssen. Die Kovarianz verhält sich zur Varianz wie ein Skalarprodukt zu einer Norm. Der (Pearson)-Korrelationskoeffizient wird so normiert, dass er skaleninvariant ist.
-    
+
+[Für eine kurze lockere Übersicht über einen Teil der Frage ``Was sind eigentlich Daten'', insb. der Frage der Skalen, gibt es ein Video vom HeiCAD-Programm ``KI für Alle''](https://www.youtube.com/watch?v=hJVOudzjnEI).
     
 ## Visualisierung
 

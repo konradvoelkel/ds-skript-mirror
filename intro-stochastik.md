@@ -147,3 +147,5 @@ Sie können also nun ein Stochastik-Buch in die Hand nehmen, dort einen Satz vor
 Wenn Sie sich gern im weiteren Verlauf der Vorlesung mit interaktiven Spielchen der Stochastik nähern wollen, ist [Random Services](
 https://randomservices.org/random/prob/index.html) genau das Richtige für Sie.
 Wenn Sie es lieber elegant-visuell mögen, wird [Seeing Theory](https://seeing-theory.brown.edu/) Sie durch den Stochastik-Teil der Vorlesung begleiten.
+
+[Wenn Sie in 6 Minuten den Würfelwurf (die Gleichverteilung, auch ``Laplace-Experiment'') nochmal von jemand anderem erklärt haben möchten, können Sie das auf YouTube finden im Kanal ``musstewissen Mathe''](https://www.youtube.com/watch?v=zPcjFWQa6Uc).
