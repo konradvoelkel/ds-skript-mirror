@@ -26,7 +26,7 @@ $\texttt{median}(v) := \arg\min_{c \in \mathbb{R}} \texttt{mae}(v,c)$ ist \`\`de
 :::
 
 Das bedeutet also, der Median ist definiert als eine Zahl $c \in \mathbb{R}$ mit der Eigenschaft, dass die Zahl $\texttt{mae}(v,c)$ minimal wird.
-Das bedeutet, für alle $c$ gilt $\texttt{mae}(v,c) \geq $\texttt{mae}(v,\texttt{median}(v))$.
+Das bedeutet, für alle $c$ gilt $\texttt{mae}(v,c) \geq \texttt{mae}(v,\texttt{median}(v))$.
 Achtung: So definiert können mehrere Zahlen 'der' Median sein. It's not a bug, it's a feature.
 
 Diese Definition mag ungewohnt sein, aber sie erfüllt die folgende Eigenschaft:
