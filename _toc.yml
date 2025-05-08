@@ -15,6 +15,7 @@ parts:
   - file: zufallsvariablen-verteilungen
   - file: erwartungswert
   - file: numpy
+  - file: explorative-analyse-mit-numpy
 
 - caption: Stetige Stochastik und Scipy
   numbered: true
