@@ -149,11 +149,11 @@ Es gibt einen inneren Zusammenhang zwischen dem Erwartungswert und den Stichprob
 :::{admonition} Satz
 **Gesetz der großen Zahlen**
 
-Ist eine unendliche Folge $(X_i)_{i \in \mathbb{N}}$ von Zufallsvariablen $\Omega \to \mathbb{R}$ gegeben, so sagt man, dass diese Folge einem *starken Gesetz der großen Zahlen* genügt, wenn die Mittelwert-Zufallsvariablen $\overline{X_n} := \dfrac{1}{n} \sum_{i=1}^n \left( X_i - \mathbb{E}(X_i) \right)$ gegen $0$ konvergieren, und zwar $P$-fast sicher (d.h. $P(\lim_{n\to\infty} \overline{X_n} = 0) = 1$).
+Ist eine unendliche Folge $(X_i)_{i \in \mathbb{N}}$ von Zufallsvariablen $\Omega \to \mathbb{R}$ gegeben, so sagt man, dass diese Folge einem *starken Gesetz der großen Zahlen* genügt, wenn die Mittelwert-Abweichungs-Zufallsvariablen $\overline{X_n^\ast} := \dfrac{1}{n} \sum_{i=1}^n \left( X_i - \mathbb{E}(X_i) \right)$ gegen $0$ konvergieren, und zwar $P$-fast sicher (d.h. $P(\lim_{n\to\infty} \overline{X_n^\ast} = 0) = 1$).
 
 Wenn die $X_i$ nun unabhängig und identisch verteilt sind ($X_i = X$ für festes $X$) mit existierendem Erwartungswert $\mathbb{E}(X)$,
 dann genügen die $X_i$ einem starken Gesetz der großen Zahlen, d.h.
-dann konvergiert $\overline{X_n}$, die Abweichung des arithmetischen Mittels einer Stichprobe von $X$ der Größe $n$ vom Erwartungswert, $P$-fast sicher gegen $0$.
+dann konvergiert $\overline{X_n^\ast} = \overline{X_n} - \mathbb{E}X$, die Abweichung des arithmetischen Mittels einer Stichprobe von $X$ der Größe $n$ vom Erwartungswert, $P$-fast sicher gegen $0$.
 Das bedeutet umgekehrt auch: Die Wahrscheinlichkeit, dass das Stichprobenmittel für beliebig große $n$ vom Erwartungswert abweicht, ist $0$.
 :::
 
