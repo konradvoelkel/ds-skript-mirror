@@ -59,15 +59,14 @@ Auch im maschinellen Lernen, etwa beim Deep Learning, kann man durch Pflegen der
 [Robinson und Nolis: Build a Career in Data Science](https://www.manning.com/books/build-a-career-in-data-science)
 
 Dazu gibt es auch einen [einstündigen Podcast mit den Autorinnen](https://talkpython.fm/episodes/show/262/build-a-career-in-data-science).
-<iframe width="100%" height="166" scrolling="no" frameborder="no"
-     src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/811644058&color=ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false">
-</iframe>
+
 
 **State of Data Science 2021**
 
 Eine Stunde Podcast [State of Data Science in 2021 with Stan Seibert](https://talkpython.fm/episodes/show/333/state-of-data-science-in-2021)
-<iframe width="100%" height="166" scrolling="no" frameborder="no"
-     src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1122428593&color=ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false">
-</iframe>
+
+**State of Data Science 2024**
+
+Ein Blogpost vom IDE-Entwickler JetBrains [State of Data Science in 2024: 6 Key Data Science Trends](https://blog.jetbrains.com/pycharm/2024/12/the-state-of-data-science/)
 
 Ein interessanter Kontrast ist dieser Artikel von Mike Loukides von O'Reilly: [What is data science?](http://radar.oreilly.com/2010/06/what-is-data-science.html) aus dem Jahr 2010. Man sieht schnell: die Werkzeuge und Softwarepakete sind im Wandel, und manches, was 2010 noch besonders spannend schien, ist heute schon vergessen. Man sieht aber auch: Data Science ist kein einfacher Hype, der bald vorüber zieht, sondern ein globaler Trend, der seit über 10 Jahren in der Entwicklung ist. Wenn Etiketten wie "Data Mining", "Big Data" und vielleicht auch "Data Science" im Laufe der Zeit an Bedeutung verlieren, so besteht doch kein Zweifel, dass statistische Methoden und maschinelles Lernen für lange Zeit eine wachsende Bedeutung in Informatik und Gesellschaft spielen werden.
