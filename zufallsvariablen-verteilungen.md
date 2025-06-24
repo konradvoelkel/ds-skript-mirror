@@ -1,5 +1,7 @@
 # Zufallsvariablen und Verteilungen
 
+[Vorlesungsaufzeichnung Zufallsvariablen und Verteilungen](https://media.hhu.de/channel/video/data-science-vl-2-wahrscheinlichkeitsmass-zufallsvariable-pmf-2025/d5149a6bce20e827dc30685847505f16/167)
+
 Das typische 'Interface' für Wahrscheinlichkeitsverteilungen sind Zufallsvariablen.
 Im Unterschied zu einer bloßen Verteilung spielt bei einer Zufallsvariable auch eine Rolle, welche konkreten Werte als Ergebnis eintreten können.
 

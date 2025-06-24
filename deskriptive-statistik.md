@@ -1,5 +1,7 @@
 # Deskriptive Statistik und Visualisierung
 
+[Vorlesungsaufzeichnung Deskriptive Statistik](https://media.hhu.de/channel/video/data-science-vl-9-stetige-verteilungen-2025/39016f5414ef3b8edd0dff941f802314/167?t=3244)
+
 In {cite}`dds`, S.41 ist schematisch dargestellt, wie wir 'Data Science' betreiben:
 
 ```{figure} images/ds-process-oneill.png

@@ -1,5 +1,7 @@
 # Relative Entropie
 
+[Vorlesungsaufzeichnung Entropie](https://media.hhu.de/channel/video/data-science-vl-5-entropie-2024/8f216336cc82cdd8015ddb7a6c59c252/167)
+
 ## Logarithmen
 
 :::{admonition} Lemma

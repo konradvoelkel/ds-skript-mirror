@@ -1,5 +1,8 @@
 # Erwartungswert und Varianz
 
+[Vorlesungsaufzeichnung Erwartungswert und Varianz](https://media.hhu.de/channel/video/data-science-vl-3-erwartungswert-varianz-2025/a9c845841d79aa3c9d893280bbf7b5a7/167)
+[Vorlesungsaufzeichnung Unabhängigkeit und Gesetz der großen Zahlen](https://media.hhu.de/channel/video/data-science-vl-4-grosse-zahlen-2025/83a373228e9c6999642f74ab85762b27/167) 
+
 ## Abweichung quantifizieren
 
 Gegeben zwei Vektoren $x,y \in \mathbb{R}^n$ (wir stellen uns vor: $x$ sind unsere Daten, $y$ das, was wir erwarten),

@@ -1,5 +1,7 @@
 # Stetige Verteilungen
 
+[Vorlesungsaufzeichnung Stetige Verteilungen](https://media.hhu.de/channel/video/data-science-vl-7-stetige-verteilungen-2024/1c1abcd6741c7c428fb6aa67827a06a3/167)
+
 :::{admonition} Definition
 Sei $X \colon \Omega \to \mathbb{R}$ eine Zufallsvariable, d.h. $\Omega$ ein Wahrscheinlichkeitsraum (eine Menge $\Omega$ zusammen mit einem Wahrscheinlichkeitsmaß $P_\Omega$) und $X$ eine Abbildung, sodass $P(X \in A) := P_\Omega(X^{-1}(A))$ für alle Ereignisse $A \subseteq \mathbb{R}$ definiert ist.
 
