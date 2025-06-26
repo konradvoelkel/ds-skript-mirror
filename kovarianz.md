@@ -1,5 +1,7 @@
 # Multivariate Statistik: Kovarianz und Abhängigkeit
 
+[Vortragsaufzeichnung Kovarianz, Korrelation](https://media.hhu.de/channel/video/data-science-vl-11-kovarianz-korrelation-2025/92283e63495a6413e5e1b55a17ed31fb/167)
+
 ## Gemeinsame Verteilung und Bayes
 
 :::{admonition} Definition

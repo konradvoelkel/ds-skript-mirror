@@ -4,6 +4,10 @@
 
 [Link zur Web-Version](https://voelkel.pages.cs.uni-duesseldorf.de/ds-skript/landing-page.html)
 
+## Aufzeichnungen
+
+[Kanal mit Vorlesungsmitschnitten in der HHU-Mediathek](https://media.hhu.de/channel/Data-Science-SoSe-2025/167)
+
 ## Voraussetzungen
 
 In diesem Text gehen wir davon aus, dass wir alle einmal 3 Semester Grundlagen der Mathematik gehört haben und wissen, was ein Vektor, eine Matrix und was die Ableitung einer Funktion in mehreren reellen Variablen sind. Außerdem haben wir alle bereits eine Programmiersprache gelernt und sind mit grundlegenden Datenstrukturen vertraut.
