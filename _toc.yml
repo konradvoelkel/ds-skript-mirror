@@ -39,6 +39,11 @@ parts:
   - file: multivariate-normalverteilung
   - file: relative-entropie
 
+- caption: Datenschutz
+  numbered: true
+  chapters:
+  - file: datenschutz
+
 - caption: Maschinelles Lernen
   numbered: true
   chapters:
