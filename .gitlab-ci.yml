@@ -14,7 +14,7 @@ cache:
 myst-build:
   stage: build
   image: nikolaik/python-nodejs:python3.14-nodejs26-slim # $CI_REGISTRY_IMAGE:latest
-  pre_build:
+  before_script:
     - apt-get update && apt-get install -y --no-install-recommends procps
   script:
     - python -V
