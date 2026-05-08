@@ -4,36 +4,39 @@ stages:
 
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
-
+  BASE_URL: "" # "/$CI_PROJECT_NAME"
+  HOST: "127.0.0.1"
+  
 cache:
   paths:
     - .cache/pip
 
-jupyter-build:
+myst-build:
   stage: build
-  image: sphinxdoc/sphinx-latexpdf
+  image: nikolaik/python-nodejs:python3.14-nodejs26-slim # $CI_REGISTRY_IMAGE:latest
+  pre_build:
+    - apt-get update && apt-get install -y --no-install-recommends procps
   script:
-    - python -V  # Print out python version for debugging
-    - pip install --upgrade pip
-    - pip install virtualenv
-    - virtualenv --python="python3.11" venv
-    - source venv/bin/activate
-    - alias python=python3
-    - pip install --upgrade setuptools # fix distutils problems?
-    - pip install -r requirements.txt -v
-    - jupyter-book clean .
-    - jupyter-book build . --builder html
-    - jupyter-book build . --builder pdflatex
+    - python -V
+    - node -v
+    - npm -v
+    - npm install -g mystmd
+    - python -m pip install --upgrade pip
+    - python -m pip install -r requirements.txt
+    - myst build --html
+    - myst build --pdf
+    
   artifacts:
     paths:
-      - _build/
+      - _build/html
+      - export
 
 pages:
   stage: deploy
   image: busybox:latest
   script:
     - mv _build/html public
-    - mv _build/latex/ds-skript.pdf public/
+    - mv export/ds-skript.pdf public/
   artifacts:
     paths:
       - public

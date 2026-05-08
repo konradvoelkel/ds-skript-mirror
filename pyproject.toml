@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools==81.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ds-skript"
+version = "0.6.0"
+description = "Skript zur Vorlesung Data Science an der HHU (Sommer 2026)"
+authors = [{ name = "Konrad Völkel", email = "konrad.voelkel@hhu.de", affiliation = "Heinrich-Heine Universität Düsseldorf" }]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "jupyter-book>=2.1.5",
+]
