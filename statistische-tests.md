@@ -80,13 +80,15 @@ Der $n$-fach wiederholte Münzwurf einer unfairen Münze mit Erfolgswahrscheinli
 Wir bestimmen den Maximum-Likelihood-Schätzer für $\theta$:
 
 $$
+\begin{aligned}
 L_x(\theta) &= P_\theta(x|n) = \binom{n}{x} \theta^x (1-\theta)^{n-x} \\
 l_x(\theta) &= \log L_x(\theta) = \log\binom{n}{x} + x\log(\theta) + (n-x)\log(1-\theta) \\
 l_x'(\theta) &= \dfrac{x}{\theta} - \dfrac{n-x}{1-\theta} \\
 l_x'(\theta) &= 0 \implies x(1-\theta) = (n-x)\theta \\
              & \qquad \implies x - \theta x = \theta n - \theta x \\
              & \qquad \implies x = \theta n \\
-             & \qquad \implies \theta = \frac{x}{n}
+             & \qquad \implies \theta = \frac{x}{n}.
+\end{aligned}
 $$
 
 Ganz konkret: werfen wir die Münze $100$ mal und es kommt $45$ mal Zahl, so schätzen wir $\theta$ als $\frac{45}{100}$ (also insbesondere, dass die Münze wirklich unfair ist).
@@ -97,9 +99,11 @@ Was aber ist unsere Konfidenz (unser Vertrauen)? Halten wir Werte weit weg von $
 Wir wollen nun Intervalle $C(x) = (\frac{x}{n} - \epsilon, \frac{x}{n} + \epsilon)$ konstruieren mit möglichst kleinem $\epsilon > 0$ sodass die Konfidenzbereich-Bedingung aus der Definition erfüllt ist:
 
 $$
+\begin{aligned}
  & \inf_{\theta \in \Theta} P_{\theta}\left( x \in \mathcal{X} \colon \tau(\theta) \in C(x) \right) \geq 1 - \alpha \\
  \Leftrightarrow & \inf_{\theta \in [0,1]} P_{\theta}\left( x \in \mathcal{X} \colon \left|\theta - \frac{x}{n}\right| < \epsilon \right) \geq 1 - \alpha \\
   \Leftrightarrow & \inf_{\theta \in [0,1]} P_{\theta}\left( x \in \mathcal{X} \colon \left|\theta - \frac{x}{n}\right| \geq \epsilon \right) \leq \alpha \\
+\end{aligned}
 $$
 
 Übersetzt: $\epsilon$ soll so bestimmt werden (in Abhängigkeit von $\alpha$ und auch möglichst klein), dass für einen Anteil von weniger als $\alpha$ der möglichen Stichproben $x$ gilt: $\left|\theta - \frac{x}{n}\right| \geq \epsilon$. Wenn konkret $\alpha = 0.05$ ist (eine häufige Wahl), bedeutet dass, dass unser Schätzfehler nur in 5\% der Stichproben größer als $\epsilon$ ausfällt.
@@ -117,11 +121,13 @@ Daher schätzen wir $\theta(1-\theta) \leq \frac{1}{4}$ ab (klar: bei $\theta = 
 Insgesamt erhalten wir also: $\epsilon$ ist gut gewählt, wenn
 
 $$
+\begin{aligned}
            & \dfrac{\mathbb{V}T}{\epsilon^2} \leq \alpha \\
 \Leftarrow & \frac{1}{4 n \epsilon^2} \leq \alpha \\
 \Leftrightarrow & \frac{1}{4 n \alpha} \leq \epsilon^2 \\
 \Leftrightarrow & \frac{1}{2 \sqrt{n \alpha}} \leq \epsilon \\
-\Leftarrow & \frac{1}{2 \sqrt{n \alpha}} =: \epsilon
+\Leftarrow & \frac{1}{2 \sqrt{n \alpha}} =: \epsilon.
+\end{aligned}
 $$
 
 Im konkreten Beispiel mit $\alpha = 0.05$ und $n=100$ erfüllt also $\epsilon := \frac{1}{2\sqrt{5}} \approx 0.2236$ unsere Wünsche.
@@ -134,6 +140,7 @@ Wir sehen aber auch einen einfachen Zusammenhang zwischen $\epsilon, n$ und $\al
 Damit lässt sich z.B. berechnen, wie groß die Stichprobe ausfallen muss, um mit Gewissheit von mindestens $1-\alpha$ sagen zu können, dass unsere Münze nicht fair ist. Wir nehmen hier wieder konkret an, dass wir für eine Stichprobe $\theta = 0.45$ geschätzt haben.
 
 $$
+\begin{aligned}
  & 0.45 + \epsilon < 0.5 \\
 \Leftrightarrow & 0.45 + \frac{1}{2 \sqrt{n \alpha}} < 0.5 \\
 \Leftrightarrow & \frac{1}{2 \sqrt{n \alpha}} < 0.05 \\
@@ -141,6 +148,7 @@ $$
 \Leftrightarrow & \sqrt{n \alpha} > 10 \\
 \Leftrightarrow & n \alpha > 100 \\
 \Leftrightarrow & n > \frac{100}{\alpha}
+\end{aligned}
 $$
 
 setzen wir noch $\alpha = 0.05$ ein, ergibt sich, dass die Stichprobe größer als $2000$ sein sollte, um verwerfen zu können, dass die Münze fair ist. Wenn wir ein clevereres Verfahren zur bestimmung kleinerer Konfidenzintervalle hätten, würde uns allerdings eine kleinere Stichprobe ausreichen.

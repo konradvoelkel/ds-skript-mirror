@@ -44,9 +44,11 @@ $$
 $$
 
 $$
+\begin{aligned}
 \mathbb{V}(X) &= \int_\Omega \left(X(\omega)-\mathbb{E}(X)\right)^2 d \omega \\
               &= \int_{-\infty}^{\infty} \left(x-\mathbb{E}(X)\right)^2 f(x) dx \\
-              &= \int_{-\infty}^{\infty} x^2f(x) dx  - {\left( \mathbb{E}(X) \right)}^2
+              &= \int_{-\infty}^{\infty} x^2f(x) dx  - {\left( \mathbb{E}(X) \right)}^2.
+\end{aligned}
 $$
 
 :::{admonition} Beispiel
