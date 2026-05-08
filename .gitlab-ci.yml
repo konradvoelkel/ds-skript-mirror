@@ -24,7 +24,7 @@ myst-build:
     - python -m pip install --upgrade pip
     - python -m pip install -r requirements.txt
     - myst build --html
-    - myst build --pdf
+    #- myst build --pdf
     
   artifacts:
     paths:
@@ -36,7 +36,7 @@ pages:
   image: busybox:latest
   script:
     - mv _build/html public
-    - mv export/ds-skript.pdf public/
+    #- mv export/ds-skript.pdf public/
   artifacts:
     paths:
       - public
