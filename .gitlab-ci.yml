@@ -33,14 +33,13 @@ jupyter-build:
   artifacts:
     paths:
       - _build/html
-      - export
 
 pages:
   stage: deploy
   image: busybox:latest
   script:
     - mv _build/html public
-    - mv export/ds-skript.pdf public/
+    - mv _build/latex/ds-skript.pdf public/
   artifacts:
     paths:
       - public
