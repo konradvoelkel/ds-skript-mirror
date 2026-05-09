@@ -40,7 +40,7 @@ pages:
   image: busybox:latest
   script:
     - mv _build/html public
-    #- mv export/ds-skript.pdf public/
+    - mv export/ds-skript.pdf public/
   artifacts:
     paths:
       - public
