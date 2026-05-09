@@ -33,6 +33,7 @@ jupyter-build:
   artifacts:
     paths:
       - _build/html
+      - _build/latex
 
 pages:
   stage: deploy
