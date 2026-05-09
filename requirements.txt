@@ -2,7 +2,7 @@ setuptools
 ipympl>=0.9.4
 ipython>=8.25.0
 ipywidgets>=8.1.3
-jupyter-book>=1.0.0
+jupyter-book<2.0.0
 jupyter-sphinx>=0.5.3
 jupyterthemes>=0.20.0
 jupytext>=1.17.1
