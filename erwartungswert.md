@@ -48,10 +48,12 @@ und $\texttt{mae}((v_1,v_2),c) = \frac{v_2 - v_1}{2}$, was für jedes $c$ zwisch
 
 :::{admonition} Beweis
 $$
+\begin{aligned}
 \texttt{mae}(v,c) &= \phantom{\dfrac{|v_1 - c|}{n} +\ } \sum_{i=1}^{n} \dfrac{|v_i -c |}{n} \\
                   &= \dfrac{|v_1 - c|}{n} + \sum_{i=2}^{n-1} \dfrac{|v_i -c |}{n} + \dfrac{|v_n - c|}{n} \\
                   &= \sum_{i=2}^{n-1} \dfrac{|v_i -c |}{n} + \dfrac{-(v_1 - c) + (v_n - c)}{n} \\
                   &= \texttt{mae}(v',c) + \dfrac{v_n - c + c - v_1}{n}.
+\end{aligned}
 $$
 :::
 
@@ -81,11 +83,13 @@ Wir schreiben ein beliebiges $c \in \mathbb{R}$ als $c = \texttt{mean}(v) + \del
 Dazu faktorisieren wir aus: $(v_i - \texttt{mean}(v) - \delta)^2 = (v_i - \texttt{mean}(v))^2 - 2\delta (v_i - \texttt{mean}(v)) + \delta^2$ und teilen die Summe entsprechend auf:
 
 $$
+\begin{aligned}
 \texttt{mse}(v,c) &= \texttt{mse}(v,\texttt{mean}(v) + \delta) = \sum_{i=1}^n \dfrac{(v - (\texttt{mean}(v) + \delta))^2}{n} \\
                   &= \dfrac{1}{n} \sum_{i=1}^n \left( {\left(v_i - \texttt{mean}(v)\right)}^2 - 2\delta \left(v_i - \texttt{mean}(v)\right) + \delta^2 \right) \\
                   &= \left( \dfrac{1}{n} \sum_{i=1}^n \left( (v_i - \texttt{mean}(v))^2 \right) \right) - 2\delta \left( \sum_{i=1}^n \frac{v_i}{n} - \texttt{mean}(v) \right) + \delta^2 \\
                   &= \texttt{mse}(v,\texttt{mean}(v)) - 2\delta(\texttt{mean}(v) - \texttt{mean}(v)) + \delta^2 \\
                   &= \texttt{mse}(v,\texttt{mean}(v)) + \delta^2
+\end{aligned}
 $$
 
 und dieser Ausdruck wird nur für $\delta=0$ minimal, weil $\delta^2 \geq 0$.
@@ -205,9 +209,11 @@ Es ist $\mathbb{V}(X) = \mathbb{E}\left( X^2 \right) - {\left(\mathbb{E}X\right)
 Es ist ${\left(X - \mathbb{E}X\right)}^2 = X^2 - 2X\mathbb{E}X + {\left(\mathbb{E}X\right)}^2$ und mit der Linearität des Erwartungswerts also
 
 $$
+\begin{aligned}
 \mathbb{V}(X) &= \mathbb{E}\left( {\left(X - \mathbb{E}X\right)}^2 \right) \\
               &= \mathbb{E}\left( X^2 \right) - 2\mathbb{E}\left( X \right)\mathbb{E}\left( X \right) + {\left(\mathbb{E}X\right)}^2 \mathbb{E}\left( 1 \right) \\
               &= \mathbb{E}\left( X^2 \right) - {\left(\mathbb{E}X\right)}^2.
+\end{aligned}
 $$
 :::
 
@@ -261,8 +267,10 @@ Für eine Zufallsvariable $X \colon \Omega' \to \Omega$ können wir nun die Verk
 eine reelle Zufallsvariable. Ihr Erwartungswert ist die mittlere Information von $X$, wir sagen auch *Entropie*
 
 $$
+\begin{aligned}
 H(X) := \mathbb{E}\left( I(X) \right) &= \sum_{\omega' \in \Omega'} -\log_b(P(\{X(\omega')\})P(X(\omega')) \\
-                                      &= - \sum_{\omega \in \Omega} \log_b(P(\{\omega\}))P(\{\omega\})
+                                      &= - \sum_{\omega \in \Omega} \log_b(P(\{\omega\}))P(\{\omega\}).
+\end{aligned}
 $$
 :::
 
