@@ -1,8 +1,8 @@
 # Vorlesungsskript
 
-[Link zur PDF-Version](https://voelkel.pages.cs.uni-duesseldorf.de/ds-skript/ds-skript.pdf)
+[Die PDF-Version ist derzeit leider nicht verfügbar.](https://voelkel.pages.cs.uni-duesseldorf.de/ds-skript/ds-skript.pdf)
 
-[Link zur Web-Version](https://voelkel.pages.cs.uni-duesseldorf.de/ds-skript/landing-page.html)
+[Link zur Web-Version](https://voelkel.pages.cs.uni-duesseldorf.de/ds-skript/)
 
 ## Aufzeichnungen
 
