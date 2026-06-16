@@ -4,7 +4,7 @@ stages:
 
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
-  BASE_URL: "" # "/$CI_PROJECT_NAME"
+  BASE_URL: "/$CI_PROJECT_NAME"
   HOST: "127.0.0.1"
 
 cache:
