@@ -41,3 +41,7 @@ opendata.dwd.de/
 train.csv
 *idx?-ubyte.gz
 *~
+
+# local working notes, not part of the book
+PROJECT_NOTES.md
+CONTENT_REVIEW.md
