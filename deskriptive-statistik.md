@@ -48,11 +48,13 @@ Die beschreibende (deskriptive) Statistik besteht aus den Datenanalysen, die *vo
   Abzugrenzen von der Stichprobe ist die *Population*, das ist die Grundgesamtheit aller möglichen Ergebnisse, mit einer gewissen Verteilung.
   
 * Bei tabellarischen Daten heißen die Spalten auch Variablen, Attribute, Merkmale, Features während die möglichen Werte *Ausprägungen* heißen.
-  Je nach Art eines Merkmals unterscheidet man verschiedene Skalenarten:
+  Je nach Art eines Merkmals unterscheidet man verschiedene *Skalenniveaus* (auch Skalenarten genannt); man sagt, ein Merkmal sei nominal-, ordinal- oder kardinalskaliert:
   * Nominalskala: kategoriell, diskret, keine feste Reihenfolge (z.B. Geschlecht)
   * Ordinalskala: Werte können geordnet werden, aber ohne Abstandsmaß (z.B. Rangplätze)
   * Intervallskala (eine Kardinalskala): (diskrete oder stetige) Werte können geordnet und Abstände angegeben werden, ein Nullpunkt ist festgelegt (z.B. Temperatur, Jahresangaben)
   * Verhältnisskala: Kardinalskala mit natürlichem Nullpunkt, sodass das Verhältnis zwischen zwei Werten eine sinnvolle Größe ist (z.B. Alter, Einkommen).
+
+  Welche Maßzahlen und Rechenoperationen für ein Merkmal sinnvoll sind, hängt an seinem Skalenniveau — eine Zusammenfassung steht unten im Abschnitt [Skalenniveau und zulässige Maßzahlen](#skalenniveau-und-zulaessige-masszahlen).
 * Univariate Beschreibungen
 
   sind Maßzahlen, die sich auf eine einzelne Variable beziehen, nicht jedoch auf den Bezug der Variablen zueinander. Diese Maßzahlen lassen sich weiter einteilen:
@@ -79,7 +81,7 @@ Die beschreibende (deskriptive) Statistik besteht aus den Datenanalysen, die *vo
     Streumaße charakterisieren, inwiefern die Daten um einen Lageparameter streuen, d.h. davon mehr oder weniger stark abweichen. Da dies auch bedeutet, zu charakterisieren, inwiefern jeder einzelne Datenpunkt von den anderen abweicht, lassen sich Streumaße ohne direkten Bezug auf einen Lageparameter definieren.
     
     * Spannweite: maximaler Wert minus minimaler Wert
-    * Variationsverhältnis: Anteil der Stichprobe, dessen Wert nicht der Modus ist
+    * Variationsverhältnis (auch *nicht-Modus-Anteil*): Anteil der Stichprobe, dessen Wert nicht der Modus ist
     * Quartile: analog zum Median ist das untere Quartil $Q1$ der Wert, sodass genau ein Viertel der Daten einen geringeren Wert hat. Das obere Quartil $Q3$ ist entsprechend der Wert, sodass genau ein Viertel der Daten einen höheren Wert hat. Der Median entspricht $Q2$. Analog definiert man Perzentile.
     * Stichprobenvarianz: mittlere quadratische Abweichung vom Mittelwert
     * Stichprobenstandardabweichung
@@ -109,6 +111,26 @@ Die beschreibende (deskriptive) Statistik besteht aus den Datenanalysen, die *vo
 
 [Für eine kurze lockere Übersicht über einen Teil der Frage ``Was sind eigentlich Daten'', insb. der Frage der Skalen, gibt es ein Video vom HeiCAD-Programm ``KI für Alle''](https://www.youtube.com/watch?v=hJVOudzjnEI).
     
+(skalenniveau-und-zulaessige-masszahlen)=
+### Skalenniveau und zulässige Maßzahlen
+
+Die Maßzahlen oben sind nicht für jedes Merkmal sinnvoll. Ein Mittelwert über Postleitzahlen ist eine Zahl, aber keine Information; eine Standardabweichung über Schulnoten setzt voraus, dass der Abstand zwischen „gut“ und „sehr gut“ derselbe ist wie zwischen „ausreichend“ und „mangelhaft“. Was erlaubt ist, entscheidet das Skalenniveau:
+
+| Skalenniveau | Beispiel | sinnvolle Vergleiche | Lagemaß | Streuungsmaß |
+|---|---|---|---|---|
+| nominal | Studiengang, Farbe, Postleitzahl | gleich / ungleich | Modus | Variationsverhältnis (nicht-Modus-Anteil) |
+| ordinal | Schulnote, Zufriedenheit „niedrig / mittel / hoch“, Rangplatz | zusätzlich: kleiner / größer | Median, Quartile | Spannweite, Interquartilsabstand |
+| kardinal (Intervall- und Verhältnisskala) | Temperatur, Alter, Preis, Lernzeit in Stunden | zusätzlich: Differenzen (Verhältnisskala: auch Quotienten) | arithmetisches Mittel | Varianz, Standardabweichung |
+
+Jedes Skalenniveau erlaubt zusätzlich alle Maßzahlen der Zeilen darüber: Für ein kardinales Merkmal darf man auch Median und Modus angeben, für ein ordinales auch den Modus. Umgekehrt geht es nicht — Mittelwert und Varianz einer nominalen Variablen sind bedeutungslos, auch wenn die Ausprägungen als Zahlen gespeichert sind. Eine Spalte mit dem Datentyp `int` ist also noch lange nicht kardinalskaliert: Eine ID ist nominal, eine Schulnote ordinal.
+
+**Kodierung kategorialer Merkmale.** Die meisten Verfahren des maschinellen Lernens (etwa die lineare Regression) rechnen mit Zahlen, und die Frage, wie man ein nominales oder ordinales Merkmal in Zahlen übersetzt, hängt an derselben Tabelle:
+
+* Ein **ordinales** Merkmal darf man als ganze Zahlen entlang seiner Ordnung kodieren („niedrig“ $= 1$, „mittel“ $= 2$, „hoch“ $= 3$; *Integer-* oder *Ordinal-Encoding*). Die Ordnung ist echt, nur die gleichen Abstände sind eine Modellannahme, die man im Blick behalten sollte.
+* Ein **nominales** Merkmal darf man das *nicht*: Kodiert man Studiengänge als $1, 2, 3$, erfindet man eine Reihenfolge und Abstände, die es nicht gibt, und ein lineares Modell würde damit rechnen. Stattdessen legt man je Ausprägung eine eigene Spalte an, die $1$ ist, wenn die Ausprägung vorliegt, und sonst $0$ (*One-Hot-Encoding*, die Spalten heißen auch *Dummy-Variablen*). Aus einer Spalte „Studiengang“ mit drei Ausprägungen werden so drei Spalten mit Nullen und Einsen.
+
+Wie man das mit pandas macht und was es für eine Regression bedeutet, zeigt das Kapitel [Lineare Regression](lineare-regression.ipynb) am Melbourne-Datensatz.
+
 ### Durchgerechnetes Beispiel
 
 Nehmen wir die $n = 8$ Werte $x = (7,\ 2,\ 9,\ 4,\ 4,\ 12,\ 5,\ 3)$, etwa: Anzahl E-Mails pro Tag in einer Woche plus einem Tag.
