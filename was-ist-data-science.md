@@ -5,7 +5,7 @@
 Gerhard Goos, Vorlesungen über Informatik Band 1:
 
 > Die Darstellung einer Mitteilung durch die zeitliche Veränderung einer physikalischen Größe heißt ein *Signal*.
-Wenn wir bei der Darstellung und Weitergabe einer Mitteilung vom verwendetem Medium und den Einzelheiten der Signale und Signalparameter abstrahieren, heißt die Mitteilung eine *Nachricht*.
+Wenn wir bei der Darstellung und Weitergabe einer Mitteilung vom verwendeten Medium und den Einzelheiten der Signale und Signalparameter abstrahieren, heißt die Mitteilung eine *Nachricht*.
 
 > Die Kenntnisse, die man benötigt, um einer Nachricht Bedeutung zuzuordnen, nennen wir einen *Kontext* oder ein Bezugssystem.
 Die zugeordnete Bedeutung heißt eine *Information*.
@@ -20,6 +20,8 @@ Wenn wir etwa die Antworten zu einer Single-Choice-Frage betrachten, so ist meis
 
 > Nearly all \[...\] working data scientists make their daily bread and butter through data collection and data cleaning; building dashboards and reports; data visualization; statistical inference; communicating results to key stakeholders; and convincing decision makers of their results.
 [Hugo Bowne-Anderson, Harvard Business Review, 2018](http://hbr.org/2018/08/what-data-scientists-really-do-according-to-35-data-scientists)
+
+Kurz gesagt: Der größte Teil der täglichen Arbeit ist Datenbeschaffung, Datenbereinigung und Kommunikation der Ergebnisse, nicht die Modellierung, die in Kursen wie diesem den meisten Platz einnimmt.
 
 > But how do you find data scientists? Whenever someone asks that question, I
 refer them back to a more fundamental question: what makes a good data
@@ -44,6 +46,8 @@ data scientists who haven’t graduated from college). But the real unifying
 thread is that all have had to work with a tremendous amount of data before
 starting to work on the “real” problem
 [DJ Patil: Building Data Science Teams (2011), What Makes a Data Scientist? (p.11ff)](https://www.datascienceassn.org/sites/default/files/Building%20Data%20Science%20Teams.pdf)
+
+Patil beschreibt also, woran man gute Data Scientists erkennt: an fachlicher Tiefe in irgendeiner Disziplin und vor allem an der Neugier, ein Problem so lange zu zerlegen, bis daraus überprüfbare Hypothesen werden.
 
 Ein signifikanter Teil der Arbeit eines Data Scientist besteht in der Aufbereitung von Daten, dem sogenannten "Daten schrubben". Dabei kommen viele klassische Programmiertechniken zum Einsatz, etwa reguläre Ausdrücke und Kenntnis über Industriestandards bei Datentypen (GIS, Datumsangaben, Unicode und andere Encodings, CSV) und die Abweichung von Standards, die in der Praxis auftauchen.
 Auch im maschinellen Lernen, etwa beim Deep Learning, kann man durch Pflegen der Trainingsdaten erheblich bessere Ergebnisse erzielen.
@@ -70,3 +74,7 @@ Eine Stunde Podcast [State of Data Science in 2021 with Stan Seibert](https://ta
 Ein Blogpost vom IDE-Entwickler JetBrains [State of Data Science in 2024: 6 Key Data Science Trends](https://blog.jetbrains.com/pycharm/2024/12/the-state-of-data-science/)
 
 Ein interessanter Kontrast ist dieser Artikel von Mike Loukides von O'Reilly: [What is data science?](http://radar.oreilly.com/2010/06/what-is-data-science.html) aus dem Jahr 2010. Man sieht schnell: die Werkzeuge und Softwarepakete sind im Wandel, und manches, was 2010 noch besonders spannend schien, ist heute schon vergessen. Man sieht aber auch: Data Science ist kein einfacher Hype, der bald vorüber zieht, sondern ein globaler Trend, der seit über 10 Jahren in der Entwicklung ist. Wenn Etiketten wie "Data Mining", "Big Data" und vielleicht auch "Data Science" im Laufe der Zeit an Bedeutung verlieren, so besteht doch kein Zweifel, dass statistische Methoden und maschinelles Lernen für lange Zeit eine wachsende Bedeutung in Informatik und Gesellschaft spielen werden.
+
+## Wie es weitergeht
+
+Bevor wir mit Daten arbeiten, brauchen wir eine präzise Sprache für Zufall und Unsicherheit. Das nächste Kapitel liefert sie: Wahrscheinlichkeitsräume, Ereignisse, Zufallsvariablen. Es enthält zwei Exkurse zum Maßproblem, die als Hintergrund gedacht sind und beim ersten Lesen übersprungen werden können; der eigentliche Formalismus, den wir im ganzen Kurs verwenden, beginnt beim Abschnitt *Formalismus*.

@@ -1,6 +1,10 @@
 # Datenschutz
 
+[Vorlesungsaufzeichnung Datenschutz](https://media.hhu.de/channel/video/data-science-vl-15-datenschutz-2025/4912a23e7ad45d8389135220db07bc47/167)
+
 In der Informatik ist der **verantwortungsvolle Umgang mit personenbezogenen Daten** zentral – sowohl rechtlich als auch ethisch. Dieses Kapitel bietet einen Überblick über die wichtigsten Begriffe und Prinzipien des Datenschutzes im Kontext der Europäischen Datenschutzgrundverordnung (DSGVO, en. GDPR).
+
+Das Kapitel steht an dieser Stelle, weil wir ab dem nächsten Kapitel mit echten Datensätzen Modelle trainieren. Bevor personenbezogene Daten als Trainingsmaterial dienen, sollten die Begriffe geklärt sein, mit denen der Umgang mit solchen Daten geregelt ist. Es ist bewusst ein Begriffsglossar ohne Mathematik und Code.
 
 ## Personenbezogene Daten
 
@@ -35,7 +39,7 @@ Beispiel: Voreinstellungen dürfen keine unnötige Datenerhebung zulassen.
 
 Ein zentrales Prinzip im Datenschutz. Es bedeutet:
 - Keine Erhebung irrelevanter Daten
-- Verzicht auf optionalen Angaben (z. B. Alter bei Bestellung, wenn nicht erforderlich)
+- Verzicht auf optionale Angaben (z. B. Alter bei Bestellung, wenn nicht erforderlich)
 - Hinweis auf Freiwilligkeit und Voreinstellung auf "nicht erheben"
 
 
@@ -45,7 +49,7 @@ Ein zentrales Prinzip im Datenschutz. Es bedeutet:
 - **Rechte Betroffener**: z. B. Auskunft, Löschung, Berichtigung, Widerspruch
 - **Datenübermittlung in Drittländer**: Nur bei angemessenem Datenschutzniveau zulässig
 
-## Weiterführende Resourcen
+## Weiterführende Ressourcen
 
 - [DSGVO in einfachen Worten](https://eu-datenschutz-grundverordnung.net/eu-dsgvo/)
 - [Volltext der DSGVO (EUR-Lex)](http://eur-lex.europa.eu/legal-content/DE/TXT/PDF/?uri=CELEX:32016R0679)

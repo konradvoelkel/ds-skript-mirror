@@ -76,6 +76,23 @@ $P(A|B) = \dfrac{P(A \cap B)}{P(B)}$
 und das wenden wir auch auf vertauschte Rollen von $A$ und $B$ an.
 :::
 
+Um den Nenner $P(B)$ auszurechnen, hilft oft der folgende Satz:
+
+:::{admonition} Satz
+**von der totalen Wahrscheinlichkeit:**
+Ist $\Omega = A_1 \cup \dots \cup A_n$ eine Zerlegung in paarweise disjunkte Ereignisse mit $P(A_i) > 0$, so gilt für jedes Ereignis $B$
+
+$$
+P(B) = \sum_{i=1}^n P(B|A_i)\,P(A_i).
+$$
+:::
+
+:::{admonition} Beweis
+Die Mengen $B \cap A_i$ sind paarweise disjunkt und ihre Vereinigung ist $B$, also ist $P(B) = \sum_i P(B \cap A_i)$ (endliche Additivität), und nach Definition der bedingten Wahrscheinlichkeit ist $P(B \cap A_i) = P(B|A_i)\,P(A_i)$.
+:::
+
+Im Satz von Bayes kann man den Nenner also durch $P(B) = P(B|A)P(A) + P(B|A^c)P(A^c)$ ersetzen, wenn man nur $A$ und sein Gegenteil kennt.
+
 :::{admonition} Satz
 **von Bayes, Fassung 2:**
 Gegeben zwei Zufallsvariablen $X,Y \colon \Omega \to \mathbb{R}^n$ ist
@@ -98,7 +115,7 @@ P(H|D) = \dfrac{ P(D|H) P(H) }{ P(D) }
 $$
 
 Dabei heißt $P(H)$ der **Prior** (die a priori Wahrscheinlichkeit der Hypothese),
-$P(D)$ die **Evidenz**, $P(D|H)$ die **Likelihood** und $P(H|D)$ der **Posterior** (die a posteriori Wahrscheinlichkeit der Hypothese). Man merkt sich: 'how likely is the data, if the hypothesis were true?' = Likelihood.
+$P(D)$ die **Evidenz**, $P(D|H)$ die **Likelihood** und $P(H|D)$ der **Posterior** (die a posteriori Wahrscheinlichkeit der Hypothese). Man merkt sich: Die Likelihood beantwortet die Frage 'Wie wahrscheinlich sind die Daten, wenn die Hypothese wahr wäre?'.
 Im Gegensatz zu $P(H)$ ist die Likelihood $P(D|H)$ zumindest im Prinzip berechenbar.
 :::
 
@@ -152,7 +169,55 @@ Die Kovarianz ist bilinear: $\operatorname{Cov}(aX+bY, Z) = a\operatorname{Cov}(
 Die Kovarianz ist positiv (semi)definit: $\operatorname{Cov}(X,X) \geq 0$.
 :::
 
+:::{admonition} Beweis
+Symmetrie und Semidefinitheit liest man direkt an der Definition ab ($\operatorname{Cov}(X,X) = \mathbb{E}((X-\mathbb{E}X)^2) \geq 0$). Für die Bilinearität ist $aX + bY - \mathbb{E}(aX+bY) = a(X - \mathbb{E}X) + b(Y - \mathbb{E}Y)$ nach der Linearität des Erwartungswerts; Ausmultiplizieren mit $(Z - \mathbb{E}Z)$ und nochmals Linearität liefern die Behauptung.
+:::
+
+Aus Symmetrie und Bilinearität folgen die Rechenregeln, die man in der Praxis ständig braucht:
+
+:::{admonition} Proposition
+**Rechenregeln der Kovarianz.** Für Zufallsvariablen $X, Y$ und eine Konstante $\beta \in \mathbb{R}$ gilt
+
+1. $\mathbb{V}(X+Y) = \mathbb{V}(X) + \mathbb{V}(Y) + 2\operatorname{Cov}(X,Y)$,
+2. $\operatorname{Cov}(X, \beta) = 0$,
+3. $\operatorname{Cov}(X+\beta, Y) = \operatorname{Cov}(X,Y)$,
+4. $\operatorname{Cov}(X,Y) = \mathbb{E}(XY) - \mathbb{E}(X)\,\mathbb{E}(Y)$.
+:::
+
+:::{admonition} Beweis
+(1) $\mathbb{V}(X+Y) = \operatorname{Cov}(X+Y, X+Y) = \operatorname{Cov}(X,X) + \operatorname{Cov}(X,Y) + \operatorname{Cov}(Y,X) + \operatorname{Cov}(Y,Y)$ nach Bilinearität, und die beiden mittleren Terme sind nach Symmetrie gleich.
+(2) Die konstante Zufallsvariable $\beta$ hat Erwartungswert $\beta$, also ist $\beta - \mathbb{E}\beta = 0$ und $\operatorname{Cov}(X,\beta) = \mathbb{E}((X - \mathbb{E}X) \cdot 0) = 0$.
+(3) Bilinearität und (2): $\operatorname{Cov}(X+\beta, Y) = \operatorname{Cov}(X,Y) + \operatorname{Cov}(\beta, Y) = \operatorname{Cov}(X,Y)$.
+(4) Ausmultiplizieren der Definition und Linearität des Erwartungswerts:
+
+$$
+\mathbb{E}\big(XY - X\,\mathbb{E}Y - Y\,\mathbb{E}X + \mathbb{E}X\,\mathbb{E}Y\big) = \mathbb{E}(XY) - 2\,\mathbb{E}X\,\mathbb{E}Y + \mathbb{E}X\,\mathbb{E}Y = \mathbb{E}(XY) - \mathbb{E}X\,\mathbb{E}Y.
+$$
+
+Regel (4) ist das Gegenstück zur Formel $\mathbb{V}(X) = \mathbb{E}(X^2) - (\mathbb{E}X)^2$ aus dem Kapitel [Erwartungswert und Varianz](erwartungswert.md); für $X = Y$ fallen beide zusammen. Aus (1) folgt außerdem $\mathbb{V}(X_1 + \dots + X_n) = \sum_i \mathbb{V}(X_i)$, sobald die $X_i$ paarweise unkorreliert sind.
+:::
+
+:::{admonition} Satz
+**Unabhängige Zufallsvariablen sind unkorreliert.** Sind $X$ und $Y$ unabhängig (im Sinne des Kapitels [Erwartungswert und Varianz](erwartungswert.md), Abschnitt Unabhängigkeit) und haben sie endliche Varianz, so gilt $\mathbb{E}(XY) = \mathbb{E}(X)\,\mathbb{E}(Y)$ und damit $\operatorname{Cov}(X,Y) = 0$.
+:::
+
+:::{admonition} Beweis
+Im diskreten Fall ist die gemeinsame pmf wegen der Unabhängigkeit ein Produkt, $p(x,y) = p_X(x)\,p_Y(y)$, und die Doppelsumme zerfällt:
+
+$$
+\mathbb{E}(XY) = \sum_{x}\sum_{y} x\,y\,p_X(x)\,p_Y(y) = \Big(\sum_x x\,p_X(x)\Big)\Big(\sum_y y\,p_Y(y)\Big) = \mathbb{E}(X)\,\mathbb{E}(Y).
+$$
+
+Im stetigen Fall ersetzt man die Summen durch Integrale über die gemeinsame Dichte $p(x,y) = p_X(x)\,p_Y(y)$ (gemeinsame Dichten führen wir im nächsten Kapitel ein); die Rechnung ist dieselbe. Mit Regel (4) folgt $\operatorname{Cov}(X,Y) = \mathbb{E}(XY) - \mathbb{E}X\,\mathbb{E}Y = 0$.
+:::
+
+:::{admonition} Bemerkung
+Die Umkehrung gilt nicht: Unkorrelierte Zufallsvariablen können abhängig sein. Ein Beispiel ist $X$ gleichverteilt auf $[-1,1]$ und $Y = X^2$: Dann ist $\mathbb{E}(XY) = \mathbb{E}(X^3) = 0 = \mathbb{E}X\,\mathbb{E}Y$, also $\operatorname{Cov}(X,Y) = 0$, aber $Y$ ist eine Funktion von $X$. Die Kovarianz misst nur *lineare* Zusammenhänge. Für gemeinsam normalverteilte $(X,Y)$ gilt die Umkehrung dagegen doch, wie wir im nächsten Kapitel sehen.
+:::
+
 Damit verhält sich die Kovarianz wie ein Skalarprodukt. Man kann das rigoros machen, und die Kovarianz als Skalarprodukt in einem $\mathcal{L}^2$-Raum von Zufallsvariablen auffassen. Der Korrelationskoeffizient spielt dann die Rolle des Kosinus des Winkels zwischen zwei Zufallsvariablen. Im diskreten Fall ist es genau das, weshalb im maschinellen Lernen oft auch 'cosine similarity' als Maß für die Korrelation angegeben wird.
 
 Man kann etwas üben, in einem Scatterplot zweier Variablen den Korrelationskoeffizienten zu 'sehen',
-etwa mit dem Spiel ['Guess the Correalation' von Omar Wagih](https://www.guessthecorrelation.com).
+etwa mit dem Spiel ['Guess the Correlation' von Omar Wagih](https://www.guessthecorrelation.com).
+
+Was Kovarianz und Korrelation geometrisch bedeuten, sehen wir im nächsten Kapitel an der multivariaten Normalverteilung: Dort beschreibt die Kovarianzmatrix Form und Lage der Ellipsen, die die Dichte als Höhenlinien hat.

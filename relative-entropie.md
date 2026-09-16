@@ -139,7 +139,7 @@ $$
 :::
 
 :::{admonition} Beweis
-$H(p \Vert r) = -\sum p_i \log \left( \dfrac{r_i}{p_i} \right)$
+$H(p \Vert r) = \sum p_i \log \left( \dfrac{p_i}{r_i} \right) = -\sum p_i \log \left( \dfrac{r_i}{p_i} \right)$ (wegen $\log(a/b) = -\log(b/a)$)
 $\geq - \log \left( \sum p_i \dfrac{r_i}{p_i} \right) \geq - \log \left( \sum r_i \right) = -\log 1 = 0$
 
 dabei haben wir wieder die Konkavität des Logarithmus ausgenutzt.
@@ -221,6 +221,8 @@ $$
 I(X;Y) := H(X)+H(Y)-H(X,Y)= H(X,Y  \Vert X\times Y)
 $$
 
+Hier steht $H(\cdot \Vert \cdot)$ für die relative Entropie der *Verteilung* von $(X,Y)$ zur Produktverteilung $P_X \times P_Y$, also der Verteilung, die $(X,Y)$ hätte, wenn $X$ und $Y$ unabhängig wären.
+
 Ein sehr häufiger Anwendungsfall der gemeinsamen Information liegt im Clustering:
 Wenn man zu einem Datensatz mit einer Methode der Wahl zu Clustern gekommen ist,
 also eine geschätzte Klassenzugehörigkeit (etwa $1,2$ oder $3$ als Label),
@@ -277,11 +279,11 @@ Entropie, bedingte Entropie, Verbundentropie und gemeinsame Information in einem
 Die *Kreuzentropie* von $X$ (verteilt nach $p \in \Delta^n$) und $Y$ (verteilt nach $r \in \Delta^n$) ist
 
 $$
-H(X; Y) = \mathbb{E}_X I(Y) = \sum_{i,\ r_i > 0}^n p_i \log r_i \in \mathbb{R} \cup \{\infty\}.
+H(X; Y) = \mathbb{E}_X I(Y) = -\sum_{i,\ r_i > 0}^n p_i \log r_i \in \mathbb{R} \cup \{\infty\}.
 $$
 :::
 
-*Achtung*: Leider wird die Kreuzentropie von manchen Autoren auch mit $H(X, Y)$ notiert, was man also leicht mit der Verbundentropie verwechseln kann.
+*Achtung*: Leider wird die Kreuzentropie von manchen Autoren auch mit $H(X, Y)$ notiert, was man also leicht mit der Verbundentropie verwechseln kann. Außerdem ähnelt die Notation $H(X;Y)$ der gemeinsamen Information $I(X;Y)$ von oben, die etwas ganz anderes ist.
 
 :::{admonition} Proposition
 $$
@@ -295,7 +297,9 @@ Ansonsten ist die Kreuzentropie eine in der Theorie deutlich seltener verwendete
 
 ## Stetige Entropie
 
-Hinweis: Dieses Unterkapitel ist nicht besonders klausurrelevant.
+:::{note}
+Dieses Unterkapitel ist nicht klausurrelevant und greift auf Maßtheorie vor (Radon-Nikodym-Ableitung, invariante Maße), die wir im Kurs nicht behandeln. Beim ersten Lesen genügt es, die Kernaussage mitzunehmen: Im Stetigen ist Entropie nur *relativ* zu einem Bezugsmaß sinnvoll definiert, die relative Entropie ist also der eigentlich grundlegende Begriff.
+:::
 
 Man könnte meinen, dass sich die Formel $H(p) = -\sum p_i \log p_i$ verallgemeinert zu $H(P) = -\int \log P dP$, aber das ergibt so keinen Sinn. Man kann aber das folgende tun:
 

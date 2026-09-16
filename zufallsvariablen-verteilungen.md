@@ -50,7 +50,7 @@ $$ = \sum_{i \geq 1} P_\Omega \left( X^{-1} A_i \right) = \sum_{i \geq 1} P_X(A_
 
 :::{admonition} Beispiel
 In einem Raum spielen $30$ Kinder. Davon haben $10$ einen blauen Pulli an,
-$10$ einen roten, $5$ einen gelben und weitere $5$ einen schwarzeln Pulli an.
+$10$ einen roten, $5$ einen gelben und weitere $5$ einen schwarzen Pulli an.
 Wir modellieren $\Omega =$ Menge der Kinder, $X \colon \Omega \to \{r,g,b,s\}$ die Abbildung,
 die jedes Kind auf den Anfangsbuchstaben der Pullifarbe abbildet.
 Die Verteilung von $X$ ist nun definiert, es ist ein Wahrscheinlichkeitsmaß auf der Menge $\{r,g,b,s\}$.
@@ -69,8 +69,7 @@ auch mit Verteilungen, die keine Gleichverteilung sind.
 
 ## Wahrscheinlichkeitsmassefunktion
 
-Die typische Art, im Alltag mit Wahrscheinlichkeiten umzugehen, ist die der Wahrscheinlichkeitsdichtefunktion, oft mit $p(x)$ im Kontrast zu $P$ bezeichnet.
-Für diskrete Verteilungen wird diese allerdings als Wahrscheinlichkeitsmassefunktion bezeichnet, ebenfalls mit der Notation $p(x)$:
+Im Alltag rechnet man mit Wahrscheinlichkeiten meist nicht über das Maß $P$ auf Ereignissen, sondern über eine Funktion $p(x)$, die jedem möglichen Wert $x$ direkt seine Wahrscheinlichkeit zuordnet. Im diskreten Fall, um den es in diesem Kapitel geht, heißt diese Funktion *Wahrscheinlichkeitsmassefunktion*; das stetige Gegenstück, die Dichte, lernen wir in einem späteren Kapitel kennen:
 
 :::{admonition} Definition
 Eine Funktion $p \colon \Omega \to [0,1]$ heißt *Wahrscheinlichkeitsmassefunktion* (*pmf*, probability mass function) einer Verteilung $P$ auf $\Omega$,
@@ -83,6 +82,7 @@ Im vorigen Beispiel haben wir $P_X(\{r\}) = \frac{10}{30}$, $P_X(\{g\}) = \frac{
 $$p(r):=\frac{10}{30},\ p(g):=\frac{5}{30},\ p(b):=\frac{10}{30},\ p(s):=\frac{5}{30}$$
 
 die Definition einer pmf für $P_X$. Man sagt auch, $p$ ist die pmf von $X$.
+Ein anderer gebräuchlicher Name für die pmf ist *Zähldichte*.
 
 Die pmf der Gleichverteilung auf $\Omega$ ist $p(\omega) = \frac{1}{|\Omega|}$.
 :::
@@ -139,6 +139,10 @@ Die Gleichverteilung entspricht $p \in \Delta_n$ mit $p_i = \frac{1}{n}$, das is
 Die Dirac-Verteilung mit Masse an $\xi \in \Omega$ entspricht $p \in \Delta_n$ mit $p_i = 1$ falls $\omega_i = \xi$ und $p_i=0$ sonst.
 Geometrisch ist das ein Eckpunkt von $\Delta_n$ (davon gibt es $n$ Stück).
 :::
+
+Eine so gegebene Verteilung heißt auch *kategoriale Verteilung*; wir treffen sie im Kapitel
+[Wichtigste diskrete Verteilungen](wichtigste-diskrete-verteilungen.ipynb) wieder, wo wir auch
+ihren Erwartungswert und ihre Varianz ausrechnen.
 
 Es ist also $\Delta_n$ der Raum aller möglichen Wahrscheinlichkeitsverteilungen auf einer $n$-elementigen Menge. Für $n=3$ kann man sich das zweidimensionale gefüllte Dreieck $\Delta_3 \subset \mathbb{R}^3$ noch gut vorstellen.
 

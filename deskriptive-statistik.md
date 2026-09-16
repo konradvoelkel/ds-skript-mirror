@@ -41,13 +41,13 @@ Man kann die verschiedenen Kulturen des Modellierens noch etwas feiner aufschlü
 
 ## Deskriptive Statistik
 
-Die beschreibende (deskriptive) Statistik besteht aus den Datenanalysen, die *vor* der schließenden (inferentiellen) Statistik gemacht werden. Das besteht vor Allem in der Beschreibung der Daten durch verschiedene Maßzahlen.
+Die beschreibende (deskriptive) Statistik besteht aus den Datenanalysen, die *vor* der schließenden (inferentiellen) Statistik gemacht werden. Das besteht vor allem in der Beschreibung der Daten durch verschiedene Maßzahlen.
 
 * Stichprobe = Sample, hat einen Umfang = Länge = Anzahl der Elemente / Zeilen / Instanzen / Ergebnisse
   
   Abzugrenzen von der Stichprobe ist die *Population*, das ist die Grundgesamtheit aller möglichen Ergebnisse, mit einer gewissen Verteilung.
   
-* Bei tabellarischen Daten heißen die Spalten auch Variablen, Attribute, Merkmale, Features während die Möglichen Werte *Ausprägungen* heißen.
+* Bei tabellarischen Daten heißen die Spalten auch Variablen, Attribute, Merkmale, Features während die möglichen Werte *Ausprägungen* heißen.
   Je nach Art eines Merkmals unterscheidet man verschiedene Skalenarten:
   * Nominalskala: kategoriell, diskret, keine feste Reihenfolge (z.B. Geschlecht)
   * Ordinalskala: Werte können geordnet werden, aber ohne Abstandsmaß (z.B. Rangplätze)
@@ -86,7 +86,7 @@ Die beschreibende (deskriptive) Statistik besteht aus den Datenanalysen, die *vo
     
       Wenn wir mit Einheiten rechnen, sehen wir ein Problem mit der Varianz: ist eine Zufallsvariable $X$ oder ein Vektor $x$ (etwa eine Spalte einer Tabelle) in der Einheit Meter (eine Verhältnisskala), so wird beim Berechnen der Varianz eine Summe bzw. ein Integral über Quadrate gebildet, somit ist die Varianz in der Einheit Quadratmeter. Man sieht daran auch, dass die Varianz generell skalenabhängig ist, d.h. beim Vergleich zweier Variablen, die eine in Meter, die andere in Zentimeter, ist die Varianz kein guter Vergleich. Daraus die Wurzel zu ziehen korrigiert den ersten Fehler, und liefert mit der Standardabweichung ein Maß in der gleichen Einheit wie den Erwartungswert.
       
-      Achtung: es gibt zwei Formeln mit dem Namen "Stichprobenstandardabweichung", einmal mit $n$ im Nenner, einmal mit $n-1$. Diesen Umstand nennt man auch *Bessel-Korrektur* und wir befassen uns im Rahmen der Schätztheorie noch damit. Ohne weiteren Hinweis ist die $n$-Version die "richtige".
+      Achtung: es gibt zwei Formeln mit dem Namen "Stichprobenstandardabweichung", einmal mit $n$ im Nenner, einmal mit $n-1$. Diesen Umstand nennt man auch *Bessel-Korrektur* und wir befassen uns im Rahmen der Schätztheorie noch damit. In diesem Skript ist ohne weiteren Hinweis die $n$-Version gemeint (so rechnet auch `numpy.std`); pandas (`DataFrame.std`) und `scipy.stats` teilen dagegen standardmäßig durch $n-1$ (`ddof=1`).
       
     * dispersion precedes location:
       
@@ -109,6 +109,32 @@ Die beschreibende (deskriptive) Statistik besteht aus den Datenanalysen, die *vo
 
 [Für eine kurze lockere Übersicht über einen Teil der Frage ``Was sind eigentlich Daten'', insb. der Frage der Skalen, gibt es ein Video vom HeiCAD-Programm ``KI für Alle''](https://www.youtube.com/watch?v=hJVOudzjnEI).
     
+### Durchgerechnetes Beispiel
+
+Nehmen wir die $n = 8$ Werte $x = (7,\ 2,\ 9,\ 4,\ 4,\ 12,\ 5,\ 3)$, etwa: Anzahl E-Mails pro Tag in einer Woche plus einem Tag.
+
+* **Sortieren**: $(2,\ 3,\ 4,\ 4,\ 5,\ 7,\ 9,\ 12)$.
+* **Modus**: $4$, der einzige Wert, der mehrfach vorkommt.
+* **Median**: $n$ ist gerade, also das Mittel der beiden mittleren Werte $4$ und $5$: $\texttt{median}(x) = 4{,}5$.
+* **Quartile**: Die untere Hälfte $(2,3,4,4)$ hat den Median $Q_1 = 3{,}5$, die obere Hälfte $(5,7,9,12)$ den Median $Q_3 = 8$; der Interquartilsabstand ist $Q_3 - Q_1 = 4{,}5$. Achtung: Für Quartile gibt es mehrere Konventionen. `numpy.percentile` interpoliert standardmäßig linear zwischen den sortierten Werten und liefert hier $Q_1 = 3{,}75$ und $Q_3 = 7{,}5$.
+* **Spannweite**: $12 - 2 = 10$. **Bereichsmitte**: $(12 + 2)/2 = 7$.
+* **Mittelwert**: $\texttt{mean}(x) = \frac{7+2+9+4+4+12+5+3}{8} = \frac{46}{8} = 5{,}75$.
+* **Varianz** ($n$-Version): Die Abweichungen vom Mittelwert sind $(1{,}25,\ -3{,}75,\ 3{,}25,\ -1{,}75,\ -1{,}75,\ 6{,}25,\ -0{,}75,\ -2{,}75)$, ihre Quadrate $(1{,}5625,\ 14{,}0625,\ 10{,}5625,\ 3{,}0625,\ 3{,}0625,\ 39{,}0625,\ 0{,}5625,\ 7{,}5625)$ summieren sich zu $79{,}5$, also $\sigma^2 = 79{,}5 / 8 = 9{,}9375$.
+* **Standardabweichung**: $\sigma = \sqrt{9{,}9375} \approx 3{,}15$. Mit Bessel-Korrektur: $\sqrt{79{,}5 / 7} \approx 3{,}37$.
+* Probe: $|\texttt{median}(x) - \texttt{mean}(x)| = 1{,}25 \leq \sigma$. Der Mittelwert liegt über dem Median, weil der Ausreißer $12$ ihn nach oben zieht: die Verteilung ist rechtsschief.
+
+Dasselbe in Numpy (die Quartile mit der linearen Interpolation von `numpy.percentile`):
+
+```python
+import numpy as np
+x = np.array([7, 2, 9, 4, 4, 12, 5, 3])
+print(np.median(x))            # 4.5
+print(np.percentile(x, [25, 75]))  # [3.75 7.5 ]
+print(np.mean(x), np.var(x))   # 5.75 9.9375
+print(np.std(x))               # 3.1524... (n-Version)
+print(np.std(x, ddof=1))       # 3.3701... (Bessel-Korrektur, n-1)
+```
+
 ## Visualisierung
 
 Wozu visualisieren?
@@ -150,7 +176,7 @@ The Datasaurus Dozen, inspiriert von Anscombe's Quartett.
     
   * Tortendiagramm
   
-    Generell hat sich herausgestellt, dass sich immer dann, wenn man ein Tortendiagramm verwenden kann, auch einen Barplot machen kann, der lesbarer ist. Tortendiagramme haben daher vor Allem einen Wert, wenn man einen Text auflockern will, ohne wesentlich auf die dargestellte Statistik einzugehen. Grundsätzlich geeignet sind Merkmale in Intervallskalen, da die Torte Anteile eines Ganzen darstellt.
+    Generell hat sich herausgestellt, dass sich immer dann, wenn man ein Tortendiagramm verwenden kann, auch einen Barplot machen kann, der lesbarer ist. Tortendiagramme haben daher vor allem einen Wert, wenn man einen Text auflockern will, ohne wesentlich auf die dargestellte Statistik einzugehen. Grundsätzlich geeignet sind Merkmale in Intervallskalen, da die Torte Anteile eines Ganzen darstellt.
     
   * Violinenplot
   

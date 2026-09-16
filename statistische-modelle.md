@@ -9,7 +9,7 @@ Man spricht von einem **statistischen Modell**, einer **Statistik** und verschie
 
 Die Lösung ist, sich auf solche statistischen Modelle einzuschränken, wo wir die grobe Struktur des richtigen Ergebnisses für einen Schätzer soweit beschreiben können, dass man eben doch zu Aussagen kommen kann wie "im Grenzwert schätzt dieser Schätzer den Erwartungswert jener Statistik auf den Daten". Und dann kann man darüber reden, wie gut die Werte abseits vom Grenzwert, für etwas kleinere Samples aussehen. Wir lernen dabei noch einen für die Data Science und das Maschinelle Lernen sehr wichtigen Begriff kennen: Das **Maximum Likelihood**-Prinzip.
 
-Ein sehr konkretes Beispiel vorab: Gegeben Daten, die als Vektor $x$ der Länge $n$ von reellen Zahlen ($\texttt{float}$) vorliegen, von denen wir wissen, dass sie als Stichprobe einer eindimensional normalverteilten Zufallsvariable $X$ mit Erwartungswert $\mu(X)$ und Varianz $\sigma^2(X)$ enstanden sind, wollen wir die Standardabweichung $\sigma(X)$ schätzen. Dazu findet man in den Büchern zwei verschiedene Formeln: $\sigma(x)$ und $\sigma^\ast(x)$, die sich nur durch den Nenner unterscheiden:
+Ein sehr konkretes Beispiel vorab: Gegeben Daten, die als Vektor $x$ der Länge $n$ von reellen Zahlen ($\texttt{float}$) vorliegen, von denen wir wissen, dass sie als Stichprobe einer eindimensional normalverteilten Zufallsvariable $X$ mit Erwartungswert $\mu(X)$ und Varianz $\sigma^2(X)$ entstanden sind, wollen wir die Standardabweichung $\sigma(X)$ schätzen. Dazu findet man in den Büchern zwei verschiedene Formeln: $\sigma(x)$ und $\sigma^\ast(x)$, die sich nur durch den Nenner unterscheiden:
 
 $$
 \sigma(x)^2 = \dfrac{1}{n} \sum_{i=1}^n (x_i-\mu)^2,\qquad \sigma^\ast(x)^2 = \dfrac{1}{n-1} \sum_{i=1}^n (x_i-\mu)^2
@@ -109,7 +109,7 @@ Niemand hat gesagt, dass $T$ ein vernünftiger, guter Schätzer sein muss - tats
 
 :::{admonition} Beispiel
 Im Standardmodell einer univariaten Normalverteilung mit Stichprobengröße $N$ ist die Projektion $\Theta \to \mathbb{R}$ auf die erste Komponente, also den Erwartungswert $\mu$ eine Abbildung $\tau$, deren Schätzer uns interessieren.
-Ein möglicher Schätzer ist die Statistik $N \colon \mathbb{R}^N \to \mathbb{R}$, die konstant $0$ ist (eine sehr konservative Schätzung).
+Ein möglicher Schätzer ist die Statistik $c \colon \mathbb{R}^N \to \mathbb{R}$, die konstant $0$ ist (eine sehr konservative Schätzung).
 Ein anderer möglicher Schätzer ist das arithmetische Mittel $\texttt{mean} \colon \mathbb{R}^N \to \mathbb{R}$, für den tatsächlich gilt, dass $\texttt{mean}(x)$ für große $N$ beliebig nah an $\mu(X)$ herankommt, wenn $X$ die gesampelte normalverteilte Zufallsvariable ist.
 :::
 
@@ -139,7 +139,7 @@ Im Standardmodell einer $N$-fach wiederholten univariaten Normalverteilung ist d
 :::
 
 :::{admonition} Beispiel
-Für die Varianz ist der Schätzer $\sigma_N^2 = \frac{1}{N} \sum_{i=1}^N (X_i - \texttt{mean}(X_j))^2$ nicht erwartungstreu, denn $\mathbb{E}(\sigma_N^2) = \frac{N-1}{N}\sigma^2(X)$. Der Bias ist also $-\frac{\sigma^2(X)}{n}$, was für $n\to\infty$ verschwindet. Damit ist der Schätzer asymptotisch erwartungstreu.
+Für die Varianz ist der Schätzer $\sigma_N^2 = \frac{1}{N} \sum_{i=1}^N (X_i - \texttt{mean}(X_j))^2$ nicht erwartungstreu, denn $\mathbb{E}(\sigma_N^2) = \frac{N-1}{N}\sigma^2(X)$. Der Bias ist also $-\frac{\sigma^2(X)}{N}$, was für $N\to\infty$ verschwindet. Damit ist der Schätzer asymptotisch erwartungstreu.
 
 Der 'korrigierte' Schätzer $\frac{N}{N-1} \sigma_N^2 = \frac{1}{N-1} \sum_{i=1}^N (X_i - \texttt{mean}(X_j))^2$ ist erwartungstreu.
 :::
@@ -153,7 +153,13 @@ Ein solcher Schätzer hat also minimale Streuung um den zu schätzenden Wert unt
 
 **Ausblick**
 
-Im Allgemeinen ist es sehr schwer, gleichmäßig beste erwartungstreue Schätzer zu bestimmen (es gibt sie im Allgemeinen nicht). Ausblick: Die *Cramer-Rao-Ungleichung* für *reguläre* statistische Modelle liefert eine Abschätzung der Varianz eines Schätzers durch die *Fisher-Information* (eine Größe, die sich auch aus der relativen Entropie berechnen lässt) und erlaubt so, gleichmäßig beste Schätzer daran zu erkennen, dass sie diese Varianzschranke nicht überschreiten. Für Verteilungen aus einer sogenannten *Exponentialfamilie* (in gewissem Sinne eine gemeinsame Verallgemeinerung der Normalverteilung, Binomialverteilung, Gamma-Verteilung, etc.) lassen sich die gleichmäßig besten Schätzer damit direkt beschreiben.
+Im Allgemeinen ist es sehr schwer, gleichmäßig beste erwartungstreue Schätzer zu bestimmen (es gibt sie im Allgemeinen nicht). Ausblick: Die *Cramer-Rao-Ungleichung* für *reguläre* statistische Modelle liefert eine Abschätzung der Varianz eines Schätzers durch die *Fisher-Information* (eine Größe, die sich auch aus der relativen Entropie berechnen lässt) und erlaubt so, gleichmäßig beste Schätzer daran zu erkennen, dass sie diese Varianzschranke nicht überschreiten. Für einen erwartungstreuen Schätzer $T$ eines reellen Parameters $\theta$ lautet sie
+
+$$
+\mathbb{V}_\theta(T) \geq \frac{1}{I(\theta)}, \qquad I(\theta) := \mathbb{E}_\theta\left[\left(\frac{\partial}{\partial\theta} \log p_\theta(X)\right)^2\right],
+$$
+
+wobei $I(\theta)$ die *Fisher-Information* ist. Ein erwartungstreuer Schätzer, der diese Schranke annimmt, ist also gleichmäßig bester Schätzer. Für Verteilungen aus einer sogenannten *Exponentialfamilie* (in gewissem Sinne eine gemeinsame Verallgemeinerung der Normalverteilung, Binomialverteilung, Gamma-Verteilung, etc.) lassen sich die gleichmäßig besten Schätzer damit direkt beschreiben.
 
 
 ### Maximum Likelihood
@@ -167,6 +173,12 @@ Wenn wir also Daten $x$ gegeben haben, drückt die Likelihood-Funktion zu $x$ f�
 :::{admonition} Definition
 Ein Schätzer $T \colon \mathcal{X} \to \Theta$ für den Parameter $\theta$ heißt **Maximum-Likelihood-Schätzer** (maximum likelihood estimator, MLE), wenn für alle $x \in \mathcal{X}$ gilt: $\rho(x, T(x)) = \max_{\theta \in \Theta} \rho(x, \theta)$, also wenn $T(x)$ die Likelihood von $x$ maximiert, für alle $x$. Man schreibt auch $T(x) = argmax L_x$.
 :::
+
+Ein erstes Beispiel dafür haben wir bereits gerechnet, ohne den Namen zu benutzen: Im Kapitel
+[Wichtigste diskrete Verteilungen](wichtigste-diskrete-verteilungen.ipynb) haben wir zu $k$ Erfolgen
+in $n$ Versuchen dasjenige $p$ bestimmt, unter dem diese Beobachtung am wahrscheinlichsten ist, und
+$\hat p = \frac{k}{n}$ erhalten. In der Sprache dieses Kapitels ist das der Maximum-Likelihood-Schätzer
+im Binomialmodell $\mathcal{X} = \{0,\dots,n\}$, $\Theta = [0,1]$, $P_p = \operatorname{Bin}(n,p)$.
 
 :::{admonition} Beispiel
 Im $N$-fachen univariat normalverteilten Modell ist $x \mapsto (\texttt{mean}(x), \sigma(x))$ ein Maximum-Likelihood-Schätzer für den Parameter $(\mu(X), \sigma(X))$. Der Schätzer $\sigma^\ast$ ist hingegen kein Maximum-Likelihood-Schätzer für $\sigma(X)$. Also können sich Erwartungstreue und Maximum-Likelihood-Prinzip gegenseitig ausschließen.
@@ -189,6 +201,36 @@ Anstatt die Likelihood von $x$ über alle möglichen $\theta$ zu maximieren, kan
 
 Wenn z.B. $\rho$ die Form $e^{A}e^{B}$ hat (etwa bei einem $2$-fachen Produktmodell), hat $\log\rho$ die Form $A+B$ und Ableitungen gleich $0$ setzen wird deutlich einfacher. Auch mit diesem Trick lässt sich aber im Allgemeinen keine analytische geschlossene Lösung finden - also kann die Informatik mit Approximations-Algorithmen glänzen, wie z.B. den *Expectation Maximization Algorithmus*, den wir später in der Vorlesung noch behandeln.
 
+:::{admonition} Beispiel
+**Maximum Likelihood für die Exponentialverteilung.**
+Wir beobachten $n$ unabhängige Wartezeiten $x_1,\dots,x_n \geq 0$ und modellieren sie als
+$\operatorname{Exp}(\lambda)$-verteilt, mit Dichte $f_\lambda(x) = \lambda e^{-\lambda x}$.
+Wegen der Unabhängigkeit ist die Likelihood das Produkt der Einzeldichten:
+
+$$
+L(\lambda) = \prod_{i=1}^n \lambda e^{-\lambda x_i} = \lambda^n e^{-\lambda \sum_{i=1}^n x_i}.
+$$
+
+Hier lohnt sich der Trick sofort — aus dem Produkt wird eine Summe:
+
+$$
+\ell(\lambda) := \log L(\lambda) = n\log\lambda - \lambda \sum_{i=1}^n x_i.
+$$
+
+Ableiten und gleich $0$ setzen liefert
+
+$$
+\ell'(\lambda) = \frac{n}{\lambda} - \sum_{i=1}^n x_i \overset{!}{=} 0
+\qquad\Longleftrightarrow\qquad
+\hat\lambda = \frac{n}{\sum_{i=1}^n x_i} = \frac{1}{\texttt{mean}(x)}.
+$$
+
+Wegen $\ell''(\lambda) = -\frac{n}{\lambda^2} < 0$ ist das tatsächlich ein Maximum.
+Das Ergebnis ist wieder eingängig: Die Exponentialverteilung hat den Erwartungswert
+$\frac{1}{\lambda}$, also schätzen wir $\frac{1}{\lambda}$ durch das Stichprobenmittel.
+Für die Beobachtungen $1, 2, 3, 4$ etwa ist $\texttt{mean}(x) = 2{,}5$ und damit $\hat\lambda = 0{,}4$.
+:::
+
 :::{admonition} Proposition
 Wenn $\theta_0$ der 'wahre' Parameter für $X$ ist (mit dem $x$ gesampelt wurde), so konvergiert der Maximum-Likelihood-Schätzwert $\hat{\theta}$ für eine Stichprobe der Größe $n$ gegen den Wert $\theta$, für den die relative Entropie zwischen $P_{\theta_0}$ und $P_{\theta}$ minimiert wird (wenn das Modell gut aufgesetzt ist, ist dieses Minimum genau $0$). Um das einzusehen, benutzt man den zuvor erwähnten Trick und das Gesetz der großen Zahlen und den Zusammenhang, dass der Erwartungswert der log-Likelihood gleich der negativen Kreuzentropie $-H(x;P_{\theta_0})$ ist.
 :::
@@ -208,12 +250,12 @@ Wir rechnen also mit einer mittleren Wartezeit zwischen den Server-Aufrufen von 
 :::
 
 :::{admonition} Beispiel
-Der k-Means-Algorithmus kann als Schätzer interpretiert werden:
+Der k-Means-Algorithmus (siehe das Kapitel [k-Means](kmeans.ipynb)) kann als Schätzer interpretiert werden:
 das statistische Modell ist $\mathcal{X} = \mathbb{R}^{nN}$, wenn $n$ die Dimension der Daten ist (also bei $4$ reellen Variablen, etwa im Iris-Datensatz, $n=4$) und $N$ die Stichprobengröße (bei Iris ist $N=150$).
 
 Der Parameterraum ist $\mathbb{R}^{nk}$ und die Verteilung zu einem Parameter $\theta = (c_1,\dots,c_k) \in \mathbb{R}^{nk}$ (mit $c_i \in \mathbb{R}^n$) ist ein gemischtes Modell aus multivariaten Normalverteilungen mit Erwartungswert $c_i$ und der $n\times n$-Einheitsmatrix als Kovarianzmatrix.
 
-Die 'perfekte' k-Means-Lösung, also die Zentroide $(c_1,\dots,c_k)$, die der k-Means-Algorithmus versucht, zu bestimmen, sind diejenigen, für die die Summe der euklidischen Abstände eines jeden Punktes $x_i$ eines Samples $x \in \mathcal{X}$ minimal sind. Das sind genau die Zentroide, für die die Likelihood der Daten unter der entsprechenden gemischten Verteilung maximal wird.
+Die 'perfekte' k-Means-Lösung, also die Zentroide $(c_1,\dots,c_k)$, die der k-Means-Algorithmus versucht, zu bestimmen, sind diejenigen, für die die Summe der quadrierten euklidischen Abstände eines jeden Punktes $x_i$ eines Samples $x \in \mathcal{X}$ zu seinem nächsten Zentroid minimal ist. Das sind genau die Zentroide, für die die Likelihood der Daten unter der entsprechenden gemischten Verteilung maximal wird.
 :::
 
 Das führt uns auf eine offensichtliche Verallgemeinerung des k-Means-Verfahrens: wir könnten kompliziertere Kovarianzmatrizen erlauben, und damit die Likelihood weiter vergrößern. Das auftretende Problem ist dann allerdings, dass sich auch für die log-Likelihood keine geschlossene Form bestimmen lässt, und man sich einen neuen Algorithmus zur Schätzung überlegen muss!

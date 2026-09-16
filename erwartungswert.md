@@ -35,7 +35,7 @@ Achtung: So definiert können mehrere Zahlen 'der' Median sein. It's not a bug, 
 Diese Definition mag ungewohnt sein, aber sie erfüllt die folgende Eigenschaft:
 
 :::{admonition} Proposition
-Wenn $n \geq 3$ und $v \in \mathbb{R}^n$ sortiert ist, also $v_i < v_j$ für $ < j$, dann ist mit $v' := (v_2,\dots,v_{n-1}) \in \mathbb{R}^{n-2}$ ein neuer (kürzerer) Vektor definiert, sodass für alle $c \in \mathbb{R}$ mit $v_1 \leq c \leq v_n$ gilt:
+Wenn $n \geq 3$ und $v \in \mathbb{R}^n$ sortiert ist, also $v_i < v_j$ für $i < j$, dann ist mit $v' := (v_2,\dots,v_{n-1}) \in \mathbb{R}^{n-2}$ ein neuer (kürzerer) Vektor definiert, sodass für alle $c \in \mathbb{R}$ mit $v_1 \leq c \leq v_n$ gilt:
 
 $\texttt{mae}(v,c) = \texttt{mae}(v',c) + \dfrac{v_n - v_1}{n}$.
 :::
@@ -57,7 +57,7 @@ $$
 $$
 :::
 
-Da der Median also relativ schlecht die Daten wiederspiegelt (von den meisten Daten ist er völlig unabhängig!), brauchen wir ein besseres Maß.
+Da der Median also relativ schlecht die Daten widerspiegelt (von den meisten Daten ist er völlig unabhängig!), brauchen wir ein besseres Maß.
 *Idee*: wir quadrieren die individuellen Fehlerterme in der Summe, damit große Fehler einen größeren Teil zur Summe beitragen. Praktisch: durch das Quadrieren muss man nicht mehr explizit den Absolutbetrag nehmen (das geschieht automatisch).
 
 ### Quadratische Abweichung
@@ -69,7 +69,7 @@ $$
 \texttt{mse}(v,w) := \sum_{i=1}^n \dfrac{{\left(v_i - w_i\right)}^2}{n}
 $$
 
-und für $c \in \mathbb{R}^n$ schreiben wir $\texttt{mse}(v,c) := \texttt{mse}(v, (c)_{i=1}^n)$.
+und für $c \in \mathbb{R}$ schreiben wir $\texttt{mse}(v,c) := \texttt{mse}(v, (c)_{i=1}^n)$.
 :::
 
 :::{admonition} Proposition
@@ -84,7 +84,7 @@ Dazu faktorisieren wir aus: $(v_i - \texttt{mean}(v) - \delta)^2 = (v_i - \textt
 
 $$
 \begin{aligned}
-\texttt{mse}(v,c) &= \texttt{mse}(v,\texttt{mean}(v) + \delta) = \sum_{i=1}^n \dfrac{(v - (\texttt{mean}(v) + \delta))^2}{n} \\
+\texttt{mse}(v,c) &= \texttt{mse}(v,\texttt{mean}(v) + \delta) = \sum_{i=1}^n \dfrac{(v_i - (\texttt{mean}(v) + \delta))^2}{n} \\
                   &= \dfrac{1}{n} \sum_{i=1}^n \left( {\left(v_i - \texttt{mean}(v)\right)}^2 - 2\delta \left(v_i - \texttt{mean}(v)\right) + \delta^2 \right) \\
                   &= \left( \dfrac{1}{n} \sum_{i=1}^n \left( (v_i - \texttt{mean}(v))^2 \right) \right) - 2\delta \left( \sum_{i=1}^n \frac{v_i}{n} - \texttt{mean}(v) \right) + \delta^2 \\
                   &= \texttt{mse}(v,\texttt{mean}(v)) - 2\delta(\texttt{mean}(v) - \texttt{mean}(v)) + \delta^2 \\
@@ -222,7 +222,7 @@ Für eine zentrierte Zufallsvariable, d.h. mit $\mathbb{E}(X) = 0$, ist offensic
 :::{admonition} Definition
 Man nennt allgemein auch $\mathbb{E}(X^n)$ das $n$-te *Moment* und $\mathbb{E}((X - \mathbb{E}X)^n)$ das $n$-te *zentrale Moment*.
 Der Erwartungswert ist also das erste Moment und die Varianz das zweite zentrale Moment.
-Das dritte zentrale Moment heißt auch *Schiefe* (skewness) und das fünfte *Wölbung*.
+Das dritte zentrale Moment heißt auch *Schiefe* (skewness) und das vierte *Wölbung* (kurtosis).
 Die Schiefe ist ein Maß dafür, wie symmetrisch die Verteilung um den Erwartungswert ist.
 Man nennt $\sigma(X) := \sqrt{\mathbb{V}(X)}$ die *Standardabweichung* von X.
 :::
@@ -253,13 +253,13 @@ Daran sehen wir: Abweichungen von $2\sigma$ haben eine Wahrscheinlichkeit $\leq 
 Wendet man das Gesetz der großen Zahlen auf die Zufallsvariable ${\left(X-\mathbb{E}(X)\right)}^2$ an, so sieht man, dass auch die Standardabweichung gegen die Sample-Standardabweichung konvergiert. Damit ist also die Sample-Standardabweichung ein guter Ersatz, wenn sich die wahre Varianz der Zufallsvariable nicht bestimmen lässt.
 
 
-### Entropie
+## Entropie
 
 :::{admonition} Definition
-Bei einem diskreten Wahrscheinlichkeitsraum $\Omega$ nennen wir für $x \in \Omega$ die *Information* von $x$
+Bei einem diskreten Wahrscheinlichkeitsraum $\Omega$ nennen wir für $x \in \Omega$ die *Information* (auch *Selbstinformation*) von $x$
 
 $$
-I(x) := -\log_b(P(\{x\}).
+I(x) := -\log_b(P(\{x\})).
 $$
 
 Dabei ist die Basis $b$ des Logarithmus in der Regel $2$, aber letztlich nicht so wichtig.
@@ -280,6 +280,14 @@ also $I(x) = -\log_2(P(\{x\})) = -\log_2\frac{1}{n} = \log_2(n)$ und somit
 $H(X) = \sum_{i=1}^n \frac{\log_2(n)}{n} = \log_2(n)$.
 Diese Zahl verrät uns, dass wir im Mittel $\log_2(n)$ bits an Information brauchen, um ein Sample der Größe $n$ zu rekonstruieren, wenn wir die Verteilung von $X$ kennen. Es gibt andere Verteilungen, die es erlauben mit im Mittel weniger Information ein Sample zu rekonstruieren. Genau genommen sogar jede, denn die Gleichverteilung hat maximale Entropie unter allen diskreten Verteilungen. Sie korrespondiert dazu, dass wir maximal wenig wissen und daher alle Ergebnisse als gleich wahrscheinlich annehmen.
 :::
+
+Am anderen Ende der Skala steht die Dirac-Verteilung: Ist $P(\{\xi\}) = 1$ für ein einziges $\xi \in \Omega$
+und $P(\{\omega\}) = 0$ für alle anderen, so ist $I(\xi) = -\log_2(1) = 0$ und damit $H(X) = 0$
+(für die Summanden mit $P(\{\omega\}) = 0$ verwenden wir die übliche Konvention $0\log 0 = 0$).
+Das ist der kleinstmögliche Wert, denn $H(X)$ ist eine Summe nichtnegativer Terme.
+Auf einer endlichen Menge $\Omega$ gilt also stets $0 \leq H(X) \leq \log_2|\Omega|$,
+wobei das Minimum genau von den Dirac-Verteilungen angenommen wird (davon gibt es $|\Omega|$ Stück, eine je Element)
+und das Maximum ausschließlich von der Gleichverteilung.
 
 Am besten versteht man die Entropie als eine relative Größe, und das werden wir später noch tun.
 
@@ -331,3 +339,56 @@ die *bedingte Wahrscheinlichkeit* von $A$ bedingt $B$.
 
 Klar: $A$ und $B$ sind unabhängig voneinander genau dann wenn $P(A | B) = P(A)$.
 Bedingte Wahrscheinlichkeiten treten also stets dann auf (bzw. sind besonders interessant), wenn zwei Ereignisse (bzw. Zufallsvariablen) nicht unabhängig sind.
+
+### Rechenregeln für die Varianz
+
+Der Erwartungswert ist linear, die Varianz ist es nicht. Stattdessen gelten die folgenden beiden Regeln,
+die wir im nächsten Kapitel ständig brauchen werden.
+
+:::{admonition} Lemma
+Sei $X \colon \Omega \to \mathbb{R}$ eine Zufallsvariable mit endlicher Varianz.
+
+1. Für $a,b \in \mathbb{R}$ ist $\mathbb{V}(aX+b) = a^2\,\mathbb{V}(X)$.
+
+2. Sind $X$ und $Y$ unabhängig, so ist $\mathbb{V}(X+Y) = \mathbb{V}(X) + \mathbb{V}(Y)$.
+   Allgemeiner ist für paarweise unabhängige $X_1,\dots,X_n$
+
+$$
+\mathbb{V}\left( \sum_{i=1}^n X_i \right) = \sum_{i=1}^n \mathbb{V}(X_i).
+$$
+:::
+
+:::{admonition} Beweis
+(1) Nach der Linearität des Erwartungswerts ist $\mathbb{E}(aX+b) = a\,\mathbb{E}X + b$, also
+
+$$
+aX + b - \mathbb{E}(aX+b) = a\left( X - \mathbb{E}X \right)
+$$
+
+und damit $\mathbb{V}(aX+b) = \mathbb{E}\left( a^2 {\left( X - \mathbb{E}X \right)}^2 \right) = a^2\,\mathbb{V}(X)$.
+Insbesondere ändert eine Verschiebung um $b$ die Varianz nicht.
+
+(2) Wir multiplizieren aus und nutzen die Linearität:
+
+$$
+\begin{aligned}
+\mathbb{V}(X+Y) &= \mathbb{E}\left( {\left( (X - \mathbb{E}X) + (Y - \mathbb{E}Y) \right)}^2 \right) \\
+                &= \mathbb{E}\left( {(X - \mathbb{E}X)}^2 \right) + \mathbb{E}\left( {(Y - \mathbb{E}Y)}^2 \right)
+                   + 2\,\mathbb{E}\left( (X - \mathbb{E}X)(Y - \mathbb{E}Y) \right) \\
+                &= \mathbb{V}(X) + \mathbb{V}(Y) + 2\left( \mathbb{E}(XY) - \mathbb{E}(X)\mathbb{E}(Y) \right).
+\end{aligned}
+$$
+
+Sind $X$ und $Y$ unabhängig, so ist der Klammerausdruck nach der Produktregel gleich $0$.
+Der allgemeine Fall folgt per Induktion über $n$.
+:::
+
+Der Term $\mathbb{E}(XY) - \mathbb{E}(X)\mathbb{E}(Y)$, der hier gerade verschwindet, ist eine eigene interessante Größe:
+Er heißt *Kovarianz* von $X$ und $Y$ und misst, wie stark die beiden Variablen linear zusammenhängen.
+Im Kapitel [Kovarianz](kovarianz.md) nehmen wir ihn genauer unter die Lupe und beweisen die Regel dort noch einmal
+in der allgemeinen Fassung, ohne die Voraussetzung der Unabhängigkeit.
+
+Regel (2) ist der Grund dafür, dass sich die Varianz einer Summe unabhängiger Wiederholungen desselben Experiments
+so einfach ausrechnen lässt — das nutzen wir im Kapitel
+[Wichtigste diskrete Verteilungen](wichtigste-diskrete-verteilungen.ipynb)
+bei der Binomialverteilung.

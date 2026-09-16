@@ -43,7 +43,7 @@ Sie sollen nach dem erfolgreichen Abschluss dieses Moduls in der Lage sein,
 
 Dazu sind Sie damit vertraut, wie sich diese Aufgaben mit Python lösen lassen.
 
-Bei der Auswahl und Verarbeitung von Daten sowie der Bewertung von Modellen stellen sich drängende ethische Fragen, nicht nur zum Datenschutz, und Sie sollten sich dieser Problematik bewusst werden und die neu erworbenen Kompetenzen verantwortungsvoll einsetzen können.
+Bei der Auswahl und Verarbeitung von Daten sowie der Bewertung von Modellen stellen sich auch ethische Fragen. Dieses Skript behandelt davon den rechtlichen Rahmen des Datenschutzes in einem eigenen Kapitel, als Glossar der wichtigsten Begriffe; die weitergehende ethische Diskussion ist nicht Teil des Skripts.
 
 Teil der explorativen Datenanalyse ist das Generieren von Forschungsfragen.
 
@@ -54,7 +54,7 @@ Teil der explorativen Datenanalyse ist das Generieren von Forschungsfragen.
 Alle Grundlagen der Mathematik, die Sie zur Bearbeitung der Übungsaufgaben benötigen, sind in diesem Skript enthalten (oder in den Eingangsvoraussetzungen der Vorlesung).
 
 **Wozu ein Skript**
-könnte man auch fragen. Hautpsächlich dient uns das Skript als Referenz und Leitfaden für die Übungsaufgaben. Es gibt in der Tat hervorragende MOOCs (massive open online courses) frei im WWW, vor Allem wenn man gut Englisch spricht. Dieses Skript begleitet allerdings, im Gegensatz zu MOOCs, eine Präsenzlehrveranstaltung mit Übungsaufgaben. Es ist für den Lernerfolg entscheidend, die Übungsaufgaben engagiert zu bearbeiten und sich rege mit Kommiliton\*innen auszutauschen. Lehrpersonen können nur Lehren, das Lernen müssen die Student\*innen noch selbst machen.
+könnte man auch fragen. Hauptsächlich dient uns das Skript als Referenz und Leitfaden für die Übungsaufgaben. Es gibt in der Tat hervorragende MOOCs (massive open online courses) frei im WWW, vor allem wenn man gut Englisch spricht. Dieses Skript begleitet allerdings, im Gegensatz zu MOOCs, eine Präsenzlehrveranstaltung mit Übungsaufgaben. Es ist für den Lernerfolg entscheidend, die Übungsaufgaben engagiert zu bearbeiten und sich rege mit Kommiliton\*innen auszutauschen. Lehrpersonen können nur lehren, das Lernen müssen die Student\*innen noch selbst machen.
 
 
 ## Lizenz

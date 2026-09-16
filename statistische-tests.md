@@ -8,7 +8,7 @@ Ein Test lässt sich interpretieren als ein Schätzer, der keinen einzelnen Wert
 
 ## Prognoseintervalle
 
-Wir betrachten zur Motivation die Grafik {ref}`warming-without-confidence` und setzen Sie danach in Bezug zu {ref}`warming-with-confidence`
+Wir betrachten zur Motivation die Grafik {ref}`warming-without-confidence` und setzen sie danach in Bezug zu {ref}`warming-with-confidence`
 
 
 ```{figure} images/global_warming_without_confidence.png
@@ -48,12 +48,12 @@ IPCC Likelihood scale
 
 Nun sehen wir, dass es sich beim grau schattierten Bereich um den Bereich handelt, in dem mit mind. $2/3$ Wahrscheinlichkeit die tatsächlichen Messwerte liegen werden (laut Modell). Anhand dieser Information kann man deutlich besser einschätzen, welche zukünftigen Erwärmungen zu erwarten sind, selbst wenn wir 'Glück haben' oder auch wie schlimm es werden könnte, wenn wir 'Pech haben'. Der grau schattierte Bereich ist genau genommen ein **Prognoseintervall**, in dem der tatsächliche Wert in Zukunft mit hoher Wahrscheinlichkeit vermutet wird. Eng verwandt ist ein **Konfidenzintervall**, welches der Bereich ist, in dem der tatsächliche Wert in (z.B.) 95\% der erwarteten Beobachtungen vermutet wird.
 
-Wir verweisen für die mathematische Theorie von Bereichsschätzern / Konfidenzintervallen auf Vorlesungen über Statistik. Unser Ziel soll im Folgenden vor Allem sein, den Begriff des Tests so weit verstanden zu haben, dass wir einordnen können, ob eine angebliche Interpretation eines statistischen Tests seriös ist. Wenn wir das können, wollen wir außerdem in der Lage sein, zu identifizieren, in welchen Situationen ein Hypothesentest sinnvolle Erkenntnisse liefern kann. Dafür wird es vor allem wichtig sein, den Begriff der Signifikanz zu besprechen.
+Wir verweisen für die mathematische Theorie von Bereichsschätzern / Konfidenzintervallen auf Vorlesungen über Statistik. Unser Ziel soll im Folgenden vor allem sein, den Begriff des Tests so weit verstanden zu haben, dass wir einordnen können, ob eine angebliche Interpretation eines statistischen Tests seriös ist. Wenn wir das können, wollen wir außerdem in der Lage sein, zu identifizieren, in welchen Situationen ein Hypothesentest sinnvolle Erkenntnisse liefern kann. Dafür wird es vor allem wichtig sein, den Begriff der Signifikanz zu besprechen.
 
 
 ## Ausblick: Konfidenzintervalle
 
-Hinweis: dieser Abschnitt ist vor Allem zum besseren Verständnis statistischer Tests hier, und wird für sich genommen nicht in der Klausur abgefragt.
+Hinweis: dieser Abschnitt ist vor allem zum besseren Verständnis statistischer Tests hier, und wird für sich genommen nicht in der Klausur abgefragt.
 
 :::{admonition} Definition
 Sei $(\mathcal{X}, P_\theta : \theta \in \Theta)$ ein statistisches Modell, $\Sigma$ eine beliebige Menge und $\tau \colon \Theta \to \Sigma$ eine zu schätzende Größe in Abhängigkeit des Parameters $\theta$. Sei außerdem $0 < \alpha < 1$ eine reelle Zahl.
@@ -75,7 +75,7 @@ Natürlich ist das kein besonders nützlicher Konfidenzbereich, stellt aber klar
 
 :::{admonition} Beispiel
 **Münzwurf:**
-Der $n$-fach wiederholte Münzwurf einer unfairen Münze mit Erfolgswahrscheinlichkeit $p$ lässt sich modellieren mit dem **Binomialmodell**: $\mathcal{X} = \{1,\dots,n\}$ ist die Anzahl der Erfolge, der unbekannte Parameter ist $\theta = p \in \Theta = [0,1]$ und $P_\theta = Bin(n,\theta)$ (und $\tau = id$, also schätzen wir den Parameter $\theta$).
+Der $n$-fach wiederholte Münzwurf einer unfairen Münze mit Erfolgswahrscheinlichkeit $p$ lässt sich modellieren mit dem **Binomialmodell** (siehe [Wichtigste diskrete Verteilungen](wichtigste-diskrete-verteilungen.ipynb)): $\mathcal{X} = \{1,\dots,n\}$ ist die Anzahl der Erfolge, der unbekannte Parameter ist $\theta = p \in \Theta = [0,1]$ und $P_\theta = Bin(n,\theta)$ (und $\tau = id$, also schätzen wir den Parameter $\theta$).
 
 Wir bestimmen den Maximum-Likelihood-Schätzer für $\theta$:
 
@@ -232,7 +232,7 @@ Wir sehen also, dass es schnell kompliziert werden kann, wenn man einen Konfiden
 
 Mit der Approximation der Binomialverteilung durch eine Normalverteilung und der hier besprochenen Methode, zu Konfidenzintervallen für eine Normalverteilung zu kommen, lassen sich auch bessere Konfidenzintervalle für eine Binomialverteilung finden -- wenngleich kompliziertere Verfahren nochmals deutlich bessere Intervalle liefern.
 
-Uns soll genügen, dass wir nun wissen, wo die $\chi^2$-Verteilung und die Student t-Verteilung herkommen, und damit dürfen wir die konkrete Wahrscheinlichkeitsdichte auch wieder vergessen - das haben die Statistiker zum Glück für uns ausgerechnet und in unsere Python-Pakete implementiert. Wichtig ist vor Allem, dass die naive Annahme, der Schätzfehler sei wieder normalverteilt, im Allgemeinen nicht zutrifft. Wir begegnen diesen Verteilungen wieder bei der Diskussion statistischer Tests, die gewissermaßen auf der Konstruktion von Konfidenzintervallen aufbauen.
+Uns soll genügen, dass wir nun wissen, wo die $\chi^2$-Verteilung und die Student t-Verteilung herkommen, und damit dürfen wir die konkrete Wahrscheinlichkeitsdichte auch wieder vergessen - das haben die Statistiker zum Glück für uns ausgerechnet und in unsere Python-Pakete implementiert. Wichtig ist vor allem, dass die naive Annahme, der Schätzfehler sei wieder normalverteilt, im Allgemeinen nicht zutrifft. Wir begegnen diesen Verteilungen wieder bei der Diskussion statistischer Tests, die gewissermaßen auf der Konstruktion von Konfidenzintervallen aufbauen.
 
 
 ## Tests
@@ -265,10 +265,10 @@ Wir haben bereits bei der Diskussion eines Konfidenzintervalls für das Binomial
 
 Man kann diesen Zusammenhang systematisieren, und mit der Begrifflichkeit des Formparameters aus jedem Test einen Bereichsschätzer konstruieren. Wir sehen uns hier nur die andere Richtung an, nämlich wie aus einem Bereichsschätzer ein Test konstruiert wird.
 
-Die Ausgangssituation soll (der Einfachhheit halber) ein parametrisches statistisches Modell $(\mathcal{X}, P_\theta : \theta \in \Theta)$ und ein Intervallschätzer (d.h. ein Konfidenzintervall) $C \colon \mathcal{X} \to \mathcal{P}(\Theta)$ für den Parameter $\theta$ gegeben sein. Stellen wir uns außerdem vor, dass wir einen ausgezeichneten Parameter $\hat{\theta} \in \Theta$ haben, z.B. gegeben durch einen Punktschätzer (etwa den Mittelpunkt des Intervalls $C(x)$).
+Die Ausgangssituation soll (der Einfachheit halber) ein parametrisches statistisches Modell $(\mathcal{X}, P_\theta : \theta \in \Theta)$ und ein Intervallschätzer (d.h. ein Konfidenzintervall zum Niveau $1-\alpha$) $C \colon \mathcal{X} \to \mathcal{P}(\Theta)$ für den Parameter $\theta$ gegeben sein. Außerdem haben wir einen hypothetischen Parameterwert $\theta_0 \in \Theta$, der *nicht* aus den Daten stammt, sondern aus einer anderen Quelle: etwa $\theta_0 = \frac{1}{2}$ für die Behauptung 'die Münze ist fair', oder ein Wert aus der Literatur bzw. aus einem früheren Experiment.
 
-Die Hypothese ist nun, dass dieser Parameter der wahre Parameter ist.
-Während klar ist, dass diese Hypothese im strikten Sinne wahrscheinlich immer falsch ist, so sind wir doch daran interessiert, wann man die Hypothese *sicher* verwerfen kann. Wir setzen also $\Theta_0 := \{\hat{\theta}\}$ und $\Theta_1 := \Theta - \{\hat{\theta}\}$.
+Die Hypothese ist nun, dass $\theta_0$ der wahre Parameter ist.
+Während klar ist, dass diese Hypothese im strikten Sinne wahrscheinlich immer falsch ist, so sind wir doch daran interessiert, wann man die Hypothese *sicher* verwerfen kann. Wir setzen also $\Theta_0 := \{\theta_0\}$ und $\Theta_1 := \Theta - \{\theta_0\}$.
 
 Daraus konstruieren wir den Test $T_C \colon \mathcal{X} \to [0,1]$ durch
 
@@ -280,9 +280,9 @@ $$
 T_C(x) = \begin{cases} 0 & \theta_0 \in C(x) \\ 1 & \theta_0 \notin C(x) \end{cases}
 $$
 
-Das Vorgehen ist also: wir schätzen den Parameter (z.B. mit einem Maximum-Likelihood-Schätzer) mit Hilfe der Daten $x \in \mathcal{X}$ auf $\hat{\theta}$, betrachten das Konfidenzintervall $C(x)$ und fragen, ob darin $\hat{\theta}$ liegt. Wenn ja, dann halten wir an der Hypothese '$\hat{\theta}$ ist der wahre Parameter' fest, ansonsten schlussfolgern wir '$\hat{\theta}$ kann nicht der wahre Parameter sein'.
+Das Vorgehen ist also: wir berechnen aus den Daten $x \in \mathcal{X}$ das Konfidenzintervall $C(x)$ und fragen, ob $\theta_0$ darin liegt. Wenn ja, dann halten wir an der Hypothese '$\theta_0$ ist der wahre Parameter' fest, ansonsten schlussfolgern wir '$\theta_0$ kann nicht der wahre Parameter sein'. Da $C$ ein Konfidenzintervall zum Niveau $1-\alpha$ ist, gilt $P_{\theta_0}(\theta_0 \notin C(x)) \leq \alpha$, der Test $T_C$ hat also das Niveau $\alpha$.
 
-Interessanter ist der Test natürlich, wenn wir eine andere Quelle für einen möglichen Wert $\hat{\theta}$ haben, z.B. wenn wir danach fragen, ob die Daten gleichverteilt bzw. normalverteilt sind, oder nicht.
+Wichtig ist, dass $\theta_0$ nicht selbst aus denselben Daten geschätzt wurde: ein Punktschätzer $\hat{\theta}(x)$, etwa der Mittelpunkt von $C(x)$, liegt immer in $C(x)$, und der Test würde dann nie verwerfen. Interessant ist der Test genau dann, wenn wir eine unabhängige Quelle für $\theta_0$ haben, z.B. wenn wir danach fragen, ob die Daten gleichverteilt bzw. normalverteilt sind, oder nicht.
 
 ## Ausblick: Beste einfache Tests
 
@@ -344,7 +344,7 @@ Die Zufallsvariable $Z$ ist standardnormalverteilt.
 Bei einem beidseitigem z-Test ist die Nullhypothese $H_0 := (\mu = \mu_0)$, das entspricht $\Theta_0 = \{\mu_0\}$ und die Alternative ist $H_1 = (\mu \neq \mu_0)$, das entspricht $\Theta_1 = \mathbb{R} \setminus \{\mu_0\}$.
 
 Wir wählen ein Niveau $\alpha$, z.B. $\alpha = 0.05$.
-Da wir einen beidseitigen Test machen wollen, betrachten wir den z-Wert von $1 - \alpha/2$ (z.B. aus einer Tabelle mit z-Werten oder mit `scipy.stats.zscore`. Für $\alpha = 0.05$ ist der z-Wert $\pm 1.96$.
+Da wir einen beidseitigen Test machen wollen, betrachten wir den z-Wert von $1 - \alpha/2$ (z.B. aus einer Tabelle mit z-Werten oder mit der Quantilfunktion `scipy.stats.norm.ppf(1 - alpha/2)`). Für $\alpha = 0.05$ ist der z-Wert $\pm 1.96$.
 Der z-Wert $z(p)$ ist das $p$-Quantil einer Standardnormalverteilung, also $P(Z \leq z(p)) = p$,
 hier konkret $P(Z \leq 1.96) = 0.975$.
 Da die Standardnormalverteilung symmetrisch ist, gilt auch $P(Z \geq -1.96) = 0.975$ und $P(-1.96 \leq Z \leq 1.96) = 0.95$.
@@ -370,10 +370,10 @@ Diesen beidseitigen t-Test können wir auch direkt mit SciPy ausrechnen lassen:
 
 Genau genommen kann dieser t-Test noch mehr: anstatt die Verteilung von $x$ mit einer Normalverteilung mit Mittelwert $\mu$ und der gleichen Varianz wie $x$ zu vergleichen, können wir auch zwei Samples $x,y$ vergleichen (die nicht gleich groß sein müssen), ob die Mittelwerte übereinstimmen (unter der Voraussetzung, dass beide Samples normalverteilt mit gleicher Varianz sind, und dass beide Samples voneinander unabhängig sind) mit `scipy.stats.ttest_ind(x, y)`. Davon ist $y = \texttt{mu}$ ein Spezialfall (aber der Aufruf mit eingesetztem $y$ wird nur `NaN`s zurückgeben - weil die Varianz eines einelementigen Samples $0$ ist; daher `ttest_1samp`).
 
-Der Rückgabewert von SciPy's t-test ist ein `Ttest_indResult`, das ist definiert als `namedtuple('Ttest_indResult', ('statistic', 'pvalue'))`.
+Der Rückgabewert des t-Tests von SciPy ist ein `Ttest_indResult`, das ist definiert als `namedtuple('Ttest_indResult', ('statistic', 'pvalue'))`.
 Ein `namedtuple` verhält sich zu `tuple` wie ein Dictionary zu einer Liste. Anders formuliert, ist ein named tuple eine immutable Version eines Dictionary.
 Der Rückgabewert `statistic` ist die berechnete t-Statistik (da noch kein $\alpha$ involviert war, müsste man diese noch von Hand mit dem kritischen t-Wert vergleichen, um zum Testergebnis zu kommen).
-Der Rückgabewert `pvalue` ist der **p-Wert** (auch: die **Signifikanz**) des Testergebnisses, das ist die Wahrscheinlichkeit $p = P(D|H_0) = P(X=x | H_0)$.
+Der Rückgabewert `pvalue` ist der **p-Wert** (auch: die **Signifikanz**) des Testergebnisses, das ist die Wahrscheinlichkeit, unter $H_0$ eine Teststatistik zu beobachten, die mindestens so extrem ist wie die tatsächlich beobachtete - beim zweiseitigen Test also $p = P(|T| \geq |t_{\text{beob}}| \,|\, H_0)$. Der p-Wert ist insbesondere *nicht* die Wahrscheinlichkeit der konkreten Beobachtung (die wäre bei stetigen Verteilungen immer $0$) und auch nicht die Wahrscheinlichkeit $P(H_0 | D)$, dass die Nullhypothese wahr ist.
 Der Name kommt von 'probabilitas' und das Wort 'Signifikanz' erweckt natürlich gewisse Assoziationen.
 Wenn $p < \alpha$, so verwerfen wir die Nullhypothese, sonst nehmen wir sie an.
 
@@ -397,9 +397,9 @@ Eine Verallgemeinerung des t-Tests auf mehr als $2$ Stichprobengruppen ist ANOVA
 * Die Residuen (das sind die Differenzen $x_i-\texttt{mean}(x)$, eine Schätzung des tatsächlichen Samplingfehlers) sind normalverteilt
 * Homoskedastizität - das bedeutet Varianzhomogenität, also dass die Varianzen der Stichprobengruppen gleich sind.
 
-Die Anwendung ist in der Regel auf eine kategorielle Variable mit $k$ Ausprägungen, dann teilt man eine Stichprobe in $k$ Gruppen auf (je nach Ausprägung) und betrachtet ANOVA für diese Gruppen. Wenn dabei eine Signifikante Abweichung auftaucht (also ein p-Wert kleiner $0.05$), so verwerfen wir die Nullhypothese, dass die Gruppen gleiche Erwartungswerte haben - und schlußfolgern damit, dass vermutlich die kategorielle Variable einen Einfluss auf den Erwartungswert hat.
+Die Anwendung ist in der Regel auf eine kategorielle Variable mit $k$ Ausprägungen, dann teilt man eine Stichprobe in $k$ Gruppen auf (je nach Ausprägung) und betrachtet ANOVA für diese Gruppen. Wenn dabei eine signifikante Abweichung auftaucht (also ein p-Wert kleiner $0.05$), so verwerfen wir die Nullhypothese, dass die Gruppen gleiche Erwartungswerte haben - und schlußfolgern damit, dass vermutlich die kategorielle Variable einen Einfluss auf den Erwartungswert hat.
 
-Wenn keine signifikante Abweichung auftaucht (p-Wert größergeich $0.05$), dann sehen wir zwar vielleicht eine Abweichung der verschiedenen Mittelwerte, aber eben nur so wenig, wie sich durch einen Samplingfehler gut erklären lässt - einen Einfluss der kategoriellen Variable kann man so nicht sehen.
+Wenn keine signifikante Abweichung auftaucht (p-Wert größergleich $0.05$), dann sehen wir zwar vielleicht eine Abweichung der verschiedenen Mittelwerte, aber eben nur so wenig, wie sich durch einen Samplingfehler gut erklären lässt - einen Einfluss der kategoriellen Variable kann man so nicht sehen.
 
 Vorsicht: das bedeutet nicht, dass die kategorielle Variable keinen Einfluss auf die Mittelwerte hat! Es bedeutet nur, dass unsere Stichprobe nicht in der Lage ist, diesen von einem Stichprobenfehler zu unterscheiden.
 'Wir wissen, dass wir nichts wissen'.

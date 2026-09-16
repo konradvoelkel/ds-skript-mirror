@@ -5,14 +5,14 @@
 :::{admonition} Definition
 Sei $X \colon \Omega \to \mathbb{R}$ eine Zufallsvariable, d.h. $\Omega$ ein Wahrscheinlichkeitsraum (eine Menge $\Omega$ zusammen mit einem Wahrscheinlichkeitsmaß $P_\Omega$) und $X$ eine Abbildung, sodass $P(X \in A) := P_\Omega(X^{-1}(A))$ für alle Ereignisse $A \subseteq \mathbb{R}$ definiert ist.
 
-Wenn $\Omega$ kein diskreter Wahrscheinlichkeitsraum ist (z.B. weil $\Omega$ eine überabzählbar unendliche Menge ist, etwa $\Omega = \mathbb{R}^n$), und $X$ unendlich viele mögliche Werte annimmt, nennen wir $X$ eine *stetige Zufallsvariable*.
+Wenn $\Omega$ kein diskreter Wahrscheinlichkeitsraum ist (z.B. weil $\Omega$ eine überabzählbar unendliche Menge ist, etwa $\Omega = \mathbb{R}^n$), und $X$ überabzählbar viele mögliche Werte annimmt, und wenn die Verteilung von $X$ eine *Dichte* besitzt (das definieren wir im nächsten Abschnitt), nennen wir $X$ eine *stetige Zufallsvariable*. Eine Zufallsvariable mit überabzählbar vielen Werten, aber ohne Dichte (etwa eine Mischung aus einer Dirac- und einer Normalverteilung), ist also weder diskret noch stetig.
 :::
 
 :::{admonition} Definition
 Man nennt die kleinste Menge $A \subset \mathbb{R}$ mit $P(X \in A)=1$ den *Träger* von $X$ und schreibt auch
 
 $$
-supp(X) = \overline{\bigcap \{ A \subseteq \mathbb{R} : P(X \in A) = 1 \}}
+\operatorname{supp}(X) = \overline{\bigcap \{ A \subseteq \mathbb{R} : P(X \in A) = 1 \}}
 $$
 :::
 
@@ -21,13 +21,13 @@ Der Träger ist auch für diskrete reelle Zufallsvariablen definiert - der offen
 ## Dichtefunktionen
 
 :::{admonition} Definition
-Sei $\Omega \subset \mathbb{R}^n$ und $f \colon \Omega \to [0,\infty)$ eine integrierbare Funktion (bezüglich des Lebesgue-Maßes auf $\mathbb{R}^n$, Riemann-integrierbar ist ein hinreichendes Kriterium) mit $\int_\Omega f(x) dx = 1$. Dann ist auf $\Omega$ ein Wahrscheinlichkeitsmaß definiert durch:
+Sei $D \subseteq \mathbb{R}^n$ und $f \colon D \to [0,\infty)$ eine integrierbare Funktion (bezüglich des Lebesgue-Maßes auf $\mathbb{R}^n$, Riemann-integrierbar ist ein hinreichendes Kriterium) mit $\int_D f(x) dx = 1$. Dann ist auf $D$ ein Wahrscheinlichkeitsmaß definiert durch:
 
 $$
-\text{für } A \subseteq \Omega \text{ Ereignis } P(A) := \int_A f(x) dx
+\text{für } A \subseteq D \text{ Ereignis } P(A) := \int_A f(x) dx
 $$
 
-Wir nennen für jedes Wahrscheinlichkeitsmaß $P$, welches sich so schreiben lässt, die Funktion $f$ eine *Wahrscheinlichkeitsdichtefunktion* (probability density function, pdf) oder kurz *Dichte* (gelegentlich Wahrscheinlichkeitsmassefunktion, pmf).
+Wir nennen für jedes Wahrscheinlichkeitsmaß $P$, welches sich so schreiben lässt, die Funktion $f$ eine *Wahrscheinlichkeitsdichtefunktion* (probability density function, pdf) oder kurz *Dichte* (nicht zu verwechseln mit der Wahrscheinlichkeitsmassefunktion, pmf, aus dem diskreten Fall).
 :::
 
 Gegeben eine reelle Zufallsvariable $X \colon \Omega \to \mathbb{R}$, deren Verteilung $P_X$ durch eine Dichte $f$ gegeben ist, gilt also für $A \subseteq \mathbb{R}$
@@ -52,13 +52,14 @@ $$
 $$
 
 :::{admonition} Beispiel
-Seien $a < b \in \mathbb{R}$. Mit $\Omega = \mathbb{R}^1$ und $f \colon \mathbb{R} \to [0,\infty)$ gegeben durch
+Seien $a < b \in \mathbb{R}$. Mit $D = \mathbb{R}$ und $f \colon \mathbb{R} \to [0,\infty)$ gegeben durch
 
 $$
 f(x) = \begin{cases} \frac{1}{b-a}, & \text{ wenn } x \in [a,b] \\ 0 & \text{ sonst} \end{cases}
 $$
 
 ist ein Wahrscheinlichkeitsmaß auf $\mathbb{R}$ definiert, die *stetige Gleichverteilung* auf dem Intervall $[a,b]$.
+Sei $X$ eine Zufallsvariable mit dieser Verteilung, wir schreiben $X \sim U([a,b])$.
 Der Erwartungswert (wir nutzen $\int x dx = \frac{x^2}{2}$) ist $\mathbb{E}(X) =$
 
 $$
@@ -86,7 +87,7 @@ $$
 P(A) = \begin{cases} 1 & \text{ wenn } 0 \in A \\ 0 & \text{ sonst} \end{cases}
 $$
 
-Diese Verteilung heißt *Dirac-Verteilung* mit Masse bei $0$. Wenn man sich sehr viel Mühe gibt, so etwas ähnliches wie eine Dichte zu basteln, so muss man zur Theorie der Distributionen aus der Funktionalanalysis greifen (Physiker kennen das). Es gibt auch Verteilungen, da genügt auch keine Distribution.
+Diese Verteilung heißt *Dirac-Verteilung* mit Masse bei $0$. Wenn man sich sehr viel Mühe gibt, so etwas ähnliches wie eine Dichte zu basteln, so muss man zur Theorie der Distributionen aus der Funktionalanalysis greifen (Physiker\*innen kennen das). Es gibt auch Verteilungen, da genügt auch keine Distribution.
 :::
 
 :::{admonition} Definition
