@@ -1,0 +1,47 @@
+jtex: v1
+title: ds-skript (plain_latex + amssymb, babel ngerman, listings fixes)
+description: A minimal template that only uses vanilla LaTeX commands and environments
+version: 1.0.0
+license: CC-BY-4.0
+authors:
+  - name: Steve Purves (plain_latex)
+  - name: Konrad Völkel (ds-skript additions)
+tags:
+  - article
+  - paper
+  - vanilla
+parts:
+  - id: abstract
+    description: >
+      An abstract is a short summary of your research paper or report. A good
+      abstract will prepare readers for
+
+      the detailed information to follow, communicate the essence of the article
+      and help readers take away and
+
+      remember key points.
+doc:
+  - id: title
+    required: true
+  - id: authors
+    required: true
+  - id: date
+  - id: bibliography
+options:
+  - id: link
+    type: string
+    title: Footnote Link
+    description: >
+      This will add a footnote containing a link back to online version of your
+      article
+files:
+  - template.tex
+packages:
+  - amssymb
+  - geometry
+  - babel
+  - listings
+  - datetime
+  - graphicx
+  - hyperref
+  - natbib

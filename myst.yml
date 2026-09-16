@@ -24,6 +24,7 @@ project:
       code_style: listings
   exports:
     - format: pdf
+      template: ./templates/tex/ds-skript
       output: exports/ds-skript.pdf
   toc:
     - file: landing-page.md
