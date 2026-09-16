@@ -44,4 +44,7 @@ train.csv
 
 # local working notes, not part of the book
 PROJECT_NOTES.md
-CONTENT_REVIEW.md
+TODO.md
+todo/
+.sync-exclude.lst
+*.local-widgets.ipynb
