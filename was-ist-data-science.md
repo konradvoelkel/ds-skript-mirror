@@ -5,7 +5,7 @@
 Gerhard Goos, Vorlesungen über Informatik Band 1:
 
 > Die Darstellung einer Mitteilung durch die zeitliche Veränderung einer physikalischen Größe heißt ein *Signal*.
-Wenn wir bei der Darstellung und Weitergabe einer Mitteilung vom verwendeten Medium und den Einzelheiten der Signale und Signalparameter abstrahieren, heißt die Mitteilung eine *Nachricht*.
+Wenn wir bei der Darstellung und Weitergabe einer Mitteilung vom verwandten Medium und den Einzelheiten der Signale und Signalparameter abstrahieren, heißt die Mitteilung eine *Nachricht*.
 
 > Die Kenntnisse, die man benötigt, um einer Nachricht Bedeutung zuzuordnen, nennen wir einen *Kontext* oder ein Bezugssystem.
 Die zugeordnete Bedeutung heißt eine *Information*.

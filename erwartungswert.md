@@ -255,6 +255,8 @@ Wendet man das Gesetz der großen Zahlen auf die Zufallsvariable ${\left(X-\math
 
 ## Entropie
 
+[Vorlesungsaufzeichnung Entropie](https://media.hhu.de/channel/video/data-science-vl-5-entropie-2024/8f216336cc82cdd8015ddb7a6c59c252/167)
+
 :::{admonition} Definition
 Bei einem diskreten Wahrscheinlichkeitsraum $\Omega$ nennen wir für $x \in \Omega$ die *Information* (auch *Selbstinformation*) von $x$
 

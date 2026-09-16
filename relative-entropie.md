@@ -1,6 +1,6 @@
 # Relative Entropie
 
-[Vorlesungsaufzeichnung Entropie](https://media.hhu.de/channel/video/data-science-vl-5-entropie-2024/8f216336cc82cdd8015ddb7a6c59c252/167)
+[Vorlesungsaufzeichnung Relative und stetige Entropie](https://media.hhu.de/channel/video/data-science-vl-22-relative-und-stetige-entropie/5dcf4a4c1f44569d78493f65d76a735f/167)
 
 ## Logarithmen
 

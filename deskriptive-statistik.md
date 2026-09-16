@@ -176,7 +176,7 @@ The Datasaurus Dozen, inspiriert von Anscombe's Quartett.
     
   * Tortendiagramm
   
-    Generell hat sich herausgestellt, dass sich immer dann, wenn man ein Tortendiagramm verwenden kann, auch einen Barplot machen kann, der lesbarer ist. Tortendiagramme haben daher vor allem einen Wert, wenn man einen Text auflockern will, ohne wesentlich auf die dargestellte Statistik einzugehen. Grundsätzlich geeignet sind Merkmale in Intervallskalen, da die Torte Anteile eines Ganzen darstellt.
+    Generell hat sich herausgestellt, dass sich immer dann, wenn man ein Tortendiagramm verwenden kann, auch einen Barplot machen kann, der lesbarer ist. Tortendiagramme haben daher vor allem einen Wert, wenn man einen Text auflockern will, ohne wesentlich auf die dargestellte Statistik einzugehen. Grundsätzlich geeignet sind nominal- oder ordinalskalierte Merkmale, denn die Torte stellt die Anteile der einzelnen Ausprägungen an einem Ganzen dar — sie ist ein ungewöhnlich gezeichnetes Balkendiagramm.
     
   * Violinenplot
   
