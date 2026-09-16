@@ -37,6 +37,7 @@ pages:
   image: busybox:latest
   script:
     - mv _build/html public
+    - cp exports/ds-skript.pdf public/ || echo "no PDF in this run"
   artifacts:
     paths:
       - public
