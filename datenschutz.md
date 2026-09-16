@@ -28,6 +28,20 @@ Auch **pseudonymisierte**, **verschlüsselte** oder **anonymisierte Daten**, die
 5. **Speicherbegrenzung** – Daten nur solange wie erforderlich speichern  
 6. **Integrität & Vertraulichkeit** – Schutz vor unbefugtem Zugriff und Verlust  
 
+## Rechtsgrundlagen (Art. 6) und besondere Kategorien (Art. 9)
+
+- **Rechtsgrundlage**: Eine Verarbeitung personenbezogener Daten ist nur rechtmäßig, wenn mindestens eine der sechs Voraussetzungen aus Art. 6 Abs. 1 DSGVO erfüllt ist:
+  1. Einwilligung der betroffenen Person,
+  2. Erfüllung eines Vertrags mit der betroffenen Person (oder vorvertragliche Maßnahmen auf ihre Anfrage),
+  3. Erfüllung einer rechtlichen Verpflichtung,
+  4. Schutz lebenswichtiger Interessen,
+  5. Wahrnehmung einer Aufgabe im öffentlichen Interesse oder in Ausübung öffentlicher Gewalt,
+  6. berechtigtes Interesse des Verantwortlichen oder eines Dritten, sofern nicht die Interessen oder Grundrechte der betroffenen Person überwiegen.
+
+  Die Einwilligung ist also nur *eine* von sechs möglichen Grundlagen – ein Onlineshop braucht für die Lieferadresse keine gesonderte Einwilligung, denn die Verarbeitung ist zur Vertragserfüllung erforderlich.
+
+- **Besondere Kategorien personenbezogener Daten** (Art. 9 DSGVO, umgangssprachlich „sensible Daten“): Daten, aus denen die rassische oder ethnische Herkunft, politische Meinungen, religiöse oder weltanschauliche Überzeugungen oder die Gewerkschaftszugehörigkeit hervorgehen, sowie genetische Daten, biometrische Daten zur eindeutigen Identifizierung, Gesundheitsdaten und Daten zum Sexualleben oder zur sexuellen Orientierung. Ihre Verarbeitung ist **grundsätzlich untersagt** (Art. 9 Abs. 1) – aber nicht absolut: Art. 9 Abs. 2 zählt abschließend Ausnahmen auf, etwa die ausdrückliche Einwilligung, Pflichten aus dem Arbeits- und Sozialrecht, Daten, die die betroffene Person offensichtlich selbst öffentlich gemacht hat, die Gesundheitsversorgung oder die wissenschaftliche Forschung unter Schutzmaßnahmen. Die Religionszugehörigkeit darf also verarbeitet werden, wenn eine dieser Ausnahmen greift; ohne eine solche Ausnahme reicht auch keine der sechs Rechtsgrundlagen aus Art. 6.
+
 ## Privacy by Design und by Default
 
 - **Privacy by Design**: Datenschutz muss schon bei der Konzeption von Systemen mitgedacht werden.
