@@ -70,6 +70,16 @@ P(A|B) = \dfrac{P(B|A)P(A)}{P(B)}.
 $$
 :::
 
+:::{admonition} Beispiel
+**Warum die Basisrate zählt.** Ein Test erkennt eine seltene Krankheit zuverlässig: $99\,\%$ der Kranken werden erkannt, und nur $1\,\%$ der Gesunden bekommen fälschlich ein positives Ergebnis. Trotzdem ist bei einem positiven Test die Wahrscheinlichkeit, tatsächlich krank zu sein, klein. Der Grund ist die *Basisrate* $P(A)$: Ist nur einer von tausend krank, so kommen auf einen richtig erkannten Kranken etwa zehn fälschlich positive Gesunde — die kleine Fehlerrate von $1\,\%$ wirkt auf eine tausendmal größere Gruppe. Mit $A$ = „krank“ und $B$ = „Test positiv“ rechnet der Satz von Bayes genau diese Gewichtung aus:
+
+$$
+P(A|B) = \dfrac{0{,}99 \cdot 0{,}001}{0{,}99 \cdot 0{,}001 + 0{,}01 \cdot 0{,}999} = \dfrac{0{,}00099}{0{,}00099 + 0{,}00999} \approx 0{,}09.
+$$
+
+$P(A|B)$ ist eben nicht $P(B|A)$, sondern $P(B|A)$ *mal* das Verhältnis $P(A)/P(B)$, und $P(B)$ wird von der großen Gruppe der Gesunden dominiert. Wer die beiden bedingten Wahrscheinlichkeiten verwechselt, begeht den *Basisratenfehler* — der ist so häufig, dass er einen eigenen Namen hat. (Woher der Nenner kommt, klärt der nächste Satz.)
+:::
+
 :::{admonition} Beweis
 Die Definition der bedingten Wahrscheinlichkeit ist
 $P(A|B) = \dfrac{P(A \cap B)}{P(B)}$

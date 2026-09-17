@@ -48,6 +48,7 @@ Die beschreibende (deskriptive) Statistik besteht aus den Datenanalysen, die *vo
   Abzugrenzen von der Stichprobe ist die *Population*, das ist die Grundgesamtheit aller möglichen Ergebnisse, mit einer gewissen Verteilung.
   
 * Bei tabellarischen Daten heißen die Spalten auch Variablen, Attribute, Merkmale, Features während die möglichen Werte *Ausprägungen* heißen.
+  Ein Datensatz mit $n$ Zeilen und $k$ Spalten hat also $n$ Samples und $k$ Features. Nicht jede Spalte ist aber ein Feature im statistischen Sinn: Eine laufende Nummer, eine Matrikelnummer oder ein Primärschlüssel aus einer Datenbank identifiziert die Zeile nur und trägt keine Information über das, was gemessen wurde — jede Analyse, die eine ID als Merkmal behandelt, findet darin bestenfalls Zufall und schlimmstenfalls die Reihenfolge, in der die Daten erhoben wurden. Ebenso ist die *Zielgröße*, die man vorhersagen will, zwar eine Spalte, zählt aber beim Zählen der Features nicht mit.
   Je nach Art eines Merkmals unterscheidet man verschiedene *Skalenniveaus* (auch Skalenarten genannt); man sagt, ein Merkmal sei nominal-, ordinal- oder kardinalskaliert:
   * Nominalskala: kategoriell, diskret, keine feste Reihenfolge (z.B. Geschlecht)
   * Ordinalskala: Werte können geordnet werden, aber ohne Abstandsmaß (z.B. Rangplätze)
