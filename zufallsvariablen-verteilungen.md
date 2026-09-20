@@ -146,6 +146,10 @@ ihren Erwartungswert und ihre Varianz ausrechnen.
 
 Es ist also $\Delta_n$ der Raum aller möglichen Wahrscheinlichkeitsverteilungen auf einer $n$-elementigen Menge. Für $n=3$ kann man sich das zweidimensionale gefüllte Dreieck $\Delta_3 \subset \mathbb{R}^3$ noch gut vorstellen.
 
+:::{admonition} Bemerkung
+Genau dieser Simplex $\Delta_n$ ist der Bildbereich der *Softmax*-Funktion, mit der neuronale Netze Klassenwahrscheinlichkeiten ausgeben: Aus $n$ beliebigen reellen Zahlen macht sie einen Vektor in $\Delta_n$. Die Vorlesung *Einführung in Deep Learning* baut darauf auf, dass Sie $\Delta_n$ als Raum der Verteilungen auf $n$ Werten kennen.
+:::
+
 :::{admonition} Beispiel
 Wenn wir auf einer endlichen Menge $\Omega$ durch den Vektor $p \in \Delta_n$ eine Verteilung gegeben haben,
 können wir ein Ereignis $A \subseteq \Omega$ ebenfalls durch einen Vektor charakterisieren,

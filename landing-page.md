@@ -21,7 +21,7 @@ Sie soll Orientierung und Überblick geben und erste Anwendungen ermöglichen in
 Dabei kümmern wir uns um den notwendigen theoretischen Background in Stochastik und einige praktische Übungen in Python.
 Darauf aufbauend ließe sich danach tiefer in die künstliche Intelligenz einsteigen. Dazu gibt es an der HHU das [Masterprogramm ,,Artificial Intelligence and Data Science''](https://www.heicad.hhu.de/lehre/masters-programme-ai-and-data-science).
 
-Wenn Sie in der vollen Breite als Data Scientist arbeiten können wollen, sollten Sie zusätzlich zu dieser Vorlesung auch noch die Inhalte von Vorlesungen über Statistik, Datenbanken und Machine Learning kennen und einige Übung in konkreten Projekten haben. Je nach Einsatzbereich brauchen Sie noch Kenntnisse über Algorithmen für verteilte Systeme (Data Science 2) oder Deep Learning. Um flexibel in anderen Projekten mitarbeiten zu können, sollten Sie in der Lage sein, R Code zu lesen (und auch Julia könnte in der Zukunft wichtiger werden).
+Wenn Sie in der vollen Breite als Data Scientist arbeiten können wollen, sollten Sie zusätzlich zu dieser Vorlesung auch noch die Inhalte von Vorlesungen über Statistik, Datenbanken und Machine Learning kennen und einige Übung in konkreten Projekten haben. Je nach Einsatzbereich brauchen Sie noch Kenntnisse über Algorithmen für verteilte Systeme (Data Science 2) oder Deep Learning. Um flexibel in anderen Projekten mitarbeiten zu können, sollten Sie in der Lage sein, R Code zu lesen (und auch Julia könnte in der Zukunft wichtiger werden); zur Vertiefung der Programmierung selbst gibt es die Vorlesung *Einführung in Python* mit eigenem Skript, [Einführung in Python](https://eipy-skript-7dd28c.pages.cs.uni-duesseldorf.de/) (in Aufbau befindlich).
 Das alles ist aber noch nicht notwendig für "Junior Data Analyst"-Jobs, die sich im Wesentlichen mit der Anwendung einfacher Statistik beim Erstellen von Reports und Dashboards befassen - dazu lernen Sie das Handwerkszeug in dieser Vorlesung und müssen lediglich je nach Anwendung konkrete Softwarepakete dazu lernen und üben.
 
 Wir werden immer wieder auf zusätzliche Quellen stoßen, um einzelne Themen weiter zu vertiefen oder aus einer anderen Perspektive zu betrachten.
@@ -29,9 +29,7 @@ In der ersten Vorlesung haben wir uns einen Überblick verschafft, was Data Scie
 
 
 **Kompetenzen**
-Studierende sollen nach Absolvierung der Lehrveranstaltungen grundlegende Konzepte aus der Wahrscheinlichkeitsrechnung kompetent anwenden können, Kompetenzen in den Grundlagen der Wahrscheinlichkeitsrechnung für Machine Learning erlangen, ein Machine-Learning-Problem detailliert ausarbeiten können und grundlegende Machine-Learning-Algorithmen anwenden können.
-
-Sie sollen nach dem erfolgreichen Abschluss dieses Moduls in der Lage sein,
+Studierende sollen nach Absolvierung der Lehrveranstaltungen grundlegende Konzepte aus der Wahrscheinlichkeitsrechnung kompetent anwenden können, Kompetenzen in den Grundlagen der Wahrscheinlichkeitsrechnung für Machine Learning erlangen, ein Machine-Learning-Problem detailliert ausarbeiten können und grundlegende Machine-Learning-Algorithmen anwenden können. Sie sollen nach dem erfolgreichen Abschluss dieses Moduls in der Lage sein,
 1. einen Datensatz explorativ zu analysieren,
 1. Daten zur Weiterverarbeitung zu transformieren,
 1. Teildatensätze zur Weiterverarbeitung zu wählen,
@@ -43,11 +41,55 @@ Sie sollen nach dem erfolgreichen Abschluss dieses Moduls in der Lage sein,
 
 Dazu sind Sie damit vertraut, wie sich diese Aufgaben mit Python lösen lassen.
 
+**Was diese Vorlesung nicht ist**
+Diese Vorlesung behandelt keine Data Science auf verteilten Systemen, das ist Thema von Data Science 2. Sie ist keine Einführung in Deep Learning, dafür gibt es die Vorlesung „Einführung in Deep Learning“. Sie führt nicht in R/RStudio oder andere Werkzeuge ein. Sie reduziert Data Science nicht auf den Aufruf von `model.fit()`: Wir programmieren Schätzer und Algorithmen selbst nach, um zu verstehen, was dabei passiert. Und sie ist kein Programmierkurs, Python-Vorkenntnisse werden aber nicht vorausgesetzt; was wir brauchen, steht im Kapitel [Einführung in Python](intro-python.ipynb).
+
 Bei der Auswahl und Verarbeitung von Daten sowie der Bewertung von Modellen stellen sich auch ethische Fragen. Dieses Skript behandelt davon den rechtlichen Rahmen des Datenschutzes in einem eigenen Kapitel, als Glossar der wichtigsten Begriffe; die weitergehende ethische Diskussion ist nicht Teil des Skripts.
 
 Teil der explorativen Datenanalyse ist das Generieren von Forschungsfragen.
 
+## Aufbau der Vorlesung
 
+Die Vorlesung ruht auf drei Säulen. Die erste ist der *Background aus der Statistik*: Wahrscheinlichkeitsräume, Zufallsvariablen und Verteilungen, Erwartungswert und Varianz, Schätzer und Tests. Ohne diese Sprache lässt sich nicht sagen, was ein statistisches Modell behauptet und wann man ihm trauen darf.
+
+Die zweite Säule ist die *Programmierübung mit Python*. Wir arbeiten mit Spielzeugdaten, die klein genug sind, um sie ganz zu überblicken, und lernen daran Numpy, Scipy, Matplotlib, Pandas und Scikit-Learn kennen. Die Übungsblätter sind der Ort, an dem aus dem Lesen ein Können wird.
+
+Die dritte Säule sind *Algorithmen und Datenstrukturen*: Wir programmieren die wichtigsten Schätzer und Lernverfahren selbst nach, damit wir verstehen, was passiert, wenn man `model.fit()` aufruft.
+
+Die Kapitel des Skripts folgen dieser Reihenfolge; das Inhaltsverzeichnis unten listet sie einzeln auf. Als zweite Sicht zeigt das folgende Diagramm, wie die Teile aufeinander aufbauen.
+
+```{mermaid}
+flowchart TB
+  subgraph E["Einführung"]
+    direction LR
+    E1["Was ist Data Science?"] --> E2["Stochastik"] --> E3["Python"]
+  end
+  subgraph D["Diskrete Stochastik und Numpy"]
+    direction LR
+    D1["Zufallsvariablen, Verteilungen,<br/>Erwartungswert"] --> D2["Numpy"] --> D3["Diskrete Verteilungen,<br/>erste Exploration"]
+  end
+  subgraph S["Stetige Stochastik und Scipy"]
+    direction LR
+    S1["Stetige Verteilungen,<br/>Normalverteilung, Scipy"]
+  end
+  subgraph X["Explorative Datenanalyse"]
+    direction LR
+    X1["Deskriptive Statistik,<br/>Beispiele, Iris"] --> X2["Pandas, Daten putzen"]
+  end
+  subgraph M["Multivariate Stochastik"]
+    direction LR
+    M1["Kovarianz, multivariate<br/>Normalverteilung, relative Entropie"]
+  end
+  subgraph P["Datenschutz"]
+    direction LR
+    P1["Datenschutz-Glossar"]
+  end
+  subgraph L["Maschinelles Lernen"]
+    direction LR
+    L1["Clustering,<br/>Dimensionsreduktion"] --> L2["Statistische Modelle,<br/>Regression, Kernel"] --> L3["Tests, Modellwahl,<br/>Expectation Maximization"]
+  end
+  E --> D --> S --> X --> M --> P --> L
+```
 
 ## Skript und Vorlesung
 
@@ -55,6 +97,9 @@ Alle Grundlagen der Mathematik, die Sie zur Bearbeitung der Übungsaufgaben ben�
 
 **Wozu ein Skript**
 könnte man auch fragen. Hauptsächlich dient uns das Skript als Referenz und Leitfaden für die Übungsaufgaben. Es gibt in der Tat hervorragende MOOCs (massive open online courses) frei im WWW, vor allem wenn man gut Englisch spricht. Dieses Skript begleitet allerdings, im Gegensatz zu MOOCs, eine Präsenzlehrveranstaltung mit Übungsaufgaben. Es ist für den Lernerfolg entscheidend, die Übungsaufgaben engagiert zu bearbeiten und sich rege mit Kommiliton\*innen auszutauschen. Lehrpersonen können nur lehren, das Lernen müssen die Student\*innen noch selbst machen.
+
+**KI-Werkzeuge**
+Bei den Übungsblättern dürfen Sie KI-Werkzeuge wie Chatbots und Code-Assistenten benutzen, müssen das aber kennzeichnen: Schreiben Sie zur Abgabe dazu, welches Werkzeug Sie wofür eingesetzt haben. In der Klausur und im Midterm sind KI-Werkzeuge nicht erlaubt. Der Grund ist derselbe, aus dem es die Übungsaufgaben überhaupt gibt: Probieren Sie es erst einmal selbst, sonst lernt nur der Chatbot dazu.
 
 
 ## Lizenz

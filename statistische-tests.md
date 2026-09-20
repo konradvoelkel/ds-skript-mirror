@@ -286,7 +286,7 @@ Ein Test heißt **nichtrandomisiert**, wenn $\phi(x)=0$ oder $\phi(x)=1$ für al
 :::
 
 :::{admonition} Beispiel
-**Äpfel wiegen.** Eine Lieferung Äpfel soll im Mittel $200\,\mathrm{g}$ wiegen; wir nehmen die Gewichte als normalverteilt an und wiegen eine Stichprobe $x$. Drei Tests zur selben Sorte Frage:
+**Äpfel wiegen.** Ein Lieferant verspricht Äpfel von mindestens $150\,\mathrm{g}$ im Mittel; wir nehmen die Gewichte als normalverteilt an und wiegen eine Stichprobe $x$. Drei Tests zur selben Sorte Frage:
 
 1. $\Theta_0 = (-\infty, 150]$ („die Äpfel wiegen im Mittel höchstens $150\,\mathrm{g}$“), $\Theta_1 = (150, \infty)$. Ein Test: $\phi(x) = 1$, wenn $\texttt{mean}(x) > 150$, sonst $0$.
 2. Dieselbe Hypothese, aber ein vorsichtigerer Test: $\phi(x) = 1$ erst, wenn $\texttt{mean}(x) > 160$. Er verwirft seltener, irrt also seltener, wenn $\Theta_0$ stimmt, und übersieht öfter, wenn $\Theta_1$ stimmt.
@@ -400,7 +400,7 @@ $$
 Z(x) = \dfrac{\texttt{mean}(x) - \mu_0}{\sigma/\sqrt{n}}
 $$
 
-Aus $\mu_0$ berechnet man eine geschätzte Standardabweichung $\sigma$, wenn die exakte Standardabweichung nicht bekannt ist.
+Beim z-Test wird $\sigma$ als bekannt behandelt; bei großen Stichproben setzt man dafür die Stichprobenstandardabweichung $\sigma^\ast(x)$ ein. Unbekannt ist $\mu$, und die Nullhypothese lautet $H_0$: $\mu = \mu_0$. Beim t-Test unten wird $\sigma$ dagegen als unbekannt behandelt, und der Schätzfehler, der beim Schätzen von $\sigma$ entsteht, wird in der Verteilung der Teststatistik berücksichtigt.
 Die Zufallsvariable $Z$ ist standardnormalverteilt.
 
 Bei einem beidseitigem z-Test ist die Nullhypothese $H_0 := (\mu = \mu_0)$, das entspricht $\Theta_0 = \{\mu_0\}$ und die Alternative ist $H_1 = (\mu \neq \mu_0)$, das entspricht $\Theta_1 = \mathbb{R} \setminus \{\mu_0\}$.
@@ -411,9 +411,18 @@ Der z-Wert $z(p)$ ist das $p$-Quantil einer Standardnormalverteilung, also $P(Z 
 hier konkret $P(Z \leq 1.96) = 0.975$.
 Da die Standardnormalverteilung symmetrisch ist, gilt auch $P(Z \geq -1.96) = 0.975$ und $P(-1.96 \leq Z \leq 1.96) = 0.95$.
 
-Wir berechnen also die z-Statistik unseres Samples und vergleichen das Ergebnis mit dem z-Wert $1.96$. Liegen wir dazwischen, also $-1.96 \leq Z(x) \leq 1.96$, so nehmen wir die Nullhypothese an. Liegt die z-Statistik außerhalb von $[-1.96, 1.96]$, so verwerfen wir die Hypothese.
+Wir berechnen also die z-Statistik unseres Samples und vergleichen das Ergebnis mit dem z-Wert $1.96$. Liegen wir dazwischen, also $-1.96 \leq Z(x) \leq 1.96$, so können wir die Nullhypothese nicht verwerfen (was nicht heißt, dass wir sie annehmen, siehe [Signifikanz](#signifikanz) unten). Liegt die z-Statistik außerhalb von $[-1.96, 1.96]$, so verwerfen wir die Hypothese.
 
 ## Der Student t-Test
+
+Die beiden Tests im Vergleich:
+
+| | z-Test | t-Test |
+|---|---|---|
+| $\sigma$ | bekannt (bei großem $n$: $\sigma^\ast(x)$ eingesetzt) | unbekannt, wird mitgeschätzt |
+| Verteilung der Statistik unter $H_0$ | Standardnormalverteilung | Student t-Verteilung mit $n-1$ Freiheitsgraden |
+| wann | $n$ groß (Faustregel: $n > 30$) | $n$ klein (funktioniert aber für jedes $n$) |
+| SciPy | `norm.ppf` | `t.ppf`, `ttest_1samp` |
 
 Bei kleinen Stichproben macht sich die Verzerrung der geschätzten Parameter einer Normalverteilung bemerkbar und man muss mit der tatsächlichen Verteilung der **t-Statistik** rechnen. Wenn also $\mu_0$ der Parameter ist, auf den man testen möchte, so betrachtet man
 
@@ -425,19 +434,33 @@ Dabei ist $\sigma^\ast(x)$ der erwartungstreue Schätzer für $\sigma$.
 
 Wie zuvor bei der Konstruktion von Konfidenzintervallen besprochen, folgt $t$ einer Student t-Verteilung. Um den Test durchzuführen zu einem Niveau $\alpha$ müssen wir daher den t-Wert zu diesem Niveau in einer Tabelle nachschlagen oder mit Python ausrechnen über `scipy.stats.t.ppf(p, n-1)` (ppf ist die **percent point function**, die uns das p-Quantil der t-Verteilung mit $n-1$ Freiheitsgraden ausgibt).
 
-Wir berechnen die t-Statistik auf den Daten $x$ und vergleichen sie mit dem zuvor berechneten 'kritischen' t-Wert. Liegen wir mit der t-Statistik zwischen $\pm$ dem kritischen t-Wert, so nehmen wir die Hypothese an (dass $\mu_0$ der Erwartungswert der Verteilung ist).
+Wir berechnen die t-Statistik auf den Daten $x$ und vergleichen sie mit dem zuvor berechneten 'kritischen' t-Wert. Liegen wir mit der t-Statistik zwischen $\pm$ dem kritischen t-Wert, so können wir die Hypothese (dass $\mu_0$ der Erwartungswert der Verteilung ist) nicht verwerfen; liegen wir außerhalb, verwerfen wir sie.
 
 Diesen beidseitigen t-Test können wir auch direkt mit SciPy ausrechnen lassen:
 `scipy.stats.ttest_1samp(x, mu)`
 
 Genau genommen kann dieser t-Test noch mehr: anstatt die Verteilung von $x$ mit einer Normalverteilung mit Mittelwert $\mu$ und der gleichen Varianz wie $x$ zu vergleichen, können wir auch zwei Samples $x,y$ vergleichen (die nicht gleich groß sein müssen), ob die Mittelwerte übereinstimmen (unter der Voraussetzung, dass beide Samples normalverteilt mit gleicher Varianz sind, und dass beide Samples voneinander unabhängig sind) mit `scipy.stats.ttest_ind(x, y)`. Davon ist $y = \texttt{mu}$ ein Spezialfall (aber der Aufruf mit eingesetztem $y$ wird nur `NaN`s zurückgeben - weil die Varianz eines einelementigen Samples $0$ ist; daher `ttest_1samp`).
 
-Der Rückgabewert des t-Tests von SciPy ist ein `Ttest_indResult`, das ist definiert als `namedtuple('Ttest_indResult', ('statistic', 'pvalue'))`.
-Ein `namedtuple` verhält sich zu `tuple` wie ein Dictionary zu einer Liste. Anders formuliert, ist ein named tuple eine immutable Version eines Dictionary.
+Der Rückgabewert von `scipy.stats.ttest_1samp(x, mu)` ist ein `TtestResult`-Objekt mit den Attributen `statistic`, `pvalue` und `df` (die Anzahl der Freiheitsgrade, also $n-1$) sowie der Methode `confidence_interval(level=0.95)`. (Ältere SciPy-Versionen gaben ein `namedtuple` mit nur `statistic` und `pvalue` zurück; diese beiden Attribute gibt es unverändert.)
 Der Rückgabewert `statistic` ist die berechnete t-Statistik (da noch kein $\alpha$ involviert war, müsste man diese noch von Hand mit dem kritischen t-Wert vergleichen, um zum Testergebnis zu kommen).
 Der Rückgabewert `pvalue` ist der **p-Wert** (auch: die **Signifikanz**) des Testergebnisses, das ist die Wahrscheinlichkeit, unter $H_0$ eine Teststatistik zu beobachten, die mindestens so extrem ist wie die tatsächlich beobachtete - beim zweiseitigen Test also $p = P(|T| \geq |t_{\text{beob}}| \,|\, H_0)$. Der p-Wert ist insbesondere *nicht* die Wahrscheinlichkeit der konkreten Beobachtung (die wäre bei stetigen Verteilungen immer $0$) und auch nicht die Wahrscheinlichkeit $P(H_0 | D)$, dass die Nullhypothese wahr ist.
 Der Name kommt von 'probabilitas' und das Wort 'Signifikanz' erweckt natürlich gewisse Assoziationen.
-Wenn $p < \alpha$, so verwerfen wir die Nullhypothese, sonst nehmen wir sie an.
+Wenn $p < \alpha$, so verwerfen wir die Nullhypothese, sonst können wir sie nicht verwerfen; das ist nicht dasselbe wie sie anzunehmen, denn ein hoher p-Wert sagt nur, dass die Stichprobe die Abweichung nicht von einem Stichprobenfehler unterscheiden kann (siehe die zweite Warnung im Abschnitt [Signifikanz](#signifikanz) unten).
+
+Für das Äpfel-Beispiel aus dem Abschnitt *Tests*, mit einer simulierten Stichprobe von $40$ normalverteilten Gewichten und der Nullhypothese $\mu_0 = 150$ wie im dritten Test dort:
+
+```python
+from scipy.stats import ttest_1samp, norm
+x = norm.rvs(155, 20, size=40, random_state=0)
+res = ttest_1samp(x, 150)
+res.statistic, res.pvalue, res.df, res.confidence_interval()
+```
+
+```
+(3.3007, 0.00207, 39, ConfidenceInterval(low=154.36, high=168.15))
+```
+
+Der p-Wert liegt unter $0{,}05$, also verwerfen wir $\mu_0 = 150$; passend dazu liegt die $150$ nicht im Konfidenzintervall. `confidence_interval()` ist genau das Intervall aus dem Abschnitt *Von der Stichprobe auf die Population*, $\texttt{mean}(x) \pm t \cdot \sigma^\ast(x)/\sqrt{n}$, nur mit dem Quantil $t = \texttt{t.ppf}(0.975, 39) \approx 2{,}02$ der t-Verteilung anstelle von $1{,}96$.
 
 Intern verwendet SciPy die Methode
 ```python
@@ -468,6 +491,7 @@ Vorsicht: das bedeutet nicht, dass die kategorielle Variable keinen Einfluss auf
 
 In Python benutzen wir `scipy.stats.f_oneway`.
 
+(signifikanz)=
 ## Signifikanz
 
 Von allen Begriffen dieses Kapitels ist dieser der wichtigste, denn er verlässt die Statistik und taucht in Zeitungen, Studien und Meetings auf. Er wird dort fast immer so verwendet, als stünde eine Zahl dahinter. Das tut es nicht.

@@ -293,6 +293,10 @@ $$
 
 Wenn man $X$ festhält und $Y$ variiert, ist es das gleiche, ob man $H(X;Y)$ oder $H(X \Vert Y)$ minimiert, daher wird im maschinellen Lernen häufig das eine mit dem anderen substituiert. Die Maximum-Likelihood-Methode kann man auffassen als Minimierung einer Kreuzentropie und damit als Minimierung der relativen Entropie. Das erklärt, wie und wieso Entropie für maschinelles Lernen relevant ist.
 
+:::{admonition} Bemerkung
+Im Deep Learning begegnet man dieser Beobachtung unter drei Namen: *negative log-likelihood*, *Kreuzentropie* und *KL-Divergenz zu den Labels* bezeichnen dort dieselbe Loss-Funktion für Klassifikationsprobleme. Der Unterschied zwischen den letzten beiden ist nur die Konstante $H(X)$ aus der Proposition oben, die von den Modellparametern nicht abhängt. Die Vorlesung *Einführung in Deep Learning* setzt diesen Zusammenhang als bekannt voraus.
+:::
+
 Ansonsten ist die Kreuzentropie eine in der Theorie deutlich seltener verwendete Größe als die relative Entropie (die meist Kullback-Leibler-Divergenz $D_{KL}$ genannt wird).
 
 ## Stetige Entropie

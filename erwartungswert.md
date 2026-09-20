@@ -102,15 +102,42 @@ und dieser Ausdruck wird nur für $\delta=0$ minimal, weil $\delta^2 \geq 0$.
 Sei $v \in \mathbb{R}^n$. Die Quadratwurzel der mittleren quadratischen Abweichung (root mean squared error) vom Mittelwert nennen wir $\texttt{rmse}$ (oder auch Sample-Standardabweichung):
 
 $\texttt{rmse}(v) = \sqrt{\texttt{mse}\left( v, \texttt{mean}(v) \right)}$.
+
+Man schreibt dafür auch $\sigma(v)$, die *Standardabweichung* des Samples $v$. Die Schreibweise passt zu $\sigma(X)$ für Zufallsvariablen weiter unten.
+:::
+
+Zum Ausrechnen ist die Definition unpraktisch, weil man erst den Mittelwert bestimmen und dann noch einmal über alle Einträge gehen muss. Die folgende Umformung braucht nur die Summe der Einträge und die Summe ihrer Quadrate:
+
+:::{admonition} Lemma
+**(Verschiebungssatz)**
+
+Für $v \in \mathbb{R}^n$ ist
+
+$$
+\texttt{rmse}(v)^2 = \texttt{mse}\left( v, \texttt{mean}(v) \right) = \texttt{mean}(v^2) - \texttt{mean}(v)^2,
+$$
+
+wobei $v^2 := {\left( v_i^2 \right)}_{i=1}^n$ komponentenweise zu lesen ist.
+:::
+
+:::{admonition} Beweis
+Mit $m := \texttt{mean}(v)$ ist
+
+$$
+\texttt{mse}(v, m) = \dfrac{1}{n} \sum_{i=1}^n \left( v_i^2 - 2 m v_i + m^2 \right) = \texttt{mean}(v^2) - 2m \cdot \texttt{mean}(v) + m^2 = \texttt{mean}(v^2) - m^2.
+$$
 :::
 
 :::{admonition} Proposition
-Für $v \in \mathbb{R}^n$ mit $\texttt{mean}(v)=0$ (ein *zentriertes* Sample, etwa $v := w - (\texttt{mean}(w))_{i=1}^n$ für ein beliebiges $w \in \mathbb{R}^n$) 
+Für $v \in \mathbb{R}^n$, $v \neq 0$, mit $\texttt{mean}(v)=0$ (ein *zentriertes* Sample, etwa $v := w - (\texttt{mean}(w))_{i=1}^n$ für ein beliebiges $w \in \mathbb{R}^n$) 
 ist $\texttt{rmse}(v)^2 = \texttt{mse}(v,0) = \frac{1}{n} \sum_{i=1}^n v_i^2$ und der Vektor $v' := {\left( \dfrac{v_i}{\texttt{rmse}(v)} \right)}_{i=1}^n$ erfüllt $\texttt{mean}(v')=0$ und $\texttt{rmse}(v')=1$ (ein *normiertes* Sample).
 :::
 
 :::{admonition} Beweis
-Übungsaufgabe.
+Das rechnet man direkt nach. Dass das zentrierte $v = w - (\texttt{mean}(w))_{i=1}^n$ wirklich Mittelwert $0$ hat, ist die Linearität des Mittelwerts: $\texttt{mean}(v) = \texttt{mean}(w) - \texttt{mean}(w) = 0$.
+Wegen $\texttt{mean}(v) = 0$ ist $\texttt{rmse}(v)^2 = \texttt{mse}(v, \texttt{mean}(v)) = \texttt{mse}(v, 0) = \frac{1}{n} \sum_{i=1}^n v_i^2$, das ist der Verschiebungssatz mit $m = 0$.
+Für $v'$ sei $s := \texttt{rmse}(v)$, und $s > 0$ wegen $v \neq 0$. Dann ist $\texttt{mean}(v') = \frac{1}{n} \sum_{i=1}^n \frac{v_i}{s} = \frac{\texttt{mean}(v)}{s} = 0$ und daher
+$\texttt{rmse}(v')^2 = \texttt{mse}(v', 0) = \frac{1}{n} \sum_{i=1}^n \frac{v_i^2}{s^2} = \frac{\texttt{rmse}(v)^2}{s^2} = 1$.
 :::
 
 ### Informationsgehalt
@@ -127,7 +154,33 @@ Zu Median und Mittelwert gehört traditionell noch der **Modus**, der häufigste
 
 ## Momente einer Zufallsvariable
 
-### Erwartungswert, allgemein
+### Erwartungswert, diskret
+
+:::{admonition} Definition
+Sei $X \colon \Omega \to \mathbb{R}$ eine diskrete reelle Zufallsvariable (also $\Omega$ ein diskreter Wahrscheinlichkeitsraum, höchstens abzählbar). Dann ist der *Erwartungswert* von $X$ definiert als
+
+$$
+\mathbb{E}X := \mathbb{E}(X) := \sum_{\omega \in \Omega} X(\omega) P(\{\omega\}).
+$$
+
+Wenn man nicht "in $\Omega$" arbeiten möchte, kann man diese Summe auch umstellen und über alle Werte $\{x_i\}_{i\in I}$ summieren, die $X$ annimmt:
+$\mathbb{E}(X) = \sum_{i \in I} x_i P(X = x_i)$.
+:::
+
+Der Erwartungswert ist also das mit den Wahrscheinlichkeiten gewichtete Mittel der Werte von $X$.
+
+:::{admonition} Beispiel
+Der Erwartungswert einer Gleichverteilung auf $\Omega = \{1,\dots,n\}$ ist $\sum_{i=1}^n \frac{i}{n}$, also $\frac{n(n+1)}{2n} = \frac{n+1}{2}$.
+:::
+
+Für endliches $\Omega$ ist die Summe endlich und existiert immer. Ist $\Omega$ abzählbar unendlich, so ist die Summe eine Reihe, und die muss nicht konvergieren: Es gibt Zufallsvariablen, für die sich kein Erwartungswert bestimmen lässt. Ein Beispiel: Auf $\Omega = \{1, 2, 3, \dots\}$ ist durch $P(\{k\}) := \frac{6}{\pi^2 k^2}$ ein Wahrscheinlichkeitsmaß gegeben (weil $\sum_{k \geq 1} \frac{1}{k^2} = \frac{\pi^2}{6}$), und für $X(k) := k$ wird die Reihe $\sum_{k \geq 1} k \cdot \frac{6}{\pi^2 k^2} = \frac{6}{\pi^2} \sum_{k \geq 1} \frac{1}{k}$ zur harmonischen Reihe, die divergiert. Diese Zufallsvariable hat keinen Erwartungswert.
+
+Für stetige Zufallsvariablen, die überabzählbar viele Werte annehmen, tritt an die Stelle der Summe ein Integral über eine Dichte $f$: $\mathbb{E}(X) = \int x f(x)\,dx$. Diese Definition geben wir im Kapitel [Stetige Verteilungen](stetige-verteilungen.md), sobald wir Dichten kennen. Alles, was wir in diesem Kapitel über den Erwartungswert festhalten, gilt für stetige Zufallsvariablen genauso, mit Integralen an Stelle von Summen.
+
+### Exkurs: Erwartungswert allgemein
+
+::::{note}
+**Exkurs (nicht klausurrelevant):** Summe und Dichte-Integral sind zwei Spezialfälle einer einzigen Definition, die für beliebige Zufallsvariablen funktioniert.
 
 :::{admonition} Definition
 Sei $X \colon \Omega \to \mathbb{R}$ eine reelle Zufallsvariable, dann ist der *Erwartungswert* definiert als
@@ -137,19 +190,8 @@ $\mathbb{E}X := \mathbb{E}(X) := \int_{\Omega} X dP = \int_{\Omega} X(\omega) d 
 also als das Integral der Abbildung $X$ bezüglich des Maßes $P$.
 :::
 
-Dieses Integral existiert im Allgemeinen nicht, d.h. es gibt Zufallsvariablen, für die sich kein Erwartungswert bestimmen lässt.
-
-### Erwartungswert, diskret
-
-Wenn $X \colon \Omega \to \mathbb{R}$ eine diskrete reelle Zufallsvariable ist (also $\Omega$ ein diskreter Wahrscheinlichkeitsraum, höchstens abzählbar),
-so ist $\mathbb{E}(X) = \sum_{\omega \in \Omega} X(\omega) P({\omega})$ (das Integral vereinfacht sich zu einer Summe).
-
-Wenn man nicht "in $\Omega$" arbeiten möchte, kann man diese Summe auch umstellen und über alle Werte $\{x_i\}_{i\in I}$ summieren:
-$\mathbb{E}(X) = \sum_{i \in I} x_i P(X = x_i)$.
-
-:::{admonition} Beispiel
-Der Erwartungswert einer Gleichverteilung auf $\Omega = \{1,\dots,n\}$ ist $\sum_{i=1}^n \frac{i}{n}$, also $\frac{n(n+1)}{2n} = \frac{n+1}{2}$.
-:::
+Dieses Integral (das Lebesgue-Integral bezüglich $P$) existiert im Allgemeinen nicht, d.h. es gibt Zufallsvariablen, für die sich kein Erwartungswert bestimmen lässt. Für diskretes $\Omega$ vereinfacht sich das Integral zur Summe $\sum_{\omega \in \Omega} X(\omega) P(\{\omega\})$ von oben, und hat $X$ eine Dichte $f$, so wird daraus das Integral $\int x f(x)\,dx$. Mit dieser allgemeinen Definition lassen sich die Rechenregeln unten für alle Zufallsvariablen auf einmal beweisen; das ist der Grund, warum sie in der Maßtheorie so gewählt wird.
+::::
 
 Es gibt einen inneren Zusammenhang zwischen dem Erwartungswert und den Stichproben einer Zufallsvariable:
 
@@ -202,6 +244,8 @@ $\mathbb{V}X := \mathbb{V}(X) := Var(X) := \mathbb{E}\left( {\left(X - \mathbb{E
 :::
 
 :::{admonition} Proposition
+**(Verschiebungssatz)**
+
 Es ist $\mathbb{V}(X) = \mathbb{E}\left( X^2 \right) - {\left(\mathbb{E}X\right)}^2$.
 :::
 
@@ -217,6 +261,7 @@ $$
 $$
 :::
 
+Das ist das Gegenstück zum Verschiebungssatz $\texttt{rmse}(v)^2 = \texttt{mean}(v^2) - \texttt{mean}(v)^2$ für Samples von oben.
 Für eine zentrierte Zufallsvariable, d.h. mit $\mathbb{E}(X) = 0$, ist offensichtlich $\mathbb{V}(X) = \mathbb{E}(X^2)$.
 
 :::{admonition} Definition
@@ -227,18 +272,48 @@ Die Schiefe ist ein Maß dafür, wie symmetrisch die Verteilung um den Erwartung
 Man nennt $\sigma(X) := \sqrt{\mathbb{V}(X)}$ die *Standardabweichung* von X.
 :::
 
-Die Varianz hilft uns bei der Einschätzung, wie wahrscheinlich gewisse Abweichungen vom Erwartungswert sind.
+Die Varianz hilft uns bei der Einschätzung, wie wahrscheinlich gewisse Abweichungen vom Erwartungswert sind. Der Schlüssel dazu ist eine Ungleichung, die zunächst nur den Erwartungswert benutzt:
+
+:::{admonition} Satz
+**(Markov-Ungleichung)**
+
+Für $X$ eine reelle Zufallsvariable mit $X \geq 0$ und $c > 0$ ist
+
+$$
+P\left( X \geq c \right) \leq \dfrac{\mathbb{E}X}{c}.
+$$
+:::
+
+:::{admonition} Beweis
+Sei $1_{\{X \geq c\}} \colon \Omega \to \{0,1\}$ die Indikatorfunktion des Ereignisses $\{X \geq c\}$, also $1$ auf $\{X \geq c\}$ und $0$ sonst. Dann gilt punktweise $c \cdot 1_{\{X \geq c\}} \leq X$: Wo der Indikator $1$ ist, ist $X \geq c$, und wo er $0$ ist, ist $X \geq 0$ nach Voraussetzung. Der Erwartungswert einer Indikatorfunktion ist die Wahrscheinlichkeit des Ereignisses, im diskreten Fall $\mathbb{E}(1_A) = \sum_{\omega \in A} P(\{\omega\}) = P(A)$. Mit der Linearität und der Monotonie des Erwartungswerts (Rechenregeln oben) folgt
+
+$$
+c \cdot P(X \geq c) = \mathbb{E}\left( c \cdot 1_{\{X \geq c\}} \right) \leq \mathbb{E}X,
+$$
+
+und Teilen durch $c > 0$ liefert die Behauptung.
+:::
+
+Die Markov-Ungleichung ist grob, aber sie liefert sofort die Ungleichung, die wir eigentlich wollen:
 
 :::{admonition} Satz
 **(Tschebyscheff-Ungleichung)**
 
-Für $X$ eine reelle Zufallsvariable, $c \in \mathbb{R}$ ist
+Für $X$ eine reelle Zufallsvariable, $c > 0$ ist
 
 $$
 P\left( | X - \mathbb{E} X | \geq c \right) \leq \dfrac{\mathbb{V}X}{c^2}.
 $$
+:::
 
-**ohne Beweis**.
+:::{admonition} Beweis
+Die Zufallsvariable $Y := {\left( X - \mathbb{E}X \right)}^2$ ist nichtnegativ, und nach Definition der Varianz ist $\mathbb{E}Y = \mathbb{V}X$. Die Markov-Ungleichung für $Y$ mit der Schranke $c^2 > 0$ ergibt
+
+$$
+P\left( {\left( X - \mathbb{E}X \right)}^2 \geq c^2 \right) \leq \dfrac{\mathbb{E}Y}{c^2} = \dfrac{\mathbb{V}X}{c^2}.
+$$
+
+Weil $c > 0$ ist, gilt ${\left( X - \mathbb{E}X \right)}^2 \geq c^2$ genau dann, wenn $|X - \mathbb{E}X| \geq c$. Die beiden Ereignisse sind also gleich, und das ist die Behauptung.
 :::
 
 Dabei ist der Spezialfall $c=\sigma$ trivial, weil auf der rechten Seite nur $1$ steht, und jede Wahrscheinlichkeit $\leq 1$ ist.
@@ -250,13 +325,36 @@ $$
 
 Daran sehen wir: Abweichungen von $2\sigma$ haben eine Wahrscheinlichkeit $\leq \frac{1}{4}$, und Abweichungen von $3\sigma$ bereits nur noch $\leq \frac{1}{9}$. Wenn wir also Abweichungen in Vielfachen von $\sigma$ messen, so ist die Wahrscheinlichkeit für so große Abweichungen näherungsweise umgekehrt quadratisch proportional (so steht's ja oben schon in der Ungleichung). Damit haben wir auch ein Kriterium zur Hand, um in Daten fehlerhafte Datenpunkte auszusortieren - wenn Abweichung größer $k\sigma$ mit $k > 1$ häufiger als erwartet zu sehen sind, dann gehören diese Datenpunkte zumindest nicht zu der Verteilung, die man erwartet.
 
-Die wichtigste Anwendung der Ungleichung ist das Stichprobenmittel selbst. Für $n$ unabhängige Kopien von $X$ hat $\overline{X_n}$ den Erwartungswert $\mathbb{E}X$ und (mit den Rechenregeln für die Varianz unten) die Varianz $\mathbb{V}X / n$, also
+Die wichtigste Anwendung der Ungleichung ist das Stichprobenmittel selbst. Damit können wir das Gesetz der großen Zahlen von oben in einer schwächeren Form tatsächlich beweisen, und zwar genau mit den Werkzeugen, die wir jetzt haben:
+
+:::{admonition} Satz
+**(Schwaches Gesetz der großen Zahlen)**
+
+Seien $X_1, \dots, X_n$ unabhängig und identisch verteilt wie $X$ (kurz: iid; jedes $X_i$ hat dieselbe Verteilung wie $X$), und $X$ habe endliche Varianz. Für das Stichprobenmittel $\overline{X_n} := \frac{1}{n} \sum_{i=1}^n X_i$ gilt dann für jedes $c > 0$
 
 $$
-P\left( | \overline{X_n} - \mathbb{E} X | \geq c \right) \leq \dfrac{\mathbb{V}X}{n c^2}.
+P\left( | \overline{X_n} - \mathbb{E} X | \geq c \right) \leq \dfrac{\mathbb{V}X}{n c^2} \xrightarrow{n \to \infty} 0.
+$$
+:::
+
+:::{admonition} Beweis
+Nach der Linearität des Erwartungswerts ist $\mathbb{E}\overline{X_n} = \frac{1}{n} \sum_{i=1}^n \mathbb{E}X_i = \mathbb{E}X$, denn jedes $X_i$ hat denselben Erwartungswert wie $X$.
+Nach den Rechenregeln für die Varianz (Abschnitt *Rechenregeln für die Varianz* weiter unten: $\mathbb{V}(aY) = a^2\,\mathbb{V}Y$, und die Varianz einer Summe unabhängiger Zufallsvariablen ist die Summe der Varianzen) ist
+
+$$
+\mathbb{V}\overline{X_n} = \dfrac{1}{n^2} \mathbb{V}\left( \sum_{i=1}^n X_i \right) = \dfrac{1}{n^2} \sum_{i=1}^n \mathbb{V}X_i = \dfrac{n\,\mathbb{V}X}{n^2} = \dfrac{\mathbb{V}X}{n}.
 $$
 
-Das ist das Gesetz der großen Zahlen mit einer Zahl dran: Die Wahrscheinlichkeit einer Abweichung um mehr als $c$ fällt wie $1/n$, oder anders gelesen, der typische Fehler des Stichprobenmittels schrumpft wie $1/\sqrt{n}$. Wer den Fehler halbieren will, braucht die vierfache Stichprobe. Die Schranke ist grob; das Kapitel [Normalverteilung](normalverteilung.ipynb) liefert mit dem zentralen Grenzwertsatz eine schärfere, und das Kapitel [Statistische Tests](statistische-tests.md) macht daraus das Rezept, mit dem man von der Stichprobe auf die Population schließt.
+Die Tschebyscheff-Ungleichung für $\overline{X_n}$ liefert nun $P(|\overline{X_n} - \mathbb{E}X| \geq c) \leq \mathbb{V}\overline{X_n} / c^2 = \mathbb{V}X / (n c^2)$, und dieser Ausdruck geht für $n \to \infty$ gegen $0$.
+:::
+
+Das ist genau die stochastische Konvergenz, die wir oben aus dem (unbewiesenen) starken Gesetz der großen Zahlen gefolgert hatten: Das schwache Gesetz ist die Form, die wir mit unseren Mitteln beweisen können; das starke Gesetz mit seiner fast sicheren Konvergenz braucht mehr Werkzeug, kommt dafür aber ohne die Voraussetzung endlicher Varianz aus.
+
+Das schwache Gesetz ist außerdem das Gesetz der großen Zahlen mit einer Zahl dran: Die Wahrscheinlichkeit einer Abweichung um mehr als $c$ fällt wie $1/n$, oder anders gelesen, der typische Fehler des Stichprobenmittels schrumpft wie $1/\sqrt{n}$. Wer den Fehler halbieren will, braucht die vierfache Stichprobe. Die Schranke ist grob; das Kapitel [Normalverteilung](normalverteilung.ipynb) liefert mit dem zentralen Grenzwertsatz eine schärfere, und das Kapitel [Statistische Tests](statistische-tests.md) macht daraus das Rezept, mit dem man von der Stichprobe auf die Population schließt.
+
+:::{admonition} Bemerkung
+Im Deep Learning ist der wahre Loss eines Modells der Erwartungswert der Loss-Funktion über die Verteilung der Daten, und den kann man nicht ausrechnen, weil man diese Verteilung nicht kennt. Ein Mini-Batch aus wenigen Datenpunkten liefert stattdessen ein Stichprobenmittel des Loss: billig, aber mit hoher Varianz, also genau die Situation des schwachen Gesetzes der großen Zahlen, und $\mathbb{V}X / n$ sagt, wie viel Rauschen ein Batch der Größe $n$ mitbringt. Die Vorlesung *Einführung in Deep Learning* baut darauf auf (stochastischer Gradientenabstieg).
+:::
 
 Wendet man das Gesetz der großen Zahlen auf die Zufallsvariable ${\left(X-\mathbb{E}(X)\right)}^2$ an, so sieht man, dass auch die Standardabweichung gegen die Sample-Standardabweichung konvergiert. Damit ist also die Sample-Standardabweichung ein guter Ersatz, wenn sich die wahre Varianz der Zufallsvariable nicht bestimmen lässt.
 

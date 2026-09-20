@@ -31,7 +31,12 @@ Maschinelles Lernen ist ein Teilgebiet der künstlichen Intelligenz, Statistik e
   * Testdatensatz-Performance - Generalisierung
   * Regression, Klassifikation - Supervised Learning
   * Dichteschätzung, Klassenbildung (clustering) - Unsupervised Learning
- 
+  * Fehlerfunktion (Verlustfunktion) - Loss
+  * Schätzen der Parameter - Training
+  * Stichprobe - Trainingsdaten (Trainingsmenge); ein Durchlauf durch alle Trainingsdaten heißt Epoche
+
+Die rechte Spalte ist das Vokabular des Kurses „Einführung in Deep Learning“, der durchgehend damit arbeitet; wer die linke Spalte kennt, findet sich dort schnell zurecht.
+
 Die *explorative Datenanalyse* ist das Berechnen summarischer Statistik und Visualsierung (also deskriptiver Statistik), um eine bessere Einschätzung über die Informationen in einem Datensatz zu erlangen.
 Beim *Data Mining* geht es darum, diesen Arbeitsschritt in einem Data Science Projekt zu automatisieren, also die automatische Entdeckung von Mustern und Zusammenhängen.
 
@@ -214,7 +219,13 @@ Wozu visualisieren?
 
 Ein zweiter Grund, immer zu plotten, ist das Simpson-Paradoxon von oben: Eine Kennzahl über alle Daten kann das Gegenteil von dem sagen, was in jeder Gruppe gilt, und im Plot sieht man die Gruppen.
 
-[Alberto Cairo hat den 'Datasaurus' erfunden](http://www.thefunctionalart.com/2016/08/download-datasaurus-never-trust-summary.html) um auf den Unterschied zwischen zusammenfassender Statistik und Visualisierung hinzuweisen. [Justin Matejka und George Fitzmaurice haben die 'Datasaurus Dozen' entwickelt](https://dl.acm.org/doi/10.1145/3025453.3025912), eine Reihe von Datensätzen, die allesamt gleiche zusammenfassende Statistiken aufweisen, aber visuell sehr deutliche Unterschiede zeigen.
+[Alberto Cairo hat den 'Datasaurus' erfunden](http://www.thefunctionalart.com/2016/08/download-datasaurus-never-trust-summary.html) um auf den Unterschied zwischen zusammenfassender Statistik und Visualisierung hinzuweisen:
+
+> Never trust summary statistics alone; always visualize your data.
+>
+> Alberto Cairo, 2016
+
+Justin Matejka und George Fitzmaurice haben daraus die 'Datasaurus Dozen' entwickelt {cite}`matejka2017`, eine Reihe von zwölf Datensätzen, die allesamt gleiche zusammenfassende Statistiken aufweisen (auf zwei Nachkommastellen dieselben Mittelwerte und Standardabweichungen von $x$ und $y$, und auch denselben Korrelationskoeffizienten von etwa $-0{,}06$; was der misst, kommt im Kapitel [Kovarianz und Abhängigkeit](kovarianz.md)), aber visuell sehr deutliche Unterschiede zeigen.
 
 ```{figure} images/AllDinosGrey_1.png
 :width: 480px
@@ -234,7 +245,7 @@ The Datasaurus Dozen, inspiriert von Anscombe's Quartett.
     
     Ein Histogramm besteht also eigentlich aus einer statistischen Transformation von stetigen (kardinal skalierten) Daten in diskrete Daten, die dann gebarchartet werden.
     
-    Empfehlenswert: [Ein schöner Blogpost über Histogramme, ohne Code, von Mike Yi von Chartio](https://chartio.com/learn/charts/histogram-complete-guide/)
+    Empfehlenswert: [der Artikel „Histogramm“ in der deutschen Wikipedia](https://de.wikipedia.org/wiki/Histogramm), ohne Code, und [die Histogramm-Beispiele in der Matplotlib-Dokumentation](https://matplotlib.org/stable/gallery/statistics/hist.html), mit Code
 
   * Scatterplot
   

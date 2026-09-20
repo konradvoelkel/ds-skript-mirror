@@ -23,6 +23,18 @@ Eine CSV-Datei können wir also genau dann "Daten" nennen, wenn wir einen Kontex
 
 Wenn wir etwa die Antworten zu einer Single-Choice-Frage betrachten, so ist meist in der Nachricht erfasst, welche Nr. die gewählte Antwort hat, nicht aber der String der tatsächlichen Antwort. Diesen notiert man in einem *Code Book*, einer Kodierungstabelle. Um also die Antworten als Daten begreifen zu können, müssen wir auf die Kodierungstabelle zurückgreifen.
 
+(ein-bunter-mix)=
+## Ein bunter Mix
+
+```{figure} images/conway_data_science_venn_diagram.png
+:width: 400px
+:align: center
+:name: conway-venn
+
+Das „Data Science Venn Diagram“ von Drew Conway (2013), CC BY-NC 3.0, Quelle: drewconway.com/zia/2013/3/26/the-data-science-venn-diagram
+```
+
+Drew Conway hat 2013 die bis heute meistzitierte Antwort auf die Frage gegeben, was Data Science ausmacht: die Schnittmenge von drei Kreisen. *Hacking Skills* heißt, mit Daten in beliebigen Formaten programmierend umgehen zu können, *Math & Statistics Knowledge* heißt, zu wissen, was eine Rechnung auf diesen Daten überhaupt aussagt, und *Substantive Expertise* ist die Fachkenntnis über den Bereich, aus dem die Daten stammen. Je zwei der Kreise ergeben etwas Bekanntes: Hacking und Statistik zusammen sind *Machine Learning*, Statistik und Fachkenntnis sind *Traditional Research*, so wie sie in den empirischen Wissenschaften seit langem betrieben wird. Hacking und Fachkenntnis ohne Statistik nennt Conway die *Danger Zone*: Wer Daten einlesen und ein Verfahren darauf loslassen kann und die Ergebnisse fachlich plausibel findet, wird sie auch glauben, ohne beurteilen zu können, ob sie mehr als Zufall sind. Das Tabellenblatt vom Anfang dieses Kapitels ist ein Beispiel dafür, dass diese Zone auch für Expert\*innen gefährlich ist. Diese Vorlesung liefert den Statistik-Kreis und übt den Hacking-Kreis an kleinen Datensätzen; die Fachkenntnis bringen Sie später aus dem Bereich mit, in dem Sie arbeiten.
 
 ## Was ist ein Data Scientist?
 
@@ -81,7 +93,7 @@ Eine Stunde Podcast [State of Data Science in 2021 with Stan Seibert](https://ta
 
 Ein Blogpost vom IDE-Entwickler JetBrains [State of Data Science in 2024: 6 Key Data Science Trends](https://blog.jetbrains.com/pycharm/2024/12/the-state-of-data-science/)
 
-Ein interessanter Kontrast ist dieser Artikel von Mike Loukides von O'Reilly: [What is data science?](http://radar.oreilly.com/2010/06/what-is-data-science.html) aus dem Jahr 2010. Man sieht schnell: die Werkzeuge und Softwarepakete sind im Wandel, und manches, was 2010 noch besonders spannend schien, ist heute schon vergessen. Man sieht aber auch: Data Science ist kein einfacher Hype, der bald vorüber zieht, sondern ein globaler Trend, der seit über 10 Jahren in der Entwicklung ist. Wenn Etiketten wie "Data Mining", "Big Data" und vielleicht auch "Data Science" im Laufe der Zeit an Bedeutung verlieren, so besteht doch kein Zweifel, dass statistische Methoden und maschinelles Lernen für lange Zeit eine wachsende Bedeutung in Informatik und Gesellschaft spielen werden.
+Ein interessanter Kontrast ist dieser Artikel von Mike Loukides von O'Reilly: [What is data science?](http://radar.oreilly.com/2010/06/what-is-data-science.html) aus dem Jahr 2010. Man sieht schnell: die Werkzeuge und Softwarepakete sind im Wandel, und manches, was 2010 noch besonders spannend schien, ist heute schon vergessen. Man sieht aber auch: Data Science ist kein einfacher Hype, der bald vorüber zieht, sondern ein globaler Trend, der seit über 10 Jahren in der Entwicklung ist, und Conways drei Kreise aus dem Abschnitt [Ein bunter Mix](#ein-bunter-mix) beschreiben ihn noch immer treffend. Wenn Etiketten wie "Data Mining", "Big Data" und vielleicht auch "Data Science" im Laufe der Zeit an Bedeutung verlieren, so besteht doch kein Zweifel, dass statistische Methoden und maschinelles Lernen für lange Zeit eine wachsende Bedeutung in Informatik und Gesellschaft spielen werden.
 
 ## Wie es weitergeht
 
