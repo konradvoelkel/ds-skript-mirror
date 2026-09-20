@@ -565,4 +565,39 @@ Wir könnten noch eine ganze Reihe Tests benötigen, und deren Voraussetzungen, 
   Voraussetzung: die untersuchte Variable ist kategoriell, wenigstens 25 Instanzen pro Eintrag in der Kontingenztabelle
   `scipy.stats.chi2_contingency`
 
-  
+## Exkurs: Konnte eine Umfrage die Fünf-Prozent-Frage beantworten?
+
+:::{note}
+**Exkurs (nicht klausurrelevant):** eine Anwendung des Abschnitts *Von der Stichprobe auf die Population* auf eine Frage, die im Februar 2025 alle gestellt haben.
+:::
+
+Bei der Bundestagswahl am 23. Februar 2025 kam das Bündnis Sahra Wagenknecht auf $4{,}981\,\%$ der Zweitstimmen. Zum Einzug in den Bundestag fehlten [9.529 Stimmen](https://www.bundeswahlleiterin.de/info/presse/mitteilungen/bundestagswahl-2025/29_25_endgueltiges-ergebnis.html) von rund 49 Millionen. In der letzten Woche vor der Wahl hatten [zwölf Umfragen](https://www.wahlrecht.de/umfragen/) mit je 1000 bis 2500 Befragten das BSW zwischen $4$ und $6\,\%$ gesehen. Hinterher hieß es, die Umfragen hätten daneben gelegen. Hatten sie das?
+
+Rechnen wir mit dem Rezept nach. Ein Anteil $\hat p = 0{,}05$ hat bei $n$ Befragten den Standardfehler $\sqrt{\hat p (1 - \hat p)/n}$:
+
+```python
+import numpy as np
+p = 0.05
+for n in [1000, 2000]:
+    se = np.sqrt(p * (1 - p) / n)
+    print(n, "Befragte: Standardfehler", round(100 * se, 2), "Punkte,",
+          "95-%-Intervall ±", round(196 * se, 2), "Punkte")
+```
+
+```
+1000 Befragte: Standardfehler 0.69 Punkte, 95-%-Intervall ± 1.35 Punkte
+2000 Befragte: Standardfehler 0.49 Punkte, 95-%-Intervall ± 0.96 Punkte
+```
+
+Eine Umfrage mit $2000$ Befragten, die $5\,\%$ meldet, sagt also: irgendwo zwischen $4$ und $6$. Alle zwölf Umfragen lagen in diesem Bereich, und das Wahlergebnis auch. Keine davon hat „daneben gelegen“; sie haben eine Frage beantwortet, die niemand gestellt hat, nämlich ob das BSW bei drei oder bei sieben Prozent steht. Die gestellte Frage war, ob es über oder unter $5{,}000\,\%$ liegt, bei einem wahren Wert von $4{,}981\,\%$. Um zwei Hundertstel Punkte aufzulösen, müsste das Intervall auf $\pm 0{,}02$ Punkte schrumpfen, und weil es nur mit $\sqrt{n}$ schrumpft, bräuchte man
+
+$$
+n \geq \left( \dfrac{1{,}96 \cdot \sqrt{0{,}05 \cdot 0{,}95}}{0{,}0002} \right)^2 \approx 4{,}6 \text{ Millionen Befragte},
+$$
+
+also fast jede zehnte wahlberechtigte Person. Das ist keine Umfrage mehr, das ist eine Wahl.
+
+Das Rezept liefert dabei nur die *untere* Schranke für die Unsicherheit, den reinen Stichprobenfehler. Dazu kommt alles, was die Voraussetzung einer Zufallsstichprobe verletzt: Wer ans Telefon geht oder in einem Online-Panel sitzt, ist keine Zufallsauswahl der Wahlberechtigten, und die Institute gewichten die Rohdaten deshalb nach Alter, Region und früherem Wahlverhalten, jedes nach eigener Methode. Wer am Dienstag „BSW“ sagt, wählt am Sonntag vielleicht anders oder gar nicht. Und die Frage lautet „Wen würden Sie wählen, wenn am Sonntag Wahl wäre?“, nicht „Wen haben Sie gewählt?“. Die Spanne von $4$ bis $6$ zwischen den Instituten in derselben Woche ist zum Teil Stichprobenfehler und zum Teil diese Methodenunterschiede; auseinanderhalten kann man beides erst, wenn man weiß, wie das Institut gewichtet hat. Genau das ist der Kontext, ohne den aus der Zahl „5 %“ kein Datum wird.
+
+Für die Lektüre von Umfragen bleibt: Ein Wert ohne Fehlerangabe ist unvollständig, die Fehlerangabe ist bei $1000$ Befragten und kleinen Parteien etwa $\pm 1{,}4$ Punkte, und eine Frage, deren Antwort feiner ist als dieses Intervall, kann keine Umfrage beantworten, egal wie seriös das Institut ist.
+

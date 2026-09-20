@@ -1,5 +1,13 @@
 # Was ist Data Science?
 
+## Vorab: ein Tabellenblatt, das Europa sparen ließ
+
+Im Jahr 2010 veröffentlichten die Harvard-Ökonomen Carmen Reinhart und Kenneth Rogoff eine Auswertung von zwei Jahrhunderten Staatsschulden und Wirtschaftswachstum {cite}`reinhart2010`. Ihr Befund: Sobald die Schulden eines Landes 90 % seiner Wirtschaftsleistung übersteigen, schrumpft die Wirtschaft im Mittel, um 0,1 % pro Jahr. Die Zahl machte Karriere. Sie stand im Haushaltsentwurf des US-Kongresses, der EU-Währungskommissar zitierte sie, und sie war ein Argument für die Sparpolitik in Europa nach der Finanzkrise.
+
+Drei Jahre später bekam Thomas Herndon, Doktorand in Amherst, in einem Seminar die Aufgabe, eine bekannte Studie nachzurechnen. Er bat um das Tabellenblatt und fand darin einen markierten Zellbereich, der fünf Zeilen zu kurz war: Australien, Österreich, Belgien, Kanada und Dänemark fehlten im Mittelwert, alles Länder mit hohen Schulden und ordentlichem Wachstum. Dazu kamen ausgelassene Jahre und eine ungewöhnliche Gewichtung. Mit allen drei Korrekturen wurden aus $-0{,}1\,\%$ Wachstum $+2{,}2\,\%$ {cite}`herndon2014`. Die Klippe bei 90 % gab es nicht.
+
+Daran ist alles drin, worum es in diesem Kurs geht. Die Rohzahlen waren echt und öffentlich; die Auswertung war eine Handvoll Mittelwerte; und trotzdem lag das Ergebnis daneben, weil niemand nachgesehen hatte, welche Zeilen eigentlich in der Rechnung stecken, und weil eine Tabellenkalkulation so etwas nicht zeigt. Es brauchte keine bessere Mathematik, um den Fehler zu finden, sondern jemanden, der die Daten noch einmal von vorn anfasst. Genau das üben wir: Daten laden, statt sie anzuklicken; jede Kennzahl mit dem Blick auf die Zeilen prüfen, aus denen sie entsteht; und Rechnungen so aufschreiben, dass andere sie wiederholen können. Deshalb arbeiten wir in diesem Kurs mit Python und nicht mit Excel, und deshalb hat das Kapitel [Daten putzen](data-cleaning.ipynb) den Grundsatz, jede Änderung an den Daten zu protokollieren.
+
 ## Was ist "Data"?
 
 Gerhard Goos, Vorlesungen über Informatik Band 1:
