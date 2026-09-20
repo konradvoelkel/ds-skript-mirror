@@ -71,13 +71,13 @@ $$
 :::
 
 :::{admonition} Beispiel
-**Warum die Basisrate zählt.** Ein Test erkennt eine seltene Krankheit zuverlässig: $99\,\%$ der Kranken werden erkannt, und nur $1\,\%$ der Gesunden bekommen fälschlich ein positives Ergebnis. Trotzdem ist bei einem positiven Test die Wahrscheinlichkeit, tatsächlich krank zu sein, klein. Der Grund ist die *Basisrate* $P(A)$: Ist nur einer von tausend krank, so kommen auf einen richtig erkannten Kranken etwa zehn fälschlich positive Gesunde — die kleine Fehlerrate von $1\,\%$ wirkt auf eine tausendmal größere Gruppe. Mit $A$ = „krank“ und $B$ = „Test positiv“ rechnet der Satz von Bayes genau diese Gewichtung aus:
+**Warum die Basisrate zählt.** Ein Test erkennt eine seltene Krankheit zuverlässig: $99\,\%$ der Kranken werden erkannt, und nur $1\,\%$ der Gesunden bekommen fälschlich ein positives Ergebnis. Trotzdem ist bei einem positiven Test die Wahrscheinlichkeit, tatsächlich krank zu sein, klein. Der Grund ist die *Basisrate* $P(A)$: Ist nur einer von tausend krank, so kommen auf einen richtig erkannten Kranken etwa zehn fälschlich positive Gesunde — die kleine Fehlerrate von $1\,\%$ wirkt auf eine tausendmal größere Gruppe. In der Sprache der Konfusionsmatrix aus dem Kapitel [Titanic EDA](explorative-analyse-mit-numpy.ipynb): Der Test ist ein Klassifikator, die $99\,\%$ sind sein Recall (die *Sensitivität*), das $1\,\%$ seine Falsch-Positiv-Rate, und gesucht ist seine Precision, der Anteil der Kranken unter den positiv Getesteten. Mit $A$ = „krank“ und $B$ = „Test positiv“ rechnet der Satz von Bayes genau diese Gewichtung aus:
 
 $$
 P(A|B) = \dfrac{0{,}99 \cdot 0{,}001}{0{,}99 \cdot 0{,}001 + 0{,}01 \cdot 0{,}999} = \dfrac{0{,}00099}{0{,}00099 + 0{,}00999} \approx 0{,}09.
 $$
 
-$P(A|B)$ ist eben nicht $P(B|A)$, sondern $P(B|A)$ *mal* das Verhältnis $P(A)/P(B)$, und $P(B)$ wird von der großen Gruppe der Gesunden dominiert. Wer die beiden bedingten Wahrscheinlichkeiten verwechselt, begeht den *Basisratenfehler* — der ist so häufig, dass er einen eigenen Namen hat. (Woher der Nenner kommt, klärt der nächste Satz.)
+$P(A|B)$ ist eben nicht $P(B|A)$, sondern $P(B|A)$ *mal* das Verhältnis $P(A)/P(B)$, und $P(B)$ wird von der großen Gruppe der Gesunden dominiert. Wer die beiden bedingten Wahrscheinlichkeiten verwechselt, begeht den *Basisratenfehler* — der ist so häufig, dass er einen eigenen Namen hat. Bei der Titanic-Regel „Frauen überleben“ lagen Recall $0{,}68$ und Precision $0{,}74$ nahe beieinander, weil Überlebende und Frauen ähnlich häufig sind; hier liegt zwischen $0{,}99$ und $0{,}09$ eine Basisrate von einem Promille. (Woher der Nenner kommt, klärt der nächste Satz.)
 :::
 
 :::{admonition} Beweis
@@ -138,11 +138,18 @@ $$
 :::
 
 :::{admonition} Beispiel
-Die Hypothese $H$ ist, dass die Daten standardnormalverteilt sind. Dann lässt sich $P(D|H)$ berechnen und $P(H|D)$ ist ein Schätzwert für $P(H)$, der $D$ berücksichtigt. Wenn wir also $P(H)$ zunächst schätzen, und dann die Daten $D$ betrachten, erhalten wir eine bessere Schätzung (die aber auch von der vorherigen abhängt).
-Diesen Prozess nennt man *Bayessches Updaten*.
+**Bayessches Updaten.** Der Posterior von heute ist der Prior von morgen. Im Krankheitstest-Beispiel war die Wahrscheinlichkeit, nach einem positiven Test krank zu sein, etwa $0{,}09$. Wird der Test ein zweites Mal gemacht, unabhängig vom ersten, so ist $0{,}09$ jetzt der Prior $P(H)$, die Likelihood eines positiven Ergebnisses bleibt $0{,}99$ bei Kranken und $0{,}01$ bei Gesunden, und die Evidenz rechnet man wieder mit der totalen Wahrscheinlichkeit aus:
+
+$$
+P(H|D) = \dfrac{0{,}99 \cdot 0{,}09}{0{,}99 \cdot 0{,}09 + 0{,}01 \cdot 0{,}91} \approx 0{,}91.
+$$
+
+Zwei positive Tests hintereinander machen aus einem Promille erst neun Prozent und dann einundneunzig. Jede neue Beobachtung schiebt den Posterior weiter, und das Ergebnis hängt vom ersten Prior ab: Wer mit $P(H) = 0{,}001$ startet, braucht zwei Tests, wer mit $0{,}5$ startet (etwa, weil schon Symptome vorliegen), ist nach einem Test bei $0{,}99$. Diesen Prozess nennt man *Bayessches Updaten*; das Kapitel [Statistische Modelle](statistische-modelle.md) macht aus der Likelihood ein allgemeines Schätzverfahren.
 :::
 
 ## Kovarianz
+
+Vorab eine Warnung, die wir schon aus der Einführung kennen: Kovarianz und Korrelation messen einen Zusammenhang über *alle* Datenpunkte. Zerfallen die Daten in Gruppen, kann der Zusammenhang in jeder Gruppe das umgekehrte Vorzeichen haben, siehe das [Simpson-Paradoxon](was-ist-data-science.md). Die Zahlen in diesem Kapitel sind also erst dann aussagekräftig, wenn man weiß, dass die Stichprobe aus einer Population stammt.
 
 :::{admonition} Definition
 Gegeben zwei Zufallsvariablen $X,Y \colon \Omega \to \mathbb{R}$ ist die **Kovarianz**

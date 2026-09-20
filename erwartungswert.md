@@ -120,7 +120,7 @@ Wenn wir z.B. wissen, dass $v$ ein Sample einer auf $\{0,1\}$ gleichverteilten Z
 
 ### Lagemaße zentraler Tendenz
 
-Zu Median und Mittelwert gehört traditionell noch der Modus, den wir auch noch diskutieren werden.
+Zu Median und Mittelwert gehört traditionell noch der **Modus**, der häufigste Wert. Er passt in dasselbe Muster: Der Median ist das beste konstante Modell für den absoluten Fehler, der Mittelwert für den quadratischen, und der Modus für den *Zählfehler*, der jede Abweichung gleich zählt, egal wie groß sie ist. Für ein nominales Merkmal, etwa die Spalte `Survived` der Titanic-Liste, ist das der einzige Fehler, der Sinn ergibt; das beste konstante Modell ist dann die häufigste Klasse, und der Anteil, in dem es richtig liegt, ist seine *Accuracy* (siehe [Titanic EDA](explorative-analyse-mit-numpy.ipynb)).
 [Hier gibt es ein kurzes Erklärvideo (auf Englisch) vom Crash Course Statistics zu Mean, Median und Mode](https://www.youtube.com/watch?v=kn83BA7cRNM&list=PL8dPuuaLjXtNM_Y-bUAhblSAdWRnmBUcr). [Das in der Playlist folgende Video diskutiert die damit zusammenhängenden Begriffe für Streuung von Daten](https://www.youtube.com/watch?v=R4yfNi_8Kqw) (die Abweichung, mit der wir angefangen haben).
 
 
@@ -249,6 +249,14 @@ P\left( | X - \mathbb{E} X | \geq k\sigma \right) \leq \dfrac{1}{k^2}.
 $$
 
 Daran sehen wir: Abweichungen von $2\sigma$ haben eine Wahrscheinlichkeit $\leq \frac{1}{4}$, und Abweichungen von $3\sigma$ bereits nur noch $\leq \frac{1}{9}$. Wenn wir also Abweichungen in Vielfachen von $\sigma$ messen, so ist die Wahrscheinlichkeit für so große Abweichungen näherungsweise umgekehrt quadratisch proportional (so steht's ja oben schon in der Ungleichung). Damit haben wir auch ein Kriterium zur Hand, um in Daten fehlerhafte Datenpunkte auszusortieren - wenn Abweichung größer $k\sigma$ mit $k > 1$ häufiger als erwartet zu sehen sind, dann gehören diese Datenpunkte zumindest nicht zu der Verteilung, die man erwartet.
+
+Die wichtigste Anwendung der Ungleichung ist das Stichprobenmittel selbst. Für $n$ unabhängige Kopien von $X$ hat $\overline{X_n}$ den Erwartungswert $\mathbb{E}X$ und (mit den Rechenregeln für die Varianz unten) die Varianz $\mathbb{V}X / n$, also
+
+$$
+P\left( | \overline{X_n} - \mathbb{E} X | \geq c \right) \leq \dfrac{\mathbb{V}X}{n c^2}.
+$$
+
+Das ist das Gesetz der großen Zahlen mit einer Zahl dran: Die Wahrscheinlichkeit einer Abweichung um mehr als $c$ fällt wie $1/n$, oder anders gelesen, der typische Fehler des Stichprobenmittels schrumpft wie $1/\sqrt{n}$. Wer den Fehler halbieren will, braucht die vierfache Stichprobe. Die Schranke ist grob; das Kapitel [Normalverteilung](normalverteilung.ipynb) liefert mit dem zentralen Grenzwertsatz eine schärfere, und das Kapitel [Statistische Tests](statistische-tests.md) macht daraus das Rezept, mit dem man von der Stichprobe auf die Population schließt.
 
 Wendet man das Gesetz der großen Zahlen auf die Zufallsvariable ${\left(X-\mathbb{E}(X)\right)}^2$ an, so sieht man, dass auch die Standardabweichung gegen die Sample-Standardabweichung konvergiert. Damit ist also die Sample-Standardabweichung ein guter Ersatz, wenn sich die wahre Varianz der Zufallsvariable nicht bestimmen lässt.
 

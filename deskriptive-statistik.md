@@ -125,12 +125,14 @@ Die Maßzahlen oben sind nicht für jedes Merkmal sinnvoll. Ein Mittelwert über
 
 Jedes Skalenniveau erlaubt zusätzlich alle Maßzahlen der Zeilen darüber: Für ein kardinales Merkmal darf man auch Median und Modus angeben, für ein ordinales auch den Modus. Umgekehrt geht es nicht — Mittelwert und Varianz einer nominalen Variablen sind bedeutungslos, auch wenn die Ausprägungen als Zahlen gespeichert sind. Eine Spalte mit dem Datentyp `int` ist also noch lange nicht kardinalskaliert: Eine ID ist nominal, eine Schulnote ordinal.
 
+**Zwei nominale Merkmale.** Für den Zusammenhang zweier nominaler Merkmale gibt es keinen Korrelationskoeffizienten, aber eine ebenso einfache Maßzahl: die **Kreuztabelle** (Kontingenztafel), die für jede Kombination von Ausprägungen zählt, wie oft sie vorkommt. Eine Kreuztabelle aus Ground Truth und Vorhersage heißt Konfusionsmatrix; das Kapitel [Titanic EDA](explorative-analyse-mit-numpy.ipynb) liest daraus die Güte eines Klassifikators ab, und pandas erzeugt sie mit `pd.crosstab`.
+
 **Kodierung kategorialer Merkmale.** Die meisten Verfahren des maschinellen Lernens (etwa die lineare Regression) rechnen mit Zahlen, und die Frage, wie man ein nominales oder ordinales Merkmal in Zahlen übersetzt, hängt an derselben Tabelle:
 
 * Ein **ordinales** Merkmal darf man als ganze Zahlen entlang seiner Ordnung kodieren („niedrig“ $= 1$, „mittel“ $= 2$, „hoch“ $= 3$; *Integer-* oder *Ordinal-Encoding*). Die Ordnung ist echt, nur die gleichen Abstände sind eine Modellannahme, die man im Blick behalten sollte.
 * Ein **nominales** Merkmal darf man das *nicht*: Kodiert man Studiengänge als $1, 2, 3$, erfindet man eine Reihenfolge und Abstände, die es nicht gibt, und ein lineares Modell würde damit rechnen. Stattdessen legt man je Ausprägung eine eigene Spalte an, die $1$ ist, wenn die Ausprägung vorliegt, und sonst $0$ (*One-Hot-Encoding*, die Spalten heißen auch *Dummy-Variablen*). Aus einer Spalte „Studiengang“ mit drei Ausprägungen werden so drei Spalten mit Nullen und Einsen.
 
-Wie man das mit pandas macht und was es für eine Regression bedeutet, zeigt das Kapitel [Lineare Regression](lineare-regression.ipynb) am Melbourne-Datensatz.
+Wie man das mit pandas macht und was es für eine Regression bedeutet, zeigt das Kapitel [Lineare Regression](lineare-regression.ipynb) am Melbourne-Datensatz. Wie man unterschiedliche Schreibweisen einer Kategorie vorher vereinheitlicht, steht im Kapitel [Daten putzen](data-cleaning.ipynb).
 
 ### Durchgerechnetes Beispiel
 
@@ -161,6 +163,8 @@ print(np.std(x, ddof=1))       # 3.3701... (Bessel-Korrektur, n-1)
 ## Visualisierung
 
 Wozu visualisieren?
+
+Ein zweiter Grund, immer zu plotten, ist das [Simpson-Paradoxon](was-ist-data-science.md) aus der Einführung: Eine Kennzahl über alle Daten kann das Gegenteil von dem sagen, was in jeder Gruppe gilt, und im Plot sieht man die Gruppen.
 
 [Alberto Cairo hat den 'Datasaurus' erfunden](http://www.thefunctionalart.com/2016/08/download-datasaurus-never-trust-summary.html) um auf den Unterschied zwischen zusammenfassender Statistik und Visualisierung hinzuweisen. [Justin Matejka und George Fitzmaurice haben die 'Datasaurus Dozen' entwickelt](https://dl.acm.org/doi/10.1145/3025453.3025912), eine Reihe von Datensätzen, die allesamt gleiche zusammenfassende Statistiken aufweisen, aber visuell sehr deutliche Unterschiede zeigen.
 

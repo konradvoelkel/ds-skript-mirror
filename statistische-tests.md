@@ -51,9 +51,51 @@ Nun sehen wir, dass es sich beim grau schattierten Bereich um den Bereich handel
 Wir verweisen für die mathematische Theorie von Bereichsschätzern / Konfidenzintervallen auf Vorlesungen über Statistik. Unser Ziel soll im Folgenden vor allem sein, den Begriff des Tests so weit verstanden zu haben, dass wir einordnen können, ob eine angebliche Interpretation eines statistischen Tests seriös ist. Wenn wir das können, wollen wir außerdem in der Lage sein, zu identifizieren, in welchen Situationen ein Hypothesentest sinnvolle Erkenntnisse liefern kann. Dafür wird es vor allem wichtig sein, den Begriff der Signifikanz zu besprechen.
 
 
+## Von der Stichprobe auf die Population
+
+Bevor wir Tests definieren, halten wir fest, was wir eigentlich wollen. Alle Kennzahlen aus der explorativen Analyse, ob Mittelwert, Anteil, Median oder Korrelationskoeffizient, sind an einer **Stichprobe** berechnet. Interessiert sind wir an der **Population**, aus der die Stichprobe stammt: an allen Passagieren, allen Kunden, allen Messungen, die man hätte machen können. Eine andere Stichprobe hätte eine andere Kennzahl geliefert. Der Schluss von der Stichprobe auf die Population besteht deshalb immer aus drei Schritten:
+
+1. **Schätzen:** die Kennzahl aus der Stichprobe berechnen (den Anteil, den Mittelwert, die Differenz zweier Mittelwerte).
+2. **Unsicherheit angeben:** ein Intervall, in dem die Kennzahl der Population plausibel liegt. Eine Zahl ohne Intervall ist kein Schluss auf die Population, sondern eine Beschreibung der Stichprobe.
+3. **Entscheiden:** die Frage, die man hatte, an dem Intervall messen. „Ist die Münze fair?“ heißt: Liegt $\frac12$ im Intervall? „Überleben Frauen häufiger?“ heißt: Liegt $0$ im Intervall für die Differenz?
+
+Für Schritt 2 gibt es zwei Wege.
+
+**Der Standardfehler.** Nach dem [zentralen Grenzwertsatz](normalverteilung.ipynb) ist das Mittel einer Stichprobe der Größe $n$ näherungsweise normalverteilt mit Standardabweichung $\sigma/\sqrt{n}$, dem *Standardfehler*. In $95\,\%$ der Stichproben liegt der Populationsmittelwert dann im Intervall
+
+$$
+\texttt{mean}(x) \pm 1{,}96 \cdot \dfrac{\sigma}{\sqrt{n}},
+$$
+
+wobei man $\sigma$ durch die Stichprobenstandardabweichung ersetzt. Für einen Anteil $\hat p$ ist $\sigma = \sqrt{\hat p(1-\hat p)}$. Beispiel Münzwurf: Bei $45$ Erfolgen in $100$ Würfen ist $\hat p = 0{,}45$ und der Standardfehler $\sqrt{0{,}45 \cdot 0{,}55/100} \approx 0{,}05$, das Intervall also etwa $[0{,}35,\ 0{,}55]$. Die $\frac12$ liegt darin, die Münze könnte fair sein. Um das zu verwerfen, müsste das Intervall enger werden, und es schrumpft nur mit $\sqrt{n}$: Für ein Intervall der halben Breite braucht man die vierfache Stichprobe. (Mit der gröberen Tschebyscheff-Ungleichung statt der Normalapproximation kommt man auf ein Intervall von $\pm 0{,}22$ und eine nötige Stichprobe von über $2000$ Würfen; die Rechnung steht im Ausblick unten.)
+
+**Der Bootstrap.** Für Kennzahlen, für die es keine Formel gibt oder man sie nicht kennt, tut man so, als wäre die Stichprobe die Population: Man zieht aus ihr *mit Zurücklegen* eine neue Stichprobe derselben Größe, berechnet die Kennzahl, und wiederholt das viele tausend Mal. Die Streuung dieser Bootstrap-Kennzahlen ist eine Schätzung für die Streuung der Kennzahl über echte Stichproben, und das $2{,}5$- und das $97{,}5$-Perzentil geben ein $95\,\%$-Intervall. Mit den Arrays `survived` und `sex` aus dem Kapitel [Titanic EDA](explorative-analyse-mit-numpy.ipynb):
+
+```python
+rng = np.random.default_rng(0)
+f = survived[sex == 'female']
+m = survived[sex == 'male']
+differenz = f.mean() - m.mean()
+bootstrap = np.array([rng.choice(f, len(f)).mean() - rng.choice(m, len(m)).mean()
+                      for _ in range(10000)])
+print(differenz, np.percentile(bootstrap, [2.5, 97.5]))
+```
+
+```
+0.553  [0.495 0.609]
+```
+
+Die Überlebensrate der Frauen liegt um $55$ Prozentpunkte über der der Männer, und selbst am ungünstigen Rand des Intervalls noch um $50$. Die $0$ liegt weit außerhalb: Der Unterschied ist kein Zufall der Stichprobe. `scipy.stats.bootstrap` macht dasselbe in einer Zeile, mit besser korrigierten Perzentilen.
+
+**Was das Rezept voraussetzt.** Beide Wege setzen voraus, dass die Stichprobe eine *Zufallsstichprobe* aus der Population ist, also jede Zeile der Population dieselbe Chance hatte, in die Stichprobe zu kommen. Die Titanic-Liste ist das nur für eine einzige Population: die Passagiere dieses Schiffs (und auch da nur der Kaggle-Auszug). Über andere Schiffsunglücke sagt das Intervall nichts, so eng es auch ist. Wer eine Umfrage auf dem Campus macht und auf alle Studierenden schließen will, hat dasselbe Problem, und keine Stichprobengröße der Welt heilt es.
+
+Ein statistischer **Test**, das Thema dieses Kapitels, ist Schritt 3 in formalisierter Form: eine vorher festgelegte Regel, die aus der Stichprobe entscheidet, ob ein hypothetischer Wert noch plausibel ist. Der z-Test und der t-Test unten sind genau die Standardfehler-Rechnung von oben, nur andersherum gelesen: Statt zu fragen, ob $\mu_0$ im Intervall um $\texttt{mean}(x)$ liegt, fragen sie, wie viele Standardfehler $\texttt{mean}(x)$ von $\mu_0$ entfernt ist.
+
 ## Ausblick: Konfidenzintervalle
 
-Hinweis: dieser Abschnitt ist vor allem zum besseren Verständnis statistischer Tests hier, und wird für sich genommen nicht in der Klausur abgefragt.
+:::{note}
+**Ausblick (nicht klausurrelevant):** Dieser Abschnitt und die beiden Abschnitte *Vom Bereichsschätzer zum Test* und *Beste einfache Tests* sind Hintergrund zum besseren Verständnis statistischer Tests. Sie erklären, woher die Tests kommen, und werden für sich genommen nicht in der Klausur abgefragt. Wer sie überspringt, kann direkt beim Abschnitt *Tests* weiterlesen und dann bei *Der z-Test*.
+:::
 
 :::{admonition} Definition
 Sei $(\mathcal{X}, P_\theta : \theta \in \Theta)$ ein statistisches Modell, $\Sigma$ eine beliebige Menge und $\tau \colon \Theta \to \Sigma$ eine zu schätzende Größe in Abhängigkeit des Parameters $\theta$. Sei außerdem $0 < \alpha < 1$ eine reelle Zahl.
@@ -243,6 +285,16 @@ Jede Statistik $\phi \colon \mathcal{X} \to [0,1]$ (die wir als Entscheidungsreg
 Ein Test heißt **nichtrandomisiert**, wenn $\phi(x)=0$ oder $\phi(x)=1$ für alle $x \in \mathcal{X}$, andernfalls **randomisiert**.
 :::
 
+:::{admonition} Beispiel
+**Äpfel wiegen.** Eine Lieferung Äpfel soll im Mittel $200\,\mathrm{g}$ wiegen; wir nehmen die Gewichte als normalverteilt an und wiegen eine Stichprobe $x$. Drei Tests zur selben Sorte Frage:
+
+1. $\Theta_0 = (-\infty, 150]$ („die Äpfel wiegen im Mittel höchstens $150\,\mathrm{g}$“), $\Theta_1 = (150, \infty)$. Ein Test: $\phi(x) = 1$, wenn $\texttt{mean}(x) > 150$, sonst $0$.
+2. Dieselbe Hypothese, aber ein vorsichtigerer Test: $\phi(x) = 1$ erst, wenn $\texttt{mean}(x) > 160$. Er verwirft seltener, irrt also seltener, wenn $\Theta_0$ stimmt, und übersieht öfter, wenn $\Theta_1$ stimmt.
+3. $\Theta_0 = \{150\}$ („genau $150\,\mathrm{g}$“), $\Theta_1 = \mathbb{R} \setminus \{150\}$. Ein Test: $\phi(x) = 0$, wenn $150$ im Intervall $\texttt{mean}(x) \pm 1{,}96\,\sigma/\sqrt{n}$ aus dem Abschnitt *Von der Stichprobe auf die Population* liegt, sonst $1$.
+
+Die nächste Definition gibt den beiden Fehlern aus Variante 2 Namen; Variante 3 ist der z-Test von unten.
+:::
+
 :::{admonition} Definition
 Die Wahrscheinlichkeit für einen **Fehler erster Art**, das bedeutet Ablehnung der Nullhypothese (also $\phi(x)=1$) obwohl der wahre Parameter $\theta \in \Theta_0$ ist, ist $\sup_ {\theta \in \Theta_0} \mathbb{E}_\theta(\phi)$ und heißt auch **effektives Niveau** des Tests.
 Für ein $\alpha$ größergleich dem effektiven Niveau spricht man auch von einem Test von Niveau $\alpha$.
@@ -252,6 +304,8 @@ Es ist $1 - G_\phi(\theta)$ die Wahrscheinlichkeit für einen **Fehler zweiter A
 Für $\theta \in \Theta_1$ heißt $G_\phi(\theta)$ auch die **Macht** (oder Stärke, engl. power) von $\phi$ bei $\theta$.
 :::
 
+Im Äpfel-Beispiel hat der Test mit Schwelle $160$ ein kleineres effektives Niveau, aber auch weniger Macht als der mit Schwelle $150$.
+
 :::{admonition} Definition
 Ein Test $\phi$ heißt **gleichmäßig bester Test zum Niveau $\alpha$**, wenn er vom Niveau $\alpha$ ist und jeder andere Test vom Niveau $\alpha$ eine geringere oder gleiche Macht hat.
 :::
@@ -260,6 +314,10 @@ So ein gleichmäßig bester Test hat also höchstens $\alpha$ Wahrscheinlichkeit
 
 
 ## Ausblick: Vom Bereichsschätzer zum Test
+
+:::{note}
+Ausblick, nicht klausurrelevant (siehe Hinweis bei *Konfidenzintervalle*).
+:::
 
 Wir haben bereits bei der Diskussion eines Konfidenzintervalls für das Binomialmodell gesehen, dass uns dies helfen kann, zu einer Entscheidung zu kommen (konkret: soll ich eine Münze mit $45/100$ Erfolgen als 'unfair' ansehen, oder ist die Abweichung von $50/100$ mit einem Sampling Fehler zu erklären? Oder auch: wie viele weitere Stichproben benötige ich, um diese Frage eindeutig zu klären?)
 
@@ -285,6 +343,10 @@ Das Vorgehen ist also: wir berechnen aus den Daten $x \in \mathcal{X}$ das Konfi
 Wichtig ist, dass $\theta_0$ nicht selbst aus denselben Daten geschätzt wurde: ein Punktschätzer $\hat{\theta}(x)$, etwa der Mittelpunkt von $C(x)$, liegt immer in $C(x)$, und der Test würde dann nie verwerfen. Interessant ist der Test genau dann, wenn wir eine unabhängige Quelle für $\theta_0$ haben, z.B. wenn wir danach fragen, ob die Daten gleichverteilt bzw. normalverteilt sind, oder nicht.
 
 ## Ausblick: Beste einfache Tests
+
+:::{note}
+Ausblick, nicht klausurrelevant (siehe Hinweis bei *Konfidenzintervalle*).
+:::
 
 Wir haben bereits die Definition von Niveau und Macht gesehen, und das übliche Vorgehen, für festes Niveau nach dem mächtigsten Test zu suchen.
 
@@ -408,16 +470,25 @@ In Python benutzen wir `scipy.stats.f_oneway`.
 
 ## Signifikanz
 
-Zur Publikation in wichtigen Fachzeitschriften müssen Studien oft Ergebnisse vorweisen, die statistischen Tests genügen, deren Signifikanz (p-Wert) unter dem Schwellwert $0.05$ liegt - man sagt, das Ergebnis ist signifikant.
-Das Vorgehen dabei ist: man formuliert das, was man widerlegen (falsifizieren) will, als Nullhypothese. Bei einem p-Wert kleiner $0.05$ verwirft man diese Hypothese.
-Nochmal zur Erinnerung: **Fehler erster Art** ist falsche Ablehnung der Nullhypothese. Kleine p-Werte verleiten also zum Fehler erster Art.
+Von allen Begriffen dieses Kapitels ist dieser der wichtigste, denn er verlässt die Statistik und taucht in Zeitungen, Studien und Meetings auf. Er wird dort fast immer so verwendet, als stünde eine Zahl dahinter. Das tut es nicht.
 
-Das ist leider problematisch, denn
+:::{admonition} Definition
+Ein Ergebnis eines statistischen Tests heißt **statistisch signifikant**, wenn die Stichprobendaten so stark von der Nullhypothese abweichen, dass diese Annahme nach einer *vorher festgelegten* Regel verworfen wird.
+:::
 
-* auch signifikante Ergebnisse können völlig zufällig sein,
-* es gibt Tricks, den p-Wert systematisch zu verkleinern ohne ernsthaft mehr Kenntnis über die Fragestellung zu erlangen (p-value hacking, vgl. {ref}`pvalue-hacking`),
-* auch nichtsignifikante Ergebnisse können wissenschaftlich relevant sein,
-* der p-Wert wird sehr häufig falsch interpretiert. {cite}`haller`
+:::{admonition} Bemerkung
+In dieser Definition steckt keine Zahl. Die Regel darf beliebig streng oder beliebig dumm sein; "signifikant" heißt nur, dass sie angeschlagen hat. Ob das etwas bedeutet, kann man erst beurteilen, wenn man die Regel, das Niveau und die Nullhypothese kennt. Wer sagt "der Unterschied ist signifikant", hat sich also einen Kontext überlegt, in dem dieser Satz erlaubt ist; ohne den Kontext ist der Satz leer. Benutzen Sie das Wort ab jetzt so wie das Wort "stetig": nur noch in seiner Fachbedeutung.
+:::
+
+Die übliche Regel ist "$p < \alpha$" mit dem Niveau $\alpha = 0{,}05$. Das ist eine Konvention der Fachzeitschriften, keine Naturkonstante. Sie hat immerhin eine Begründung: Eine normalverteilte Größe weicht nur mit Wahrscheinlichkeit $5\,\%$ um mehr als knapp zwei Standardabweichungen ($1{,}96\,\sigma$) von ihrem Erwartungswert ab, also ist ein Ergebnis jenseits dieser Grenze "auffällig". Bei heiklen Fragen verlangt man mehr: $p \leq 0{,}01$ nennt man **sehr signifikant**, $p \leq 0{,}001$ **hochsignifikant** (rund drei Standardabweichungen). Die Teilchenphysik zählt gleich in Standardabweichungen und verlangt für eine Entdeckung fünf davon.
+
+Drei Warnungen gehören zur Definition:
+
+1. **Verwerfen von $H_0$ heißt nicht Annehmen von $H_1$.** Der Test hat nur gesagt, dass die Daten unter $H_0$ unwahrscheinlich sind; über die Alternative hat er nichts gesagt, und schon gar nichts darüber, ob $H_1$ die einzige andere Erklärung ist.
+2. **Ein hoher p-Wert sagt nichts.** "Nicht signifikant" heißt nur, dass die Stichprobe die Abweichung nicht von einem Stichprobenfehler unterscheiden kann. Es heißt nicht, dass es keine Abweichung gibt (siehe die Bemerkung zu ANOVA oben).
+3. **Ohne klug gewählte Nullhypothese hat der p-Wert keine Bedeutung.** Wer $H_0$ so wählt, dass sie ohnehin niemand glaubt, bekommt ein signifikantes Ergebnis geschenkt. Welche Hypothese man als $H_0$ formuliert, ist Gegenstand des nächsten Abschnitts.
+
+Nochmal zur Erinnerung: **Fehler erster Art** ist falsche Ablehnung der Nullhypothese. Kleine p-Werte verleiten also zum Fehler erster Art, und wer viele Tests macht, findet irgendwann einen signifikanten:
 
 ```{figure} images/xkcd-significant.png
 :width: 300px
@@ -427,16 +498,23 @@ Das ist leider problematisch, denn
 XKCD 882: Significant (So, uh, we did the green study again and got no link. It was probably a-- "RESEARCH CONFLICTED ON GREEN JELLY BEAN/ACNE LINK; MORE STUDY RECOMMENDED!")
 ```
 
+Zur Publikation in wichtigen Fachzeitschriften müssen Studien oft signifikante Ergebnisse vorweisen. Das ist problematisch, denn
+
+* auch signifikante Ergebnisse können völlig zufällig sein (der Comic),
+* es gibt Tricks, den p-Wert systematisch zu verkleinern, ohne mehr über die Fragestellung zu wissen (**p-value hacking**, vgl. {ref}`pvalue-hacking`): viele Hypothesen testen und nur die signifikante berichten, die Stichprobe erweitern, bis $p$ unter $0{,}05$ fällt, Ausreißer nachträglich entfernen,
+* auch nichtsignifikante Ergebnisse können wissenschaftlich relevant sein, werden aber seltener veröffentlicht (**Publikationsbias**),
+* der p-Wert wird sehr häufig falsch interpretiert, und zwar nicht nur von Studierenden: In der Befragung von {cite}`haller` beantworteten auch die meisten Methodik-Dozent\*innen mindestens eine von sechs Aussagen über die Bedeutung eines signifikanten Ergebnisses falsch.
+
 **Most Published Research Findings Are False**
 
 [Ioannidis JPA (2005) Why Most Published Research Findings Are False.
 PLOS Medicine 2(8): e124.](https://doi.org/10.1371/journal.pmed.0020124)
 
-> “the probability that a research finding is indeed true depends on the prior probability of it being true (before doing the study), the statistical power of the study, and the level of statistical significance”
+> "the probability that a research finding is indeed true depends on the prior probability of it being true (before doing the study), the statistical power of the study, and the level of statistical significance"
 
 Je unplausibler die Hypothese (niedrige prior probability), desto höher ist die Wahrscheinlichkeit, dass sich ein aufregender Befund als Fehlalarm entpuppt, unabhängig vom p-Wert.
 
-Ein sehr wichtiger Baustein um p-value-hacking zu unterbinden ist die Vorregistrierung von Studien. So verhindert man, dass nicht-signifikante Ergebnisse systematisch unterdrückt werden.
+Ein sehr wichtiger Baustein, um p-value hacking zu unterbinden, ist die Vorregistrierung von Studien: Hypothese, Niveau und Auswertung werden festgelegt, bevor die Daten da sind. Genau das verlangt die Definition oben mit "vorher festgelegte Regel".
 
 ```{figure} images/pvalue-hacking.png
 :width: 600px

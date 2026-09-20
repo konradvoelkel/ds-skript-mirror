@@ -172,6 +172,8 @@ Dann ist $N-e$ die Anzahl der Misserfolge und $\hat{\pi} := \frac{e}{N}$ eine Sc
 wenn wir davon ausgehen, dass immer die selbe Münze geworfen wurde.
 :::
 
+Damit haben wir schon alle Rollen der Statistik besetzt, auch wenn wir die Wörter erst später brauchen: Die Münze, die man beliebig oft werfen könnte, ist die **Population**, die $N$ Würfe sind eine **Stichprobe** daraus, und $\hat{\pi}$ ist eine Aussage über die Population, die man aus der Stichprobe gewonnen hat. Genauso ist eine Tüte Süßigkeiten die Population und eine Handvoll daraus die Stichprobe, aus der man die Farbverteilung in der Tüte schätzt. Was man vor dem Hineingreifen schon weiß oder vermutet (die Münze sieht normal aus, die Tüte ist eine Standardmischung), heißt später **Prior**. Dass der Schluss von der Stichprobe auf die Population nie sicher ist und wie man seine Unsicherheit beziffert, ist Thema der Kapitel [Erwartungswert und Varianz](erwartungswert.md) (Tschebyscheff-Ungleichung) und [Statistische Tests](statistische-tests.md).
+
 
 Nun werden wir Daten selten in Form von Bitfolgen mit völlig unabhängigen Bits interpretieren.
 Zum Beispiel die menschliche Körpergröße, gemessen in Zentimetern, ist eine relle Zahl größer $0$.
