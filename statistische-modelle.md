@@ -151,7 +151,9 @@ $\mathbb{V}_\theta(S) \leq \mathbb{V}_\theta(T)$
 
 Ein solcher Schätzer hat also minimale Streuung um den zu schätzenden Wert unter allen erwartungstreuen Schätzern.
 
-**Ausblick**
+:::{note}
+**Ausblick (nicht klausurrelevant):** Die Cramér-Rao-Ungleichung und die Fisher-Information in diesem Abschnitt sind Hintergrund dafür, dass es überhaupt beste Schätzer geben kann. Sie werden im Kurs nicht benötigt, um die Ergebnisse zu benutzen.
+:::
 
 Im Allgemeinen ist es sehr schwer, gleichmäßig beste erwartungstreue Schätzer zu bestimmen (es gibt sie im Allgemeinen nicht). Ausblick: Die *Cramer-Rao-Ungleichung* für *reguläre* statistische Modelle liefert eine Abschätzung der Varianz eines Schätzers durch die *Fisher-Information* (eine Größe, die sich auch aus der relativen Entropie berechnen lässt) und erlaubt so, gleichmäßig beste Schätzer daran zu erkennen, dass sie diese Varianzschranke nicht überschreiten. Für einen erwartungstreuen Schätzer $T$ eines reellen Parameters $\theta$ lautet sie
 

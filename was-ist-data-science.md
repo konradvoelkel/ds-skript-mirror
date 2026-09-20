@@ -49,7 +49,7 @@ starting to work on the “real” problem
 
 Patil beschreibt also, woran man gute Data Scientists erkennt: an fachlicher Tiefe in irgendeiner Disziplin und vor allem an der Neugier, ein Problem so lange zu zerlegen, bis daraus überprüfbare Hypothesen werden.
 
-Ein signifikanter Teil der Arbeit eines Data Scientist besteht in der Aufbereitung von Daten, dem sogenannten "Daten schrubben". Dabei kommen viele klassische Programmiertechniken zum Einsatz, etwa reguläre Ausdrücke und Kenntnis über Industriestandards bei Datentypen (GIS, Datumsangaben, Unicode und andere Encodings, CSV) und die Abweichung von Standards, die in der Praxis auftauchen.
+Ein signifikanter Teil der Arbeit eines Data Scientist besteht in der Aufbereitung von Daten, dem sogenannten "Daten schrubben". Dabei kommen viele klassische Programmiertechniken zum Einsatz, etwa reguläre Ausdrücke und Kenntnis über Industriestandards bei Datentypen (GIS, Datumsangaben, Unicode und andere Encodings, CSV) und die Abweichung von Standards, die in der Praxis auftauchen. Das Handwerk dazu hat in diesem Buch ein eigenes Kapitel, [Daten putzen](data-cleaning.ipynb).
 Auch im maschinellen Lernen, etwa beim Deep Learning, kann man durch Pflegen der Trainingsdaten erheblich bessere Ergebnisse erzielen.
 
 
@@ -74,6 +74,54 @@ Eine Stunde Podcast [State of Data Science in 2021 with Stan Seibert](https://ta
 Ein Blogpost vom IDE-Entwickler JetBrains [State of Data Science in 2024: 6 Key Data Science Trends](https://blog.jetbrains.com/pycharm/2024/12/the-state-of-data-science/)
 
 Ein interessanter Kontrast ist dieser Artikel von Mike Loukides von O'Reilly: [What is data science?](http://radar.oreilly.com/2010/06/what-is-data-science.html) aus dem Jahr 2010. Man sieht schnell: die Werkzeuge und Softwarepakete sind im Wandel, und manches, was 2010 noch besonders spannend schien, ist heute schon vergessen. Man sieht aber auch: Data Science ist kein einfacher Hype, der bald vorüber zieht, sondern ein globaler Trend, der seit über 10 Jahren in der Entwicklung ist. Wenn Etiketten wie "Data Mining", "Big Data" und vielleicht auch "Data Science" im Laufe der Zeit an Bedeutung verlieren, so besteht doch kein Zweifel, dass statistische Methoden und maschinelles Lernen für lange Zeit eine wachsende Bedeutung in Informatik und Gesellschaft spielen werden.
+
+## Ein erstes Beispiel: das Simpson-Paradoxon
+
+Bevor wir im nächsten Kapitel die Sprache der Stochastik aufbauen, ein Beispiel, für das man nur Prozentrechnung braucht und das trotzdem zeigt, warum Datenanalyse mehr ist als Ausrechnen. Es stammt aus einer medizinischen Studie über zwei Behandlungen von Nierensteinen {cite}`charig1986`; wir nennen die Behandlungen einfach A und B. Beide wurden an je 350 Patient\*innen angewendet, und "Erfolg" ist das, was die Mediziner\*innen als Erfolg definiert haben.
+
+| Behandlung | Patient\*innen | Erfolge | Erfolgsquote |
+|---|---|---|---|
+| A | 350 | 273 | 78 % |
+| B | 350 | 289 | 83 % |
+
+Stellen Sie sich vor, Sie haben Nierensteine. Welche Behandlung wählen Sie? Die meisten sagen B.
+
+Nun gibt es aber nicht einfach Nierensteine, sondern kleine und große. Teilen wir die Tabelle danach auf:
+
+| Behandlung | kleine Steine | große Steine |
+|---|---|---|
+| A | 81 von 87, also 93 % | 192 von 263, also 73 % |
+| B | 234 von 270, also 87 % | 55 von 80, also 69 % |
+
+Bei kleinen Steinen ist A besser, bei großen Steinen ist A besser. Wenn Sie kleine Steine haben, wollen Sie A; wenn Sie große Steine haben, wollen Sie A. Nur wenn Sie nicht wissen, wie groß Ihre Steine sind, wollen Sie B? Das kann nicht stimmen, denn Ihre Steine sind entweder klein oder groß.
+
+Die Auflösung steckt in den absoluten Zahlen, nicht in den Prozenten. Behandlung A wurde fast nur bei großen Steinen eingesetzt (263 von 350), Behandlung B fast nur bei kleinen (270 von 350). Große Steine sind schwerer zu behandeln, also zieht die große Gruppe der schweren Fälle die Gesamtquote von A nach unten, während B von der großen Gruppe der leichten Fälle profitiert. Die Ärzt\*innen haben die Therapie nach der Steingröße gewählt, und die Steingröße bestimmt den Erfolg. Eine solche Variable, die sowohl die Gruppenzugehörigkeit als auch das Ergebnis beeinflusst, heißt **Confounder** (Störvariable). Die Pointe: B sollte man nur wählen, wenn man sich damit aussuchen darf, kleine Steine zu haben.
+
+Dieses Phänomen heißt **Simpson-Paradoxon**: Ein Zusammenhang, der in der Gesamtheit gilt, kann sich in jeder einzelnen Untergruppe umkehren. Es tritt nicht nur bei Tabellen mit Prozenten auf, sondern genauso bei stetigen Merkmalen:
+
+```{figure} images/simpson-paradoxon.png
+:width: 560px
+:align: center
+:name: simpson-paradoxon
+
+Simpson-Paradoxon mit stetigen Merkmalen: Innerhalb jeder Gruppe steigt $y$ mit $x$, über alle Punkte zusammen fällt der Trend.
+```
+
+Im Nierenstein-Beispiel kannten wir die Steingröße. Oft ist die Variable, die die Gruppen erzeugt, aber gar nicht in der Tabelle: Dann sehen wir nur die Punktwolke rechts, ohne Farben, und der fallende Trend sieht völlig überzeugend aus. Eine solche nicht beobachtete Variable heißt **latente Variable**. An dem Wort ist nichts Geheimnisvolles, es heißt nur "nicht beobachtet". Die Gesamtverteilung ist dann eine **Mischung** aus zwei Gruppenverteilungen, und die Frage, ob sich eine Punktwolke in solche Gruppen zerlegen lässt, wird uns durch das ganze Buch begleiten: bei der [kontaminierten Normalverteilung](wichtigste-stetige-verteilungen.ipynb), beim [Clustering mit k-Means](kmeans.ipynb) und schließlich bei den [gemischten Gaußschen Modellen](expectation-maximization.ipynb). Dass Kovarianz und Korrelation genau in diese Falle laufen, sehen wir im Kapitel [Kovarianz](kovarianz.md).
+
+:::{admonition} Take-Home-Message
+Bevor Sie eine Tabelle aggregieren oder einen Trend ablesen, fragen Sie, ob die Daten heimlich aus mehreren Stichproben zusammengesetzt sind. Wenn ja, rechnen Sie je Gruppe. Und rechnen Sie mit absoluten Zahlen nach, nicht nur mit Prozenten.
+:::
+
+:::{admonition} Aufgabe: Simpson im Iris-Datensatz
+:class: tip
+Der Iris-Datensatz (den wir ab dem Kapitel [Iris](iris.ipynb) oft benutzen) enthält für 150 Pflanzen aus drei Spezies unter anderem Kelchblattlänge und Kelchblattbreite. Bestimmen Sie den Zusammenhang zwischen den beiden Maßen einmal über alle 150 Pflanzen und einmal je Spezies. Was beobachten Sie?
+:::
+
+:::{admonition} Lösung
+:class: dropdown
+Über alle Pflanzen hinweg ist der Zusammenhang schwach negativ (Korrelationskoeffizient etwa $-0{,}12$): breitere Kelchblätter gehen mit kürzeren einher. Innerhalb jeder Spezies ist er deutlich positiv (setosa etwa $0{,}74$, versicolor $0{,}53$, virginica $0{,}46$). Die Spezies ist der Confounder: *setosa* hat kurze, breite Kelchblätter, die anderen beiden lange, schmale. Wer die Spezies nicht kennt, sieht einen Trend, der in keiner Gruppe gilt. Wie man die Zahlen berechnet, steht im Kapitel [Kovarianz](kovarianz.md).
+:::
 
 ## Wie es weitergeht
 

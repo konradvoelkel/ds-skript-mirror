@@ -48,3 +48,6 @@ TODO.md
 todo/
 .sync-exclude.lst
 *.local-widgets.ipynb
+
+# Rohtranskripte und Standbilder der Aufzeichnungen (erzeugt, nicht versioniert)
+transcripts/

@@ -52,6 +52,7 @@ project:
         - file: explorative-analyse-beispiele.ipynb
         - file: iris.ipynb
         - file: pandas.ipynb
+        - file: data-cleaning.ipynb
     - title: Multivariate Stochastik
       children:
         - file: kovarianz.md
