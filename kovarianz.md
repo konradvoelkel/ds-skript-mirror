@@ -149,7 +149,7 @@ Zwei positive Tests hintereinander machen aus einem Promille erst neun Prozent u
 
 ## Kovarianz
 
-Vorab eine Warnung, die wir schon aus der Einführung kennen: Kovarianz und Korrelation messen einen Zusammenhang über *alle* Datenpunkte. Zerfallen die Daten in Gruppen, kann der Zusammenhang in jeder Gruppe das umgekehrte Vorzeichen haben, siehe das [Simpson-Paradoxon](was-ist-data-science.md). Die Zahlen in diesem Kapitel sind also erst dann aussagekräftig, wenn man weiß, dass die Stichprobe aus einer Population stammt.
+Vorab eine Warnung, die wir schon aus dem Kapitel [Deskriptive Statistik](deskriptive-statistik.md) kennen: Kovarianz und Korrelation messen einen Zusammenhang über *alle* Datenpunkte. Zerfallen die Daten in Gruppen, kann der Zusammenhang in jeder Gruppe das umgekehrte Vorzeichen haben, siehe das [Simpson-Paradoxon](deskriptive-statistik.md). Die Zahlen in diesem Kapitel sind also erst dann aussagekräftig, wenn man weiß, dass die Stichprobe aus einer Population stammt.
 
 :::{admonition} Definition
 Gegeben zwei Zufallsvariablen $X,Y \colon \Omega \to \mathbb{R}$ ist die **Kovarianz**
