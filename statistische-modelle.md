@@ -15,10 +15,44 @@ $$
 \sigma(x)^2 = \dfrac{1}{n} \sum_{i=1}^n (x_i-\mu)^2,\qquad \sigma^\ast(x)^2 = \dfrac{1}{n-1} \sum_{i=1}^n (x_i-\mu)^2
 $$
 
+Ganz konkret, für eine Stichprobe von $n = 48$ Werten, die tatsächlich aus einer Normalverteilung gezogen wurden:
+
+```python
+import numpy as np
+
+x = np.array([6.5281, 3.8003, 4.9575, 7.4818, 6.7351, 1.0454, 4.9002, 2.6973,
+              2.7936, 3.8212, 3.2881, 5.9085, 4.5221, 3.2434, 3.8877, 3.6673,
+              5.9882, 2.5897, 3.6261, 1.2918, -2.1060, 4.3072, 4.7289, 1.5157,
+              7.5395, 0.0913, 3.0915, 2.6256, 6.0656, 5.9387, 3.3099, 3.7563,
+              1.2244, -0.9616, 2.3042, 3.3127, 5.4606, 5.4048, 2.2253, 2.3954,
+              0.9029, 0.1600, -0.4125, 6.9016, 1.9807, 2.1239, 0.4944, 4.5550])
+
+print(np.mean(x))            # 3.3689...
+print(np.var(x))             # 5.0037...  Nenner n
+print(np.var(x, ddof=1))     # 5.1102...  Nenner n-1
+print(np.std(x))             # 2.2369...
+print(np.std(x, ddof=1))     # 2.2606...
+```
+
+Die beiden Formeln liefern also merklich verschiedene Zahlen — gut zwei Prozent Unterschied in der Varianz, und das bei $n = 48$. Welche ist die richtige? Und nebenbei: Dass wir $\mu(X)$ überhaupt durch $\texttt{mean}(x)$ ersetzen dürfen, haben wir bisher nur für plausibel gehalten; die Rechtfertigung liefert das Beispiel „das Stichprobenmittel ist erwartungstreu“ im Abschnitt *Erwartungstreue* weiter unten.
+
 In diesen Formeln muss man nun etwas aufpassen, wenn man das praktisch implementieren will - denn was ist $\mu$?
 In der Anwendung kenne ich $\mu(X)$ nicht, muss also $\mu(x)$ verwenden. Dann aber stellt sich heraus, dass die Information in $\{x_i-\mu(x)\}_{i=1}^{n-1}$ genügt, um $x_n - \mu(x)$ zu berechnen, denn nach Definition von $\mu(x)$ ist $x_n - \mu(x) = \sum_{i=1}^{n-1} (\mu(x) - x_i)$. Gewissermaßen gibt es also, wenn man $\mu(x)$ anstelle von $\mu(X)$ verwendet, einen Freiheitsgrad weniger als $n$. Wir werden gleich sehen, wie sich das auf die Eigenschaften dieser beiden Schätzer für $\sigma(X)$ auswirkt.
 
 Wenn man statistische Modelle formal definiert hat, kann man auch sehr gut über Konfidenzintervalle und Hypothesentests sprechen, was wir dann gleich im Anschluss erledigen. Konfidenzintervalle erweitern des Ansatz des bloßen Schätzens einer Statistik um die Information, welchen Fehlerbereich man dieser Schätzung beimisst. Hypothesentests erweitern den Ansatz darum, schließlich zu Entscheidungen zu kommen. Bei der Diskussion um Hypothesentests ist es unvermeidlich, auch über den problematischen Begriff der **Signifikanz** zu sprechen. Aber eins nach dem anderen!
+
+Als Landkarte für die folgenden Definitionen — links, worüber man redet, rechts, was es formal wird:
+
+| umgangssprachlich | formal |
+|---|---|
+| eine Familie von Verteilungen, aus der wir eine auswählen wollen | **statistisches Modell** $(\mathcal{X}, P_\theta : \theta \in \Theta)$ |
+| die Größe, die wir schätzen wollen (etwa $\mu$ oder $\sigma$) | Abbildung $\tau \colon \Theta \to \Sigma$ |
+| die Stichprobe, die wir in der Hand halten | ein Element $x \in \mathcal{X}$ — bzw., solange sie noch nicht gezogen ist, eine Zufallsvariable mit Werten in $\mathcal{X}$ |
+| das Verfahren, mit dem wir aus der Stichprobe eine Zahl machen | **Statistik** bzw. **Schätzer** $T \colon \mathcal{X} \to \Sigma$ |
+
+Der Stichprobenraum $\mathcal{X}$ ist dabei nicht der Raum eines einzelnen Messwerts, sondern der aller Stichproben: Bei $n$ reellen Messwerten ist $\mathcal{X} = \mathbb{R}^n$, eine Stichprobe also ein einziger Punkt in einem recht großen Raum.
+
+Der entscheidende Kunstgriff steht in der letzten Zeile. Weil die Stichprobe eine Zufallsvariable ist und das Schätzverfahren eine Abbildung darauf, ist auch das Ergebnis des Schätzens wieder eine Zufallsvariable. Damit dürfen wir von ihrem Erwartungswert und ihrer Varianz sprechen — und genau das brauchen wir, um überhaupt sagen zu können, was ein *guter* Schätzer ist: Bias, Konsistenz und mittlerer quadratischer Fehler sind alle in dieser Sprache formuliert.
 
 ## Statistische Modelle
 

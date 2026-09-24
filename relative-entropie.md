@@ -4,6 +4,8 @@
 
 ## Logarithmen
 
+Die elementaren Eigenschaften des Logarithmus — Definition, Basiswechsel, bit und nat — stehen im Einschub im Kapitel [Erwartungswert und Varianz](erwartungswert.md). Hier geht es um die Frage, warum in der Informationstheorie ausgerechnet der Logarithmus auftaucht und keine andere Funktion.
+
 :::{admonition} Lemma
 Sei $l \colon \{1,\dots\} = \mathbb{N}_{>0} \to \mathbb{R}$ eine Funktion mit
 1. $l(ab) = l(a) + l(b)$ -- "vollständig additiv"

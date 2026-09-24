@@ -154,6 +154,42 @@ Zu Median und Mittelwert gehört traditionell noch der **Modus**, der häufigste
 
 ## Momente einer Zufallsvariable
 
+### Vom Mittelwert zum Erwartungswert
+
+Bis hierher haben wir mit Samples gerechnet: $\texttt{mean}(v)$ ist eine Zahl, die aus $n$ konkreten Messwerten entsteht. Jetzt drehen wir die Blickrichtung um und fragen, welche Zahl zu einer *Verteilung* gehört, also zu dem Modell, aus dem die Daten stammen könnten. Der Weg dahin ist kurz, und er erklärt, warum der Erwartungswert genau so aussieht, wie er aussieht.
+
+Sei $X$ eine Zufallsvariable mit endlich vielen Werten $y_1,\dots,y_k$ und der Verteilung $p = (p_1,\dots,p_k)$, also $p_j = P(X = y_j)$. Nehmen wir für einen Moment an, die $p_j$ seien rationale Zahlen mit gemeinsamem Nenner $N$, sagen wir $p_j = \frac{a_j}{N}$ mit $a_1 + \dots + a_k = N$. Dann gibt es eine Stichprobe der Größe $N$, die diese Verteilung *exakt* trifft: die, in der der Wert $y_j$ genau $a_j$-mal vorkommt. Wir nennen sie das **idealisierte Sample** $\tilde{D}$ zu $p$ — die Stichprobe, die man bekäme, wenn der Zufall sich ein einziges Mal vollkommen an die Wahrscheinlichkeiten hielte.
+
+Den Mittelwert dieses idealisierten Samples können wir direkt hinschreiben, denn wir wissen ja, wie oft jeder Wert vorkommt:
+
+$$
+\texttt{mean}(\tilde{D}) = \dfrac{1}{N} \sum_{j=1}^k a_j y_j = \sum_{j=1}^k \dfrac{a_j}{N} y_j = \sum_{j=1}^k p_j y_j.
+$$
+
+Rechts steht keine Stichprobe mehr, sondern nur noch die Verteilung. Damit ist auch die Annahme überflüssig geworden, dass die $p_j$ rational sein müssen: Die rechte Seite ergibt für jede Verteilung Sinn, und der Umweg über $\tilde{D}$ hat nur dazu gedient, die Formel zu finden. Genau diese Größe nennen wir den Erwartungswert von $X$.
+
+:::{admonition} Beispiel
+Ein fairer Würfel hat $p = \left(\frac16,\dots,\frac16\right)$, also $N = 6$ und $a_j = 1$ für alle $j$. Das idealisierte Sample ist $\tilde{D} = (1,2,3,4,5,6)$ — jede Augenzahl genau einmal — mit
+
+$$\texttt{mean}(\tilde{D}) = \dfrac{1+2+3+4+5+6}{6} = \dfrac{21}{6} = 3{,}5.$$
+
+Der Erwartungswert eines fairen Würfels ist also $3{,}5$, eine Zahl, die der Würfel selbst nie zeigt.
+
+Ein gezinkter Würfel mit $p = \left(\frac{1}{10},\frac{1}{10},\frac{1}{10},\frac{1}{10},\frac{1}{10},\frac{5}{10}\right)$ hat $N = 10$, das idealisierte Sample $(1,2,3,4,5,6,6,6,6,6)$ und damit den Erwartungswert $\frac{45}{10} = 4{,}5$.
+:::
+
+Der Spezialfall $k = 1$ ist die Probe aufs Exempel: Eine Verteilung, die einen einzigen Wert $y_1$ mit Wahrscheinlichkeit $1$ annimmt — das Dirac-Maß $\delta_{y_1}$ aus dem Kapitel [Formalismus der Stochastik](intro-stochastik.md) — hat das idealisierte Sample $(y_1,\dots,y_1)$ und folglich den Erwartungswert $y_1$. Ein konstantes Modell und der Wert, den es vorhersagt, sind dasselbe. In der Sprache des vorigen Abschnitts: Das beste konstante Modell für den quadratischen Fehler war der Mittelwert der Daten, und als Verteilung gelesen ist ein konstantes Modell ein Dirac-Maß.
+
+:::{admonition} Beispiel
+Auf $\Omega = \{0,1,\dots,n-1\}$ — genau das, was `range(n)` in Python aufzählt — sei $P$ die Gleichverteilung. Für $Y(\omega) := \omega$ ist
+
+$$\mathbb{E}(Y) = \sum_{\omega=0}^{n-1} \dfrac{\omega}{n} = \dfrac{1}{n}\cdot\dfrac{(n-1)n}{2} = \dfrac{n-1}{2},$$
+
+für $X(\omega) := \omega + 1$ dagegen $\mathbb{E}(X) = \mathbb{E}(Y) + 1 = \frac{n+1}{2}$ (das ist die Linearität weiter unten). Für $n = 6$ sind das $2{,}5$ und $3{,}5$: Ob man die Würfelseiten bei $0$ oder bei $1$ zu zählen beginnt, macht genau einen Punkt aus. In Simulationen ist das die häufigste Quelle von Off-by-one-Fehlern.
+:::
+
+Damit können wir die Formel als Definition festhalten. Sie funktioniert wörtlich genauso, wenn $\Omega$ abzählbar unendlich ist; aus der endlichen Summe wird dann eine Reihe, und die muss nicht mehr konvergieren.
+
 ### Erwartungswert, diskret
 
 :::{admonition} Definition
@@ -210,6 +246,8 @@ Aus der $P$-fast sicheren Konvergenz folgt auch die stochastische Konvergenz:
 $\lim_{n\to\infty} P\left(|\overline{X_n}| \geq \epsilon \right) = 0$ für jedes $\epsilon > 0$.
 
 Wir wollen uns im Folgenden nicht mehr über Konvergenzbegriffe der Stochastik den Kopf zerbrechen (das kann man bei Bedarf immer noch nachholen und das lohnt sich auch je nach Anwendung), sondern in gewohnter Tradition das gute Gefühl mitnehmen, dass der Erwartungswert eine geeignete Größe ist, um erwartungsvoll eine Stichprobe zu analysieren. Je größer die Stichprobe, desto geringer dürfte die Abweichung des Stichprobenmittels vom Erwartungswert sein - so will es das Gesetz. Umgekehrt findet man also zu jeder vorgegebenen Schranke $\epsilon > 0$ eine Stichprobengröße $n$ sodass das Stichprobenmittel einer zufällig gezogenen Stichprobe fast immer um weniger als $\epsilon$ vom Erwartungswert abweicht.
+
+Damit schließt sich der Kreis zum idealisierten Sample vom Anfang des Abschnitts: Dort haben wir so getan, als hielte sich eine Stichprobe exakt an die Wahrscheinlichkeiten, um überhaupt auf die Formel zu kommen. Das Gesetz der großen Zahlen sagt, dass echte Stichproben das für große $n$ beliebig gut tun — der Umweg war also keiner.
 
 
 :::{admonition} Lemma
@@ -358,6 +396,37 @@ Im Deep Learning ist der wahre Loss eines Modells der Erwartungswert der Loss-Fu
 
 Wendet man das Gesetz der großen Zahlen auf die Zufallsvariable ${\left(X-\mathbb{E}(X)\right)}^2$ an, so sieht man, dass auch die Standardabweichung gegen die Sample-Standardabweichung konvergiert. Damit ist also die Sample-Standardabweichung ein guter Ersatz, wenn sich die wahre Varianz der Zufallsvariable nicht bestimmen lässt.
 
+
+### Einschub: Logarithmus
+
+Der nächste Abschnitt rechnet durchgehend mit Logarithmen. Weil die aus der Schule oft eine Weile her sind, hier das Nötige auf einer halben Seite.
+
+:::{admonition} Definition
+Für $b > 0$, $b \neq 1$, ist der *Logarithmus zur Basis $b$* die Umkehrung des Potenzierens: Aus $b^x = y$ folgt $x = \log_b(y)$, und umgekehrt. Er ist für $y > 0$ definiert.
+
+Drei Basen haben eigene Namen: $\ln := \log_e$ (der *natürliche* Logarithmus, zur Basis $e \approx 2{,}718$), $\operatorname{lb} := \log_2$ (der *binäre* Logarithmus, auch $\operatorname{ld}$ geschrieben) und $\log_{10}$ (der *dekadische*).
+:::
+
+Der Logarithmus zählt Größenordnungen. Zur Basis $10$ kann man das direkt ablesen: $\log_{10}(100) = 2$ und $\log_{10}(1000) = 3$, und weil der Logarithmus streng monoton wächst, liegt $\log_{10}(y)$ für jede Zahl $y$ zwischen $100$ und $1000$ zwischen $2$ und $3$. Die Anzahl der Dezimalstellen einer natürlichen Zahl $y$ ist damit $\lfloor \log_{10}(y) \rfloor + 1$ — und zur Basis $2$ entsprechend die Anzahl der Binärstellen.
+
+Die Rechenregeln folgen alle aus $e^{\ln(y)} = y$ und $\ln(e^x) = x$ sowie dem Potenzgesetz $(e^u)^v = e^{uv}$:
+
+$$
+\begin{aligned}
+b^x &= \left( e^{\ln b} \right)^x = e^{\ln(b)\, x}, \\
+\ln\left( b^x \right) &= x \ln(b), \\
+\ln(y) &= \ln\left( b^{\log_b(y)} \right) = \ln(b) \log_b(y), \\
+\text{also}\quad \log_b(y) &= \dfrac{\ln(y)}{\ln(b)}.
+\end{aligned}
+$$
+
+Die letzte Zeile ist die *Basiswechselformel*: Logarithmen zu verschiedenen Basen unterscheiden sich nur um einen konstanten Faktor. Deshalb ist die Wahl der Basis bei der Entropie eine Frage der Maßeinheit und nicht der Sache — zur Basis $2$ misst man in **bit**, zur Basis $e$ in **nat**, und zwischen beiden liegt der Faktor $\ln(2) \approx 0{,}693$.
+
+:::{admonition} Beispiel
+Die Zahl $77$ ist binär $1001101_2$, also $64 + 8 + 4 + 1$, und braucht damit $7$ Binärstellen. Nachgerechnet: $\log_2(77) = \frac{\ln 77}{\ln 2} \approx 6{,}27$, und $\lfloor 6{,}27 \rfloor + 1$ sind die erwarteten $7$ Stellen. Die Umkehrung liest man genauso: Mit $7$ bit lassen sich $2^7 = 128$ verschiedene Dinge unterscheiden, mit $6$ bit nur $64$ — zu wenig für $77$.
+:::
+
+In Numpy heißen die drei Funktionen `np.log` (natürlich, *nicht* dekadisch — eine beliebte Fehlerquelle), `np.log2` und `np.log10`.
 
 ## Entropie
 

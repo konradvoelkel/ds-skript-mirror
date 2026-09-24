@@ -18,6 +18,60 @@ heißt eine Abbildung $X \colon \Omega \to \mathcal{X}$ in eine Menge $\mathcal{
 Zur Erinnerung: Wenn $\Omega$ und $\mathcal{X}$ endliche Mengen sind, dann nennen wir jede Teilmenge Ereignis. Dann ist auch jede solche Abbildung eine Zufallsvariable.
 Wir werden später sehen: der Begriff Zufallsvariable wird genau dann genutzt, wenn wir an Erwartungswerten oder höheren Momenten interessiert sind.
 
+### Wo kommt der Zufall her?
+
+Bevor wir weiterrechnen, eine Frage, die selten gestellt und noch seltener beantwortet wird: Woher kommt in einem Datensatz eigentlich der Zufall? Die kurze Antwort lautet: Er kommt nicht vor. Er ist eine Entscheidung von uns.
+
+Eine Messung, die schon stattgefunden hat, ist nicht zufällig — der Würfel liegt, die Temperatur wurde abgelesen, die Zeile steht in der Datei. Auch die Erhebung selbst ist ein deterministischer Vorgang: Ein Sensor schreibt auf, was er misst. Zufall ist nichts, was wir in den Daten *finden*; er ist die Sprache, in der wir über das reden, was wir an den Daten nicht wissen oder nicht wissen wollen. Wir behandeln die beobachteten Häufigkeiten so, als wären sie Wahrscheinlichkeiten, und ziehen aus diesem Modell Schlüsse — der Zufall ist also ein Modellierungswerkzeug, kein Naturstoff.
+
+An drei Stellen begegnet er uns trotzdem ganz konkret:
+
+- **Bei der Auswahl.** Wenn wir aus vorhandenen Daten eine Teilmenge ziehen — eine Stichprobe, ein Mini-Batch, eine Aufteilung in Trainings- und Testdaten —, dann ist der Zufall der unsere. Wir ziehen absichtlich zufällig, damit die Auswahl keine Struktur mitbringt, die wir hinterher für ein Ergebnis halten.
+- **Beim Sampling aus einem Modell.** Aus einer Modellverteilung zu ziehen, erzeugt synthetische Daten. Auch dieser Zufall ist unserer.
+- **Im Rechner gar nicht.** Beides läuft auf einem deterministischen Gerät, das nur *Pseudozufall* erzeugt: eine Zahlenfolge, die zufällig aussieht, aber vollständig durch ihren Startwert (den *Seed*) bestimmt ist. Das ist kein Mangel, sondern der Grund, warum Auswertungen reproduzierbar sind (siehe [Stochastik programmieren](stochastik-programmieren.ipynb)).
+
+Der Weg, den die Daten dabei nehmen, lässt sich in drei Bildern erzählen. Zuerst die Erhebung: Aus der Welt wird ein Ausschnitt gewählt, über den Rohdaten anfallen, und aus den Rohdaten werden durch Bereinigung die Daten, mit denen man arbeitet.
+
+```{figure} images/dsprozess-simplified-1.png
+:width: 480px
+:align: center
+:name: ds-prozess-erhebung
+
+Erhebung: von der Welt über einen Ausschnitt und Rohdaten zu den Daten.
+```
+
+Dann die Modellierung. Aus den Daten wird ein Modell gebildet, und aus dem Modell lassen sich wieder Daten erzeugen — synthetische. Ob das Modell taugt, entscheidet sich daran, ob seine synthetischen Daten den echten ähneln.
+
+```{figure} images/dsprozess-simplified-2.png
+:width: 480px
+:align: center
+:name: ds-prozess-modell
+
+Modellierung: von den Daten zum Modell und zurück zu synthetischen Daten.
+```
+
+Und schließlich der Weg zur Zielgröße, um die es eigentlich geht: Die Daten werden transformiert, und aus den transformierten Daten wird die eine Zahl berechnet, die wir wissen wollten.
+
+```{figure} images/dsprozess-simplified-3.png
+:width: 480px
+:align: center
+:name: ds-prozess-zielgroesse
+
+Auswertung: von den Daten über transformierte Daten zur Zielgröße.
+```
+
+:::{admonition} Beispiel
+**Ein Würfelwurf, ganz ausbuchstabiert.** Der *Weltausschnitt* ist ein Würfel auf einem Tisch. Als *Rohdaten* nehmen wir an, eine Kamera liefere für jeden Zeitpunkt die 3D-Koordinaten der acht Ecken, also $8 \cdot 3$ Zahlen je Bild. Nach dem Aussortieren unbrauchbarer Bilder sind das die *Daten*. Daraus rechnen wir *transformierte Daten*: Mittelpunkt und Rotationswinkel des Würfels, also $3 + 3$ Zahlen, denn mehr braucht man nicht, um die Lage eines Würfels zu beschreiben. Erst am Ende steht die *Zielgröße*, die uns tatsächlich interessiert: die Augenzahl oben, eine Zahl in $\{1,\dots,6\}$.
+
+Der ganze Weg von der Welt zur Zielgröße ist genau das, was wir eine Zufallsvariable nennen: eine Abbildung $X \colon \Omega \to \{1,\dots,6\}$, wobei $\Omega$ die möglichen Weltzustände sind. Nichts an dieser Abbildung ist zufällig — sie ist eine lange, aber eindeutige Rechenvorschrift. Der Zufall steckt allein darin, dass wir nicht wissen, welches $\omega \in \Omega$ vorliegt, und deshalb $\Omega$ mit einem Wahrscheinlichkeitsmaß versehen. Die Aussage "der Würfel ist fair" heißt dann
+
+$$
+P(X = 6) := P_\Omega\left( \{ \omega \in \Omega : X(\omega) = 6 \} \right) = P_\Omega\left( X^{-1}(\{6\}) \right) = \dfrac{1}{6}.
+$$
+
+Die Schreibweise $P(X = 6)$ ist also eine Abkürzung: Gemeint ist die Wahrscheinlichkeit der Menge aller Weltzustände, in denen der Würfel am Ende eine Sechs zeigt. Genau diese Konstruktion — ein Maß auf $\Omega$ wird über $X$ zu einem Maß auf den Werten von $X$ — ist der Inhalt des nächsten Abschnitts.
+:::
+
 ### Induziertes Wahrscheinlichkeitsmaß
 
 :::{admonition} Definition
@@ -165,6 +219,34 @@ $$P(A) = \sum_{i=1, \omega_i \in A}^n p(\omega_i) = \sum_{i=1}^n p(\omega_i) \ch
 Die einfachste Form, in der uns Daten vorliegen können, ist eine einzelne Zahl oder eine Folge von $N$ Zahlen. Das nennen wir gern einen $N$-dimensionalen Vektor oder wir stellen uns die Spalte einer Tabelle vor.
 In der Statistik spricht man von einer Stichprobe der Größe $N$. Wir werden später auch noch mit Tabellen zu tun haben, die mehr als eine Spalte enthalten, sodass die Daten in Form von komplizierteren Zeilen vorliegen, aber zunächst wollen wir im einfacheren eindimensionalen Setting bleiben.
 
+Schon eine einzelne solche Spalte trägt eine Wahrscheinlichkeitsverteilung mit sich, ganz ohne Modellannahme: Wir zählen einfach, wie häufig jeder Wert vorkommt.
+
+:::{admonition} Definition
+Sei $D = (x_1,\dots,x_N)$ ein Datensatz mit Werten in einer endlichen Menge $\Omega$. Dann ist durch
+
+$$
+P(\{x\}) := \dfrac{\left| \{ i : x_i = x \} \right|}{N},
+$$
+
+also durch die relative Häufigkeit des Wertes $x$ in $D$, ein Wahrscheinlichkeitsmaß auf $\Omega$ gegeben. Wir nennen es die **Verteilung der Daten** (auch *empirische Verteilung*).
+:::
+
+Dass das wirklich ein Wahrscheinlichkeitsmaß ist, ist genau die Aussage, dass sich die relativen Häufigkeiten zu $1$ addieren.
+
+:::{admonition} Beispiel
+Ein Datensatz mit einer einzigen Spalte $x$, die eine Farbe enthält:
+
+| $i$ | 1 | 2 | 3 | 4 |
+|---|---|---|---|---|
+| $x_i$ | blue | red | blue | green |
+
+Hier ist $\Omega = \{\text{blue}, \text{red}, \text{green}\}$ und $N = 4$. Die Verteilung der Daten ist $P(\{\text{blue}\}) = \frac{2}{4}$, $P(\{\text{red}\}) = \frac{1}{4}$ und $P(\{\text{green}\}) = \frac{1}{4}$, als Wahrscheinlichkeitsvektor geschrieben also $p = \left(\frac{1}{2}, \frac{1}{4}, \frac{1}{4}\right)$.
+:::
+
+Wenn die Werte als Zahlen $0, 1, 2, \dots$ codiert sind, bekommt man diesen Vektor in einer Zeile: `np.bincount(daten) / len(daten)` (siehe [Numpy](numpy.ipynb), Abschnitt *Wahrscheinlichkeitsvektoren*).
+
+Das folgende Beispiel ist der Spezialfall $\Omega = \{0,1\}$, in dem eine einzige Zahl die ganze Verteilung festlegt.
+
 :::{admonition} Beispiel
 Gegeben eine Stichprobe von $N$ Münzwürfen $(x_1,\dots,x_N) \in \{0,1\}^N$ können wir die Frage stellen:
 'Welche Erfolgswahrscheinlichkeit $\pi$ lag der Münze zugrunde?'
@@ -177,6 +259,24 @@ wenn wir davon ausgehen, dass immer die selbe Münze geworfen wurde.
 :::
 
 Damit haben wir schon alle Rollen der Statistik besetzt, auch wenn wir die Wörter erst später brauchen: Die Münze, die man beliebig oft werfen könnte, ist die **Population**, die $N$ Würfe sind eine **Stichprobe** daraus, und $\hat{\pi}$ ist eine Aussage über die Population, die man aus der Stichprobe gewonnen hat. Genauso ist eine Tüte Süßigkeiten die Population und eine Handvoll daraus die Stichprobe, aus der man die Farbverteilung in der Tüte schätzt. Was man vor dem Hineingreifen schon weiß oder vermutet (die Münze sieht normal aus, die Tüte ist eine Standardmischung), heißt später **Prior**. Dass der Schluss von der Stichprobe auf die Population nie sicher ist und wie man seine Unsicherheit beziffert, ist Thema der Kapitel [Erwartungswert und Varianz](erwartungswert.md) (Tschebyscheff-Ungleichung) und [Statistische Tests](statistische-tests.md).
+
+Die Verteilung der Daten ist noch kein Modell — sie ist nur eine andere Schreibweise für die Daten selbst. Ein Modell entsteht erst, wenn eine Annahme dazukommt. Nehmen wir an, der Farbdatensatz von oben sei um einen fünften Eintrag gewachsen:
+
+| $i$ | 1 | 2 | 3 | 4 | 5 |
+|---|---|---|---|---|---|
+| $x_i$ | blue | red | blue | green | blue |
+
+Die Verteilung der Daten ist jetzt $\left(\frac{3}{5},\frac{1}{5},\frac{1}{5}\right)$. Wenn wir aber annehmen, dass die Farben gleich häufig sind bis auf eine, die doppelt so oft vorkommt, dann wählen wir als Modell die Verteilung $p = \left(\frac{1}{2},\frac{1}{4},\frac{1}{4}\right)$ — obwohl die beobachteten relativen Häufigkeiten andere sind. Eine so gewählte Verteilung heißt **Modellverteilung**. Sie hat in aller Regel weniger Parameter als der Datensatz Einträge, sie ist glatter, und sie macht auch Aussagen über Werte, die in den Daten gar nicht vorkommen.
+
+Ein Modell lässt sich in beide Richtungen benutzen. Aus Daten eine Modellverteilung zu bestimmen, ist das Schätzproblem, mit dem sich das Kapitel [Statistische Modelle und Schätzer](statistische-modelle.md) beschäftigt. Umgekehrt kann man aus einer Modellverteilung ziehen und erhält **synthetische Daten**: einen Datensatz, der aussieht wie ein echter, aber keiner ist. Synthetische Daten sind das Standardwerkzeug, um ein Auswertungsverfahren zu prüfen — denn hier kennt man die richtige Antwort und kann nachsehen, ob das Verfahren sie findet.
+
+:::{admonition} Übung
+Ziehen Sie $1000$ synthetische Farbwerte zur Modellverteilung $p = \left(\frac{1}{2},\frac{1}{4},\frac{1}{4}\right)$ und bestimmen Sie die Verteilung der so erzeugten Daten. Wie weit weicht sie von $p$ ab, und wie ändert sich das bei nur $10$ gezogenen Werten? In der Standardbibliothek zieht `random.choices(werte, weights=..., k=1000)`, in Numpy `rng.choice(werte, size=1000, p=...)` (siehe [Stochastik programmieren](stochastik-programmieren.ipynb)).
+:::
+
+Damit liegen zwei Verteilungen auf demselben $\Omega$ vor: die der Daten und die des Modells. Die nächste Frage ist die nach der Güte des Modells — sehen die Daten so aus, als wären sie aus dem Modell gezogen worden? Auf Englisch fragt man *how likely is that?*, und die Zahl, die das beantwortet, heißt **Likelihood**: die Wahrscheinlichkeit, genau die beobachteten Daten zu sehen, wenn das Modell stimmt. Ein Modell, das diese Zahl möglichst groß macht, ist nach dem **Maximum-Likelihood-Prinzip** das beste; dieses Prinzip zieht sich durch den Rest des Kurses und bekommt im Kapitel [Statistische Modelle und Schätzer](statistische-modelle.md) einen eigenen Abschnitt. Es ist nicht der einzige Weg, den Unterschied zwischen zwei Verteilungen zu beziffern: Das Kapitel [Erwartungswert und Varianz](erwartungswert.md) misst den Abstand zwischen Daten und synthetischen Daten direkt im Datenraum, und das Kapitel [Relative Entropie](relative-entropie.md) misst ihn zwischen den Verteilungen selbst.
+
+Damit ist der Weg abgesteckt, den der Rest des Kurses geht, und der sich auch in {numref}`ds-prozess-modell` wiederfindet: einen Ausschnitt der Welt wählen, Daten erheben, sie putzen ([Daten putzen](data-cleaning.ipynb)) und in brauchbare Merkmale übersetzen — man sagt **Features** —, daraus Modelle bilden und die Modelle an den Daten messen. Alles Weitere ist die Ausarbeitung dieser fünf Schritte.
 
 
 Nun werden wir Daten selten in Form von Bitfolgen mit völlig unabhängigen Bits interpretieren.

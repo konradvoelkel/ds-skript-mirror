@@ -58,8 +58,28 @@ $$
 p(y|x) = \frac{p(x,y)}{p(x)}
 $$
 
+Genauer schreibt man die Verteilungen mit ihren Zufallsvariablen im Index, wenn mehrere im Spiel sind:
 
+$$
+p_{X,Y}(x,y) = p_{Y|X}(y \mid x)\, p_X(x),
+$$
+
+wobei $p_{Y|X}(\cdot \mid x)$ für jedes feste $x$ mit $p_X(x) > 0$ die pmf der bedingten Verteilung von $Y$ ist (im stetigen Fall ebenso, mit Dichten statt pmf). Diese Formel heißt **Produktregel**; die **Summenregel** ist die Bemerkung davor, das Aufsummieren über die nicht interessierende Variable.
 :::
+
+:::{admonition} Proposition
+Seien $X, Y \colon \Omega \to \mathbb{R}$ diskrete Zufallsvariablen. Dann sind äquivalent:
+
+1. $X$ und $Y$ sind unabhängig (im Sinne des Kapitels [Erwartungswert und Varianz](erwartungswert.md), Abschnitt *Unabhängigkeit*);
+2. die gemeinsame pmf faktorisiert: $p_{X,Y}(x,y) = p_X(x)\, p_Y(y)$ für alle $x,y$;
+3. bedingen ändert nichts: $p_{Y|X}(y \mid x) = p_Y(y)$ für alle $x$ mit $p_X(x) > 0$ und alle $y$.
+:::
+
+:::{admonition} Beweis
+Die Unabhängigkeit von $X$ und $Y$ bedeutet $P(X = x, Y = y) = P(X = x)\,P(Y = y)$ für alle $x,y$, und das ist wörtlich Aussage 2. Für die Äquivalenz von 2 und 3 setzen wir die Definition $p_{Y|X}(y \mid x) = \frac{p_{X,Y}(x,y)}{p_X(x)}$ ein: Gilt 2, so kürzt sich $p_X(x) > 0$ heraus und es bleibt $p_{Y|X}(y\mid x) = p_Y(y)$. Gilt umgekehrt 3, so ist $p_{X,Y}(x,y) = p_{Y|X}(y\mid x)\,p_X(x) = p_Y(y)\,p_X(x)$ für alle $x$ mit $p_X(x) > 0$; für $x$ mit $p_X(x) = 0$ sind beide Seiten $0$.
+:::
+
+Aussage 3 ist die Verallgemeinerung von $P(A \mid B) = P(A)$ aus dem Kapitel [Erwartungswert und Varianz](erwartungswert.md): Wissen über $X$ verschiebt die Verteilung von $Y$ nicht. Im stetigen Fall gilt dieselbe Äquivalenz mit Dichten, allerdings nur "fast überall" — Dichten sind ja nur bis auf Nullmengen bestimmt (siehe [Stetige Verteilungen](stetige-verteilungen.md)).
 
 :::{admonition} Satz
 **von Bayes:**
@@ -127,6 +147,16 @@ $$
 Dabei heißt $P(H)$ der **Prior** (die a priori Wahrscheinlichkeit der Hypothese),
 $P(D)$ die **Evidenz**, $P(D|H)$ die **Likelihood** und $P(H|D)$ der **Posterior** (die a posteriori Wahrscheinlichkeit der Hypothese). Man merkt sich: Die Likelihood beantwortet die Frage 'Wie wahrscheinlich sind die Daten, wenn die Hypothese wahr wäre?'.
 Im Gegensatz zu $P(H)$ ist die Likelihood $P(D|H)$ zumindest im Prinzip berechenbar.
+:::
+
+:::{admonition} Beispiel
+**Wie man eine Likelihood ausrechnet.** Bisher waren $H$ und $D$ Ereignisse mit endlich vielen Ausgängen. In der Praxis ist die Hypothese meist eine ganze Verteilung. Nehmen wir an, wir haben $n$ Messwerte $D = (x_1,\dots,x_n)$ und rechnen mit Normalverteilungen: Die Hypothese $H$ lautet, dass die Daten aus einer $\mathcal{N}(\mu,\sigma^2)$ mit $\mu = 0$ und $\sigma = 2$ stammen. Die Likelihood $P(D \mid H)$ ist dann die Wahrscheinlichkeit(sdichte), genau diese $n$ Werte zu sehen, wenn die Hypothese stimmt — und weil die Messungen unabhängig sein sollen, faktorisiert die gemeinsame Dichte nach der Proposition oben in ein Produkt:
+
+$$
+P(D \mid H) = \prod_{i=1}^n p_{\mu,\sigma}(x_i) = \prod_{i=1}^n \dfrac{1}{\sqrt{2\pi}\,\sigma} \exp\left( -\dfrac{(x_i - \mu)^2}{2\sigma^2} \right) \quad \text{mit } \mu = 0,\ \sigma = 2.
+$$
+
+Drei Rollen sind dabei sauber zu trennen: die *datenerzeugende Verteilung*, die es in der Welt gibt und die wir nicht kennen; die *beobachteten Daten* $D$, die wir haben; und die *Modellverteilung*, die wir zur Hypothese erklären. Die Likelihood vergleicht die zweite mit der dritten. Lässt man $\mu$ und $\sigma$ variieren, statt sie festzuhalten, wird aus der Zahl eine Funktion $L(\mu,\sigma) := \prod_{i=1}^n p_{\mu,\sigma}(x_i)$, und die Parameter zu suchen, die sie maximieren, ist das Maximum-Likelihood-Prinzip — siehe [Statistische Modelle und Schätzer](statistische-modelle.md), wo aus dem Produkt durch Logarithmieren eine Summe wird.
 :::
 
 :::{admonition} Satz

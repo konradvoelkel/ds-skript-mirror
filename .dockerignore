@@ -1,0 +1,5 @@
+# Das Dockerfile braucht aus dem Repo nur requirements.txt. Alles andere aus dem
+# Build-Kontext herauszuhalten spart Kaniko (CI) und `docker build` (push-image.sh)
+# das Einlesen von ~35 MB Buch, Daten und Notebooks.
+*
+!requirements.txt

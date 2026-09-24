@@ -62,10 +62,28 @@ Aus dieser Beobachtung leiten wir nun die Forderung ab, dass unsere Wahrscheinli
 
 ## Formalismus
 
+Bisher haben wir Plausibilitäten an *Aussagen* geheftet: "es regnete", "jemand hat gegossen". Aussagen sind für die Logik der richtige Gegenstand, aber sie sind unhandlich, sobald man rechnen will — schon die Frage, wie viele verschiedene Aussagen es gibt, führt in die Irre. Der Trick der modernen Stochastik besteht darin, jede Aussage durch die Menge der Situationen zu ersetzen, in denen sie zutrifft.
+
+Dazu denken wir uns eine Menge $\Omega$ aller in Frage kommenden **Ergebnisse** $\omega$ — im Rasen-Beispiel etwa alle Zustände, in denen die Welt heute Morgen sein könnte. Jede Aussage über die Welt zerlegt diese Menge in zwei Teile: die Zustände, in denen sie wahr ist, und die übrigen. Die Aussage "der Rasen ist nass" wird so zur Teilmenge $N \subseteq \Omega$ aller Weltzustände mit nassem Rasen, "es regnete" zu $R \subseteq \Omega$ und "jemand hat gegossen" zu $G \subseteq \Omega$. Statt einer Plausibilität für die Aussage suchen wir jetzt eine Zahl für die Teilmenge.
+
+Der Gewinn: Die logischen Verknüpfungen werden zu Mengenoperationen, die wir bereits kennen und beherrschen.
+
+| Aussagenlogik | Mengenlogik |
+|---|---|
+| $A$ oder $B$, $A \vee B$ | $A \cup B$ |
+| $A$ und $B$, $A \wedge B$ | $A \cap B$ |
+| nicht $A$, $\neg A$ | $A^c := \Omega \setminus A$ |
+
+Aus der Frage, wie plausibel "es regnete oder jemand hat gegossen" ist, wird so die Frage nach $P(R \cup G)$, und "es hat weder geregnet noch gegossen" ist $R^c \cap G^c$, also das Komplement von $R \cup G$.
+
+Eine Teilmenge von $\Omega$, der wir eine Wahrscheinlichkeit zuordnen, nennen wir ein **Ereignis**. Nun wäre es bequem, jede Teilmenge von $\Omega$ als Ereignis zuzulassen, und für endliches $\Omega$ geht das auch. Im Allgemeinen — das war die Lehre aus dem Maßproblem — geht es nicht. Wir zeichnen deshalb ein System $\mathcal{F}$ von "interessanten" Teilmengen aus und verlangen nur, dass es unter denselben Operationen abgeschlossen ist, die wir gerade übersetzt haben: Mit $A$ und $B$ sollen auch $A \cup B$, $A \cap B$ und $A^c$ in $\mathcal{F}$ liegen, und $\emptyset$ sowie $\Omega$ ohnehin. Die Wahrscheinlichkeit ist dann eine Abbildung $P \colon \mathcal{F} \to [0,1]$.
+
+Auf mathematisch heißt so ein Mengensystem eine $\sigma$-Algebra — das $\sigma$ steht dafür, dass auch *abzählbar unendlich* viele Vereinigungen erlaubt sind, was wir für den Grenzübergang brauchen. Damit haben wir alle Zutaten beisammen und können die Definitionen aufschreiben.
+
 :::{admonition} Definition
 Sei $\Omega$ eine Menge. Dann heißt ein Mengensystem $\mathcal{F} \subseteq \mathcal{P}(\Omega)$ eine *$\sigma$-Algebra*, wenn
 1. $\Omega \in \mathcal{F}$ "WAHR ist messbar"
-1. $A \in \mathcal{F} \implies A^c := \Omega - A \in \mathcal{F}$ "logisches NICHT"
+1. $A \in \mathcal{F} \implies A^c := \Omega \setminus A \in \mathcal{F}$ "logisches NICHT"
 1. $A_1,\dots \in \mathcal{F} \implies \bigcup_{i\geq 1} A_i \in \mathcal{F}$ "logisches ODER"
 
 Terminologie: wir nennen die Elemente von $\Omega$ die *Ergebnisse* und die Elemente von $\mathcal{F}$ die messbaren Teilmengen oder auch *Ereignisse*. Das Paar $(\Omega,\mathcal{F})$ ist ein *Ereignisraum*.
