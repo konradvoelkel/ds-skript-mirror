@@ -26,7 +26,7 @@ unten das Buch.
 | VL 03 | – | – | 1 | Jahreszahl |
 | VL 04 | 1 | – | – | mittlerer Fehler 7 ist die Summe, nicht das Mittel |
 | VL 05 | 1 | 1 | 4 | Definition unabhängiger Zufallsvariablen auf getrennten Räumen |
-| VL 06 | 1 | 2 | 3 | Stellenzahl per ⌈log⌉, „Verteilungsfunktion“ für die pmf, Poisson-Grenzwert |
+| VL 06 | 1 | 2 | 4 | Stellenzahl per ⌈log⌉, „Verteilungsfunktion“ für die pmf, Poisson-Grenzwert |
 | VL 07 | 1 | 1 | 4 | Trägerdefinition, cdf mit offenem Intervall |
 | VL 08 | – | 3 | 1 | Z_N statt S_N, Berry-Esseen-Konstante, Max-Entropie-Tabelle |
 | VL 09 | – | – | 4 | nichts Sachliches; „Dispersion precedes location“ ist korrekt |
@@ -36,7 +36,7 @@ unten das Buch.
 | VL 17 | – | 3 | 2 | Untertitel; Herleitung setzt symmetrisches M/A voraus |
 | VL 19 | 2 | – | 2 | Klassifikator-Ungleichung verkehrt herum, mean(X) statt mean(y) |
 | VL 20 | 2 | 2 | 1 | β₁x₂, `se`, „multilinear“ |
-| **Summe** | **14** | **14** | **37** | dazu sieben Querschnittspunkte (Abschnitt 1) |
+| **Summe** | **14** | **14** | **38** | dazu sieben Querschnittspunkte (Abschnitt 1) |
 
 Reihenfolge fürs Abarbeiten: erst alle A, dann B, C nur beim Gelegenheitsbesuch im Deck.
 
@@ -195,6 +195,12 @@ Entropie der Verteilung auf Ω; sie stimmt mit H(X) nur überein, wenn X injekti
 **VL06-6 (C) Folie „Diskrete Gleichverteilung“.** „p(ω) = 1/n“ ohne Angabe von Ω; die Formeln
 𝔼(X) = (n+1)/2 und 𝕍(X) = (n²−1)/12 gelten für die Werte 1,…,n. Ein „auf {1,…,n}“ in der ersten
 Zeile genügt.
+
+**VL06-7 (C) Folie „Das Setting: eine Nachricht“ (erste).** Das Alphabet soll Σ = {a, b, …, z, ␣}
+heißen, im PDF steht aber „{a, b, …, z, }“: die Schrift Source Sans Pro hat das Zeichen ␣
+(`\textvisiblespace`) nicht, LuaLaTeX lässt es kommentarlos weg (Log: „Missing character“).
+Soll: `\textvisiblespace` aus einer Schrift nehmen, die es hat (etwa `{\ttfamily\textvisiblespace}`
+mit Source Code Pro), oder schlicht „Leerzeichen“ schreiben.
 
 Geprüft und richtig: Selbstinformation und 32 Zeichen = 5 bit; 77 = 1001101₂; 4,7 bit je Zeichen
 bei 26 Buchstaben; Bernoulli-Ableitung −log₂(p/(1−p)); Varianz der Poisson-Binomialverteilung.
