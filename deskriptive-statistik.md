@@ -246,7 +246,7 @@ Justin Matejka und George Fitzmaurice haben daraus die 'Datasaurus Dozen' entwic
 :align: center
 :name: datasaurus-dozen
 
-The Datasaurus Dozen, inspiriert von Anscombe's Quartett.
+The Datasaurus Dozen, inspiriert von Anscombe's Quartett. Abbildung: Justin Matejka und George Fitzmaurice, Autodesk Research 2017 {cite}`matejka2017`.
 ```
 
 * Wichtigste Arten von Plots
@@ -394,17 +394,21 @@ The Datasaurus Dozen, inspiriert von Anscombe's Quartett.
     Zweitens die Betrachter\*innen selbst: Etwa jeder zwölfte Mann und jede zweihundertste Frau nimmt Farben anders wahr als die Mehrheit, am häufigsten Rot und Grün. In einer Vorlesung mit zweihundert Zuhörenden sitzen also typischerweise mehrere Menschen, für die eine Rot-Grün-Skala keine Skala ist. Das ist häufig genug, um es zur Gewohnheit zu machen und nicht zur Ausnahme:
     
     
-```{figure} images/color-blind-friendly-palette-13.jpg
-:width: 480px
+Eine Farbpalette, die auch bei eingeschränkter Farbwahrnehmung gut funktioniert, ist diese:
+
+![Gute Palette](images/gute-palette.png)
+
+Dass sie funktioniert, kann man nachrechnen: Farbsehschwächen lassen sich als lineare Abbildung im Farbraum simulieren, und angewandt auf die acht Farben oben sieht das so aus.
+
+```{figure} images/farbwahrnehmung-simulation.png
+:width: 560px
 :align: center
 :name: color-friendly
 
-Simulation der Farbwahrnehmung bei verschiedenen Arten der 'Sichtigkeit'
+Dieselbe Palette, simuliert für Normalsicht und die drei Arten der Dichromasie (Verfahren nach Viénot, Brettel und Mollon 1999). Die Farben bleiben in allen vier Feldern unterscheidbar — das ist die Eigenschaft, auf die es ankommt.
 ```
 
-Eine Farbpalette, die auch bei eingeschränkter Farbwahrnehmung gut funktioniert, ist diese:
-    
-![Gute Palette](images/gute-palette.png)
+Zwei Dinge sieht man daran. Erstens: Die Palette verliert zwar ihre Buntheit, aber keine zwei Felder fallen zusammen — jede Farbe behält eine eigene Helligkeit. Zweitens: Eine Palette, die Rot und Grün gegeneinanderstellt, würde hier zusammenfallen, und genau das passiert bei der verbreiteten Ampel-Kodierung.
 
 Die Forschung über gut geeignete Farbpaletten ist nicht beendet - so gab es etwa auf der SciPy Konferenz 2022 den Vortrag [Development of Accessible, Aesthetically-Pleasing Color Sequences von Matthew Petroff](https://www.youtube.com/watch?v=Gapv8wR5DYU), dessen [Ergebnisse im Dezember 2024 in Matplotlib Version 3.10.0 eingeflossen sind](https://matplotlib.org/stable/users/prev_whats_new/whats_new_3.10.0.html#new-more-accessible-color-cycle).
 
