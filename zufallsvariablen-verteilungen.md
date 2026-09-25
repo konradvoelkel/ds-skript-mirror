@@ -180,7 +180,7 @@ Wir notieren die pmf jeweils mit $p(x),\ p(y),\ p(z)$ mit $x \in \mathcal{X}, y 
 Wir können auch die ganze Nachricht als eine einzige Zufallsvariable auffassen: XYZ.
 Dabei kann es nun passieren, dass gewisse Buchstabenfolgen wahrscheinlicher sind, als ihre Bestandteile.
 Wenn $X=s$ und $Y=o$ sind, dann ist $Z=s$ sicher wahrscheinlicher, als wenn wir beliebige Werte für $X$ und $Y$ haben.
-Insgesamt ist $XYZ=sos$ wahrscheinlicher als das Produkt der Ereignisse $X=s$, $Y=o$, $Z=s$.
+Insgesamt ist $XYZ=sos$ wahrscheinlicher als das Produkt der Wahrscheinlichkeiten von $X=s$, $Y=o$ und $Z=s$.
 Wenn wir, wie üblich, die pmf von $XYZ$ mit $p(x,y,z)$ notieren, so heißt das:
 
 $$p(x,y,z) \neq p(x)p(y)p(z)$$
@@ -188,7 +188,7 @@ $$p(x,y,z) \neq p(x)p(y)p(z)$$
 und wir sagen dazu auch: die Zufallsvariablen bzw. ihre Verteilungen sind nicht unabhängig.
 :::
 
-### Induziertes Wahrscheinlichkeitsmaß
+### Induzierte pmf
 
 :::{admonition} Proposition
 Wenn $X \colon \Omega \to \mathcal{X}$ eine Zufallsvariable ist und $P_\Omega$ eine pmf $p_\Omega \colon \Omega \to [0,1]$ hat,
@@ -224,6 +224,8 @@ Die Dirac-Verteilung mit Masse an $\xi \in \Omega$ entspricht $p \in \Delta_n$ m
 Geometrisch ist das ein Eckpunkt von $\Delta_n$ (davon gibt es $n$ Stück).
 :::
 
+Eine so durch $p \in \Delta_n$ gegebene Verteilung heißt auch *kategoriale Verteilung*; wir treffen sie im Kapitel [Wichtigste diskrete Verteilungen](wichtigste-diskrete-verteilungen.ipynb) wieder, wo wir auch ihren Erwartungswert und ihre Varianz ausrechnen. Ihr einfachster Fall hat einen eigenen Namen.
+
 :::{admonition} Definition
 Der Fall $n = 2$ hat einen eigenen Namen. Auf $\Omega = \{0,1\}$ ist ein Wahrscheinlichkeitsvektor durch eine einzige Zahl festgelegt, denn aus $p_0 + p_1 = 1$ folgt $p_0 = 1 - p_1$. Schreibt man $\pi := p_1$, so heißt die zugehörige Verteilung die **Bernoulli-Verteilung zum Parameter $\pi$**, und man notiert $X \sim \operatorname{Ber}(\pi)$ für eine Zufallsvariable mit dieser Verteilung. (Im Kapitel [Wichtigste diskrete Verteilungen](wichtigste-diskrete-verteilungen.ipynb) und in der Literatur heißt dieser Parameter meist $p$; hier schreiben wir $\pi$, weil $p$ in diesem Abschnitt schon der Wahrscheinlichkeitsvektor ist.)
 :::
@@ -233,10 +235,6 @@ Ein Münzwurf ist $\operatorname{Ber}(\pi)$ mit $\pi$ der Wahrscheinlichkeit fü
 :::
 
 Geometrisch ist $\Delta_2$ eine Strecke: die Verbindung der beiden Eckpunkte $(1,0)$ und $(0,1)$, und $\pi$ sagt, wo auf dieser Strecke man sich befindet. Eine Bernoulli-Verteilung zu wählen heißt also, einen Punkt auf einer Strecke zu wählen.
-
-Eine so gegebene Verteilung heißt auch *kategoriale Verteilung*; wir treffen sie im Kapitel
-[Wichtigste diskrete Verteilungen](wichtigste-diskrete-verteilungen.ipynb) wieder, wo wir auch
-ihren Erwartungswert und ihre Varianz ausrechnen.
 
 Es ist also $\Delta_n$ der Raum aller möglichen Wahrscheinlichkeitsverteilungen auf einer $n$-elementigen Menge. Die niedrigen Fälle kann man sich gut vorstellen: $\Delta_2$ ist eine Strecke, $\Delta_3$ ein gefülltes Dreieck (zweidimensional, aber in $\mathbb{R}^3$ eingebettet), $\Delta_4$ ein gefülltes Tetraeder. Allgemein ist $\Delta_n$ ein $(n-1)$-dimensionales Objekt mit $n$ Ecken, das man einen **Simplex** nennt. Eine Dimension geht dabei immer verloren, weil sich die Einträge zu $1$ addieren müssen — genau das haben wir bei der Bernoulli-Verteilung ausgenutzt, als aus zwei Zahlen eine wurde.
 
@@ -293,7 +291,7 @@ Gegeben eine Stichprobe von $N$ Münzwürfen $(x_1,\dots,x_N) \in \{0,1\}^N$ kö
 
 Eine mögliche Schätzung wäre $\frac{1}{2}$, ohne die Daten zu betrachten.
 
-Wenn wir die Stichprobe betrachten, können wir $e := \sum_{i=1}^n x_i$, die Anzahl der Erfolge, berechnen.
+Wenn wir die Stichprobe betrachten, können wir $e := \sum_{i=1}^N x_i$, die Anzahl der Erfolge, berechnen.
 Dann ist $N-e$ die Anzahl der Misserfolge und $\hat{\pi} := \frac{e}{N}$ eine Schätzung für die Erfolgswahrscheinlichkeit $\pi$,
 wenn wir davon ausgehen, dass immer die selbe Münze geworfen wurde.
 
@@ -313,19 +311,10 @@ Die Verteilung der Daten ist jetzt $\left(\frac{3}{5},\frac{1}{5},\frac{1}{5}\ri
 Ein Modell lässt sich in beide Richtungen benutzen. Aus Daten eine Modellverteilung zu bestimmen, ist das Schätzproblem, mit dem sich das Kapitel [Statistische Modelle und Schätzer](statistische-modelle.md) beschäftigt. Umgekehrt kann man aus einer Modellverteilung ziehen und erhält **synthetische Daten**: einen Datensatz, der aussieht wie ein echter, aber keiner ist. Synthetische Daten sind das Standardwerkzeug, um ein Auswertungsverfahren zu prüfen — denn hier kennt man die richtige Antwort und kann nachsehen, ob das Verfahren sie findet.
 
 :::{admonition} Übung
-Ziehen Sie $1000$ synthetische Farbwerte zur Modellverteilung $p = \left(\frac{1}{2},\frac{1}{4},\frac{1}{4}\right)$ und bestimmen Sie die Verteilung der so erzeugten Daten. Wie weit weicht sie von $p$ ab, und wie ändert sich das bei nur $10$ gezogenen Werten? In der Standardbibliothek zieht `random.choices(werte, weights=..., k=1000)`, in Numpy `rng.choice(werte, size=1000, p=...)` (siehe [Stochastik programmieren](stochastik-programmieren.ipynb)).
+Ziehen Sie $1000$ synthetische Farbwerte zur Modellverteilung $p = \left(\frac{1}{2},\frac{1}{4},\frac{1}{4}\right)$ und bestimmen Sie die Verteilung der so erzeugten Daten. Wie weit weicht sie von $p$ ab, und wie ändert sich das bei nur $10$ gezogenen Werten? In der Standardbibliothek zieht `random.choices(werte, weights=..., k=1000)`, in Numpy `rng.choice(werte, size=1000, p=...)` (`random.choices` im Kapitel [Stochastik programmieren](stochastik-programmieren.ipynb), `rng.choice` im Kapitel [Numpy](numpy.ipynb), Abschnitt *Wahrscheinlichkeitsvektoren*).
 :::
 
 Damit liegen zwei Verteilungen auf demselben $\Omega$ vor: die der Daten und die des Modells. Die nächste Frage ist die nach der Güte des Modells — sehen die Daten so aus, als wären sie aus dem Modell gezogen worden? Auf Englisch fragt man *how likely is that?*, und die Zahl, die das beantwortet, heißt **Likelihood**: die Wahrscheinlichkeit, genau die beobachteten Daten zu sehen, wenn das Modell stimmt. Ein Modell, das diese Zahl möglichst groß macht, ist nach dem **Maximum-Likelihood-Prinzip** das beste; dieses Prinzip zieht sich durch den Rest des Kurses und bekommt im Kapitel [Statistische Modelle und Schätzer](statistische-modelle.md) einen eigenen Abschnitt. Es ist nicht der einzige Weg, den Unterschied zwischen zwei Verteilungen zu beziffern: Das Kapitel [Erwartungswert und Varianz](erwartungswert.md) misst den Abstand zwischen Daten und synthetischen Daten direkt im Datenraum, und das Kapitel [Relative Entropie](relative-entropie.md) misst ihn zwischen den Verteilungen selbst.
 
-Damit ist der Weg abgesteckt, den der Rest des Kurses geht, und der sich auch in {numref}`ds-prozess-modell` wiederfindet: einen Ausschnitt der Welt wählen, Daten erheben, sie putzen ([Daten putzen](data-cleaning.ipynb)) und in brauchbare Merkmale übersetzen — man sagt **Features** —, daraus Modelle bilden und die Modelle an den Daten messen. Alles Weitere ist die Ausarbeitung dieser fünf Schritte.
+Damit ist der Weg abgesteckt, den der Rest des Kurses geht, und der sich auch in {numref}`ds-prozess-modell` wiederfindet: einen Ausschnitt der Welt wählen, Daten erheben, sie putzen ([Daten putzen](data-cleaning.ipynb)) und in brauchbare Merkmale übersetzen — man sagt **Features** —, daraus Modelle bilden und die Modelle an den Daten messen. Alles Weitere ist die Ausarbeitung dieser fünf Schritte. Das nächste Kapitel beginnt mit dem letzten dieser Schritte: dem Vergleich von Daten und Modell in einer einzigen Zahl.
 
-
-Nun werden wir Daten selten in Form von Bitfolgen mit völlig unabhängigen Bits interpretieren.
-Zum Beispiel die menschliche Körpergröße, gemessen in Zentimetern, ist eine reelle Zahl größer $0$.
-Gegeben eine Meßreihe, also eine Stichprobe der Größe $N$ von Körpergrößen, können wir ein statistisches Modell bilden.
-Dabei reden wir hier nicht über Kausalität oder Korrelationen mit anderen Daten, wie z.B. Geschlecht oder Alter.
-Trotzdem können wir Modelle bilden, die uns eine gewisse Vorhersage erlauben.
-Ein Ansatz ist die zusammenfassende Statistik, die aus der Stichprobe eine einzelne Zahl extrahiert, die uns die Daten verlustbehaftet komprimieren lässt.
-Welche Zahl die richtige ist, um Daten zusammenzufassen / zu modellieren, hängt von unserem Ziel ab.
-Daher wollen wir uns im Folgenden mit Erwartungswert und Varianz aus einer datenzentrierten Perspektive befassen.

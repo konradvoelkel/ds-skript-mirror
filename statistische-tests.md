@@ -1,6 +1,8 @@
 # Statistische Tests
 
-Bei der explorativen Datenanalyse kommen wir zu Hypothesen, welche Zusammenhänge in den Daten stecken. Bei der Implementierung von Systemen mit maschinellem Lernen müssen wir zahlreiche Entscheidungen treffen, etwa ob wir eine Variable als Normalverteilt annehmen können, ob die Verteilung für zwei Gruppen oder Cluster etwa gleich oder sehr verschieden ist.
+[Vorlesungsaufzeichnung Tests und Signifikanz (VL 21, ab Minute 34)](https://media.hhu.de/channel/video/data-science-vl-21-kernel-trick-und-signifikanz-bei-tests-2025/742bea567f5ae6e6a2d2a1b1fb8115c7/167?t=2040)
+
+Bei der explorativen Datenanalyse kommen wir zu Hypothesen, welche Zusammenhänge in den Daten stecken. Bei der Implementierung von Systemen mit maschinellem Lernen müssen wir zahlreiche Entscheidungen treffen, etwa ob wir eine Variable als normalverteilt annehmen können, ob die Verteilung für zwei Gruppen oder Cluster etwa gleich oder sehr verschieden ist.
 
 Tests treten dabei in zwei ganz verschiedenen Rollen auf, und es hilft, sie auseinanderzuhalten. In der **explorativen Analyse** sind sie ein Werkzeug unter vielen und beantworten Fragen wie „Ist dieses Attribut normalverteilt?“, „Haben die Stichproben A und B bei diesem Attribut dieselbe Verteilung? Denselben Mittelwert?“ — die Antwort entscheidet dann über den nächsten Schritt der Analyse, etwa darüber, ob ein Verfahren angewandt werden darf, das Normalverteilung voraussetzt. In der **Kommunikation von Ergebnissen** sind sie dagegen das Argument selbst: „Der Test zeigt, dass die Gruppen unterschiedlich verteilt sind, deshalb verwenden wir ein gemischtes Modell“ (siehe [Expectation Maximization](expectation-maximization.ipynb)). In der ersten Rolle darf man großzügig testen, in der zweiten nicht — warum, klärt der Abschnitt [Signifikanz](#signifikanz) am Ende dieses Kapitels.
 
@@ -48,7 +50,7 @@ Um diese Grafik richtig lesen zu können, müssen wir noch die *IPCC Calibrated 
 Die *Likelihood scale* der IPCC Calibrated Language {cite}`sr15`.
 ```
 
-Nun sehen wir, dass es sich beim grau schattierten Bereich um den Bereich handelt, in dem mit mind. $2/3$ Wahrscheinlichkeit die tatsächlichen Messwerte liegen werden (laut Modell). Anhand dieser Information kann man deutlich besser einschätzen, welche zukünftigen Erwärmungen zu erwarten sind, selbst wenn wir 'Glück haben' oder auch wie schlimm es werden könnte, wenn wir 'Pech haben'. Der grau schattierte Bereich ist genau genommen ein **Prognoseintervall**, in dem der tatsächliche Wert in Zukunft mit hoher Wahrscheinlichkeit vermutet wird. Eng verwandt ist ein **Konfidenzintervall**, welches der Bereich ist, in dem der tatsächliche Wert in (z.B.) 95\% der erwarteten Beobachtungen vermutet wird.
+Nun sehen wir, dass es sich beim grau schattierten Bereich um den Bereich handelt, in dem mit mind. $2/3$ Wahrscheinlichkeit die tatsächlichen Messwerte liegen werden (laut Modell). Anhand dieser Information kann man deutlich besser einschätzen, welche zukünftigen Erwärmungen zu erwarten sind, selbst wenn wir 'Glück haben' oder auch wie schlimm es werden könnte, wenn wir 'Pech haben'. Der grau schattierte Bereich ist genau genommen ein **Prognoseintervall**, in dem der tatsächliche Wert in Zukunft mit hoher Wahrscheinlichkeit vermutet wird. Eng verwandt ist ein **Konfidenzintervall** für einen Parameter: ein aus der Stichprobe berechnetes Intervall, das so konstruiert ist, dass es in (z.B.) 95 % aller Stichproben den wahren Parameter überdeckt.
 
 Wir verweisen für die mathematische Theorie von Bereichsschätzern / Konfidenzintervallen auf Vorlesungen über Statistik. Unser Ziel soll im Folgenden vor allem sein, den Begriff des Tests so weit verstanden zu haben, dass wir einordnen können, ob eine angebliche Interpretation eines statistischen Tests seriös ist. Wenn wir das können, wollen wir außerdem in der Lage sein, zu identifizieren, in welchen Situationen ein Hypothesentest sinnvolle Erkenntnisse liefern kann. Dafür wird es vor allem wichtig sein, den Begriff der Signifikanz zu besprechen.
 
@@ -119,23 +121,9 @@ Natürlich ist das kein besonders nützlicher Konfidenzbereich, stellt aber klar
 
 :::{admonition} Beispiel
 **Münzwurf:**
-Der $n$-fach wiederholte Münzwurf einer unfairen Münze mit Erfolgswahrscheinlichkeit $p$ lässt sich modellieren mit dem **Binomialmodell** (siehe [Wichtigste diskrete Verteilungen](wichtigste-diskrete-verteilungen.ipynb)): $\mathcal{X} = \{1,\dots,n\}$ ist die Anzahl der Erfolge, der unbekannte Parameter ist $\theta = p \in \Theta = [0,1]$ und $P_\theta = Bin(n,\theta)$ (und $\tau = id$, also schätzen wir den Parameter $\theta$).
+Der $n$-fach wiederholte Münzwurf einer unfairen Münze mit Erfolgswahrscheinlichkeit $p$ lässt sich modellieren mit dem **Binomialmodell** (siehe [Wichtigste diskrete Verteilungen](wichtigste-diskrete-verteilungen.ipynb)): $\mathcal{X} = \{0,\dots,n\}$ ist die Anzahl der Erfolge, der unbekannte Parameter ist $\theta = p \in \Theta = [0,1]$ und $P_\theta = \operatorname{Bin}(n,\theta)$ (und $\tau = id$, also schätzen wir den Parameter $\theta$).
 
-Wir bestimmen den Maximum-Likelihood-Schätzer für $\theta$:
-
-$$
-\begin{aligned}
-L_x(\theta) &= P_\theta(x|n) = \binom{n}{x} \theta^x (1-\theta)^{n-x} \\
-l_x(\theta) &= \log L_x(\theta) = \log\binom{n}{x} + x\log(\theta) + (n-x)\log(1-\theta) \\
-l_x'(\theta) &= \dfrac{x}{\theta} - \dfrac{n-x}{1-\theta} \\
-l_x'(\theta) &= 0 \implies x(1-\theta) = (n-x)\theta \\
-             & \qquad \implies x - \theta x = \theta n - \theta x \\
-             & \qquad \implies x = \theta n \\
-             & \qquad \implies \theta = \frac{x}{n}.
-\end{aligned}
-$$
-
-Ganz konkret: werfen wir die Münze $100$ mal und es kommt $45$ mal Zahl, so schätzen wir $\theta$ als $\frac{45}{100}$ (also insbesondere, dass die Münze wirklich unfair ist).
+Den Maximum-Likelihood-Schätzer für $\theta$ haben wir dort schon berechnet: $\hat\theta = \frac{x}{n}$, der Anteil der Erfolge. Ganz konkret: werfen wir die Münze $100$ mal und es kommt $45$ mal Zahl, so schätzen wir $\theta$ als $\frac{45}{100}$ (also insbesondere, dass die Münze wirklich unfair ist).
 :::
 
 Was aber ist unsere Konfidenz (unser Vertrauen)? Halten wir Werte weit weg von $\frac{x}{n}$ auch für halbwegs plausibel oder können wir einen sehr engen Bereich um $\frac{x}{n}$ bestimmen, den wir für plausibel halten? Im konkreten Beispiel mit der Schätzung $\theta = \frac{45}{100}$, wäre da auch $\theta = \frac{1}{2}$ halbwegs plausibel?
@@ -158,7 +146,7 @@ $$
  P_{\theta}\left( \left|\mathbb{E}(T) - T\right| \geq c \right) \leq \dfrac{\mathbb{V}T}{c^2}
 $$
 
-Wir wollen natürlich gerne $c=\epsilon$ verwenden, und das $\epsilon$ in Abhängigkeit von $\alpha$ so wählen, dass auf der rechten Seite der Ungleichung nur noch $\alpha$ steht. Es ist $\mathbb{V}T = n\theta(1-\theta)$, was dummerweise noch von $\theta$ abhängt, welches wir ja nicht kennen!
+Wir wollen natürlich gerne $c=\epsilon$ verwenden, und das $\epsilon$ in Abhängigkeit von $\alpha$ so wählen, dass auf der rechten Seite der Ungleichung nur noch $\alpha$ steht. Es ist $\mathbb{V}T = \mathbb{V}\!\left(\frac{x}{n}\right) = \frac{\theta(1-\theta)}{n}$, was dummerweise noch von $\theta$ abhängt, welches wir ja nicht kennen!
 
 Daher schätzen wir $\theta(1-\theta) \leq \frac{1}{4}$ ab (klar: bei $\theta = \frac{1}{2}$ gilt Gleichheit, sonst ist es eine echte Ungleichung).
 
@@ -195,7 +183,7 @@ $$
 \end{aligned}
 $$
 
-setzen wir noch $\alpha = 0.05$ ein, ergibt sich, dass die Stichprobe größer als $2000$ sein sollte, um verwerfen zu können, dass die Münze fair ist. Wenn wir ein clevereres Verfahren zur bestimmung kleinerer Konfidenzintervalle hätten, würde uns allerdings eine kleinere Stichprobe ausreichen.
+setzen wir noch $\alpha = 0.05$ ein, ergibt sich, dass die Stichprobe größer als $2000$ sein sollte, um verwerfen zu können, dass die Münze fair ist. Wenn wir ein clevereres Verfahren zur Bestimmung kleinerer Konfidenzintervalle hätten, würde uns allerdings eine kleinere Stichprobe ausreichen.
 
 
 
@@ -218,7 +206,7 @@ $$
 
 und das ist demnach standardnormalverteilt. Diese Größe hat noch das Problem, dass wir eigentlich $\sigma(Z)$ nicht kennen, aber trotzdem für unsere Schätzung von $\mu(Z)$ gerne den Fehler betrachten wollen. Daher müssen wir $\sigma(Z)$ noch durch unsere Schätzung $S^\ast(X)$ ersetzen.
 
-Die Zufallsvariable 'Stichprobenvarianz' $S^\ast(X)^2$ ist so verteilt, dass $\dfrac{n-1}{\sigma(Z)} S^\ast(X)^2$ einer sogenannten **$\chi^2$-Verteilung** folgt (ein Spezialfall der Gamma-Verteilung).
+Die Zufallsvariable 'Stichprobenvarianz' $S^\ast(X)^2$ ist so verteilt, dass $\dfrac{n-1}{\sigma(Z)^2} S^\ast(X)^2$ einer sogenannten **$\chi^2$-Verteilung** mit $n-1$ Freiheitsgraden folgt (ein Spezialfall der Gamma-Verteilung).
 
 Die Wahrscheinlichkeitsdichtefunktion der $\chi^2$-Verteilung ist für uns momentan nicht relevant (insbesondere nicht klausurrelevant), der Vollständigkeit halber:
 
@@ -265,8 +253,8 @@ Wir sind nun daran interessiert, wo die Wahrscheinlichkeit für einen großen Sc
 $T = \dfrac{\texttt{mean}(X) - \mu(Z)}{S^\ast(X)/\sqrt{n}}$
 klein ist. Nun hängt dieser Schätzfehler nicht von $\mu(Z)$ ab, genauer gesagt, $T$ ist unabhängig von $\mu(Z)$. Das mag unintuitiv sein, weil $\mu(Z)$ in der Formel auftaucht, ist aber dennoch wahr. Man spricht von **Verteilungsfreiheit**.
 
-Zu $\alpha$ wählen wir nun $t$ als das $\frac{\alpha}{2}$-*Quantil* der $t$-Verteilung (mit $n-1$ Freiheitsgraden), das ist genau das kleinste $t$ sodass $P(T < t) \leq \frac{\alpha}{2}$ ist. So etwas hat man früher in Tabellen nachgeschlagen, heute benutzen wir einen Rechner.
-Dann ist mit $\epsilon := t\frac{\sigma^\ast(x)}{\sqrt{n}}$ ein Konfidenzintervall für $\mu(Z)$ gegeben durch
+Zu $\alpha$ wählen wir nun $t$ als das $(1-\frac{\alpha}{2})$-*Quantil* der $t$-Verteilung mit $n-1$ Freiheitsgraden, also die Zahl $t > 0$ mit $P(T \leq t) = 1 - \frac{\alpha}{2}$; wegen der Symmetrie der Verteilung ist dann $P(|T| \leq t) = 1 - \alpha$. So etwas hat man früher in Tabellen nachgeschlagen, heute benutzen wir einen Rechner (`scipy.stats.t.ppf(1 - alpha/2, n - 1)`).
+Dann ist mit $\epsilon := t\frac{S^\ast(x)}{\sqrt{n}}$ ein Konfidenzintervall für $\mu(Z)$ gegeben durch
 
 $$
 C(x) = (\texttt{mean}(x) - \epsilon, \texttt{mean}(x) + \epsilon).
@@ -372,7 +360,7 @@ $$
 mit $c \in \mathbb{R}$ heißt **Neyman-Pearson-Test** zum Schwellwert $c$.
 :::
 
-Warum heißt $R(x)$ Likelihoood-Quotient? Weil $f_1(x)$ ein Maß für die Wahrscheinlichkeit $P(D|H_1)$ ist und $f_0(x)$ ein Maß für die Wahrscheinlichkeit $P(D|H_0)$ ist, also ist $R$ der Quotient der Likelihoods. Wenn $f_0(x)=0$ ist, setzt man einfach $R = \infty$.
+Warum heißt $R(x)$ Likelihood-Quotient? Weil $f_1(x)$ ein Maß für die Wahrscheinlichkeit $P(D|H_1)$ ist und $f_0(x)$ ein Maß für die Wahrscheinlichkeit $P(D|H_0)$ ist, also ist $R$ der Quotient der Likelihoods. Wenn $f_0(x)=0$ ist, setzt man einfach $R = \infty$.
 
 Der Fall $R(x) = c$ hat meist Wahrscheinlichkeit $0$, kann aber auch gesondert behandelt werden (mit einem geeigneten Wert für $\phi(x)$ zwischen $0$ und $1$).
 
@@ -392,7 +380,7 @@ Die Take-Home-Message ist: für einfache Hypothesen gibt es immer beste Tests, u
 
 ## Der z-Test
 
-Wenn man Daten hat, deren einzelne Datenpunkte unabhängig (und identisch verteilt) sind (also etwa als Stichprobe einer Zufallsvariable), die einer Normalverteilung folgen, und die Stichprobengröße $n$ ist deutlich über $30$, dann kann man einen **z-Test** (auch **Gauß-Test**) machen. Das ist die 'einfachere' Variante vom t-Test (s.u.), bei der man aufgrund der Größe der Stichprobe anstelle einer Student t-Verteilung mit einer Normalverteilung arbeitet.
+Wenn man Daten hat, deren einzelne Datenpunkte unabhängig (und identisch verteilt) sind (also etwa als Stichprobe einer Zufallsvariable), die einer Normalverteilung folgen, und man die Standardabweichung $\sigma$ kennt, dann kann man einen **z-Test** (auch **Gauß-Test**) machen. Das ist die 'einfachere' Variante vom t-Test (s.u.). Kennt man $\sigma$ nicht und setzt die Stichprobenstandardabweichung ein, ist das bei großem $n$ noch vertretbar, weil die t-Verteilung dann praktisch eine Normalverteilung ist; die verbreitete Faustregel „$n > 30$“ ist dafür allerdings so grob, wie im Kapitel [Normalverteilung](normalverteilung.ipynb) unter *Der $N \ge 30$-Mythos* beschrieben.
 
 Bei diesem Test möchte man herausfinden, ob ein Sample $x$ einer Normalverteilung mit Mittelwert $\mu_0$ folgt. Für $\mu_0 = \texttt{mean}(x)$ (den Maximum-Likelihood-Schätzer) ist nichts zu testen - wir schlussfolgern sofort, dass $\mu = \mu_0$ plausibel ist. Was aber ist mit Werten $\neq \texttt{mean}(x)$? Angenommen, unsere Stichprobe folgt *beinahe* einer Standardnormalverteilung - dann wäre es sinnvoll, einen Test zu machen, ob die Hypothese einer Standardnormalverteilung angenommen oder verworfen werden soll, auch wenn der Maximum-Likelihood-Schätzer etwas anderes als $0$ als $\mu$ schätzt.
 
@@ -423,7 +411,7 @@ Die beiden Tests im Vergleich:
 |---|---|---|
 | $\sigma$ | bekannt (bei großem $n$: $\sigma^\ast(x)$ eingesetzt) | unbekannt, wird mitgeschätzt |
 | Verteilung der Statistik unter $H_0$ | Standardnormalverteilung | Student t-Verteilung mit $n-1$ Freiheitsgraden |
-| wann | $n$ groß (Faustregel: $n > 30$) | $n$ klein (funktioniert aber für jedes $n$) |
+| wann | $\sigma$ bekannt, sonst nur bei großem $n$ | immer; bei großem $n$ praktisch derselbe Test |
 | SciPy | `norm.ppf` | `t.ppf`, `ttest_1samp` |
 
 Bei kleinen Stichproben macht sich die Verzerrung der geschätzten Parameter einer Normalverteilung bemerkbar und man muss mit der tatsächlichen Verteilung der **t-Statistik** rechnen. Wenn also $\mu_0$ der Parameter ist, auf den man testen möchte, so betrachtet man
@@ -464,7 +452,7 @@ res.statistic, res.pvalue, res.df, res.confidence_interval()
 
 Der p-Wert liegt unter $0{,}05$, also verwerfen wir $\mu_0 = 150$; passend dazu liegt die $150$ nicht im Konfidenzintervall. `confidence_interval()` ist genau das Intervall aus dem Abschnitt *Von der Stichprobe auf die Population*, $\texttt{mean}(x) \pm t \cdot \sigma^\ast(x)/\sqrt{n}$, nur mit dem Quantil $t = \texttt{t.ppf}(0.975, 39) \approx 2{,}02$ der t-Verteilung anstelle von $1{,}96$.
 
-Intern verwendet SciPy die Methode
+Für den Zwei-Stichproben-Fall gibt es außerdem die Variante, die nur Kennzahlen braucht:
 ```python
 ttest_ind_from_stats(mean1, std1, nobs1,
                      mean2, std2, nobs2,
@@ -555,7 +543,7 @@ Ein sehr wichtiger Baustein, um p-value hacking zu unterbinden, ist die Vorregis
 Das übliche Vorgehen ist, dass man eine wissenschaftliche Erkenntnis, die man machen möchte, formuliert als das Verwerfen der Nullhypothese. Es macht einen Unterschied, welche Aussage man als Hypothese, welche als Alternative formuliert, denn wir haben beste Tests so definiert, dass der Fehler erster und zweiter Art unterschiedliche Rollen spielen - den Fehler erster Art halten wir genau auf dem Niveau $\alpha$ und minimieren unter dieser Randbedingung den Fehler zweiter Art.
 
 :::{admonition} Beispiel
-Stellen wir uns vor, wir hätten ein neues Medikament gefunden, von dem wir glauben, dass es schlauer macht. Um das zu zeigen, gehen wir so vor: wir konstruieren ein Experiment, mit dem sich widerlegen lässt, dass unser Medikament schlauer macht. Dazu operationalisieren wir "schlauer werden" z.B. über eine Prüfungssituation mit kognitiven Aufgaben. Die Probanden, wenigstens 30 an der Zahl, werden zufällig in zwei Gruppen aufgeteilt. Eine Gruppe bekommt ein Placebo, die andere das Medikament, sonst ist alles gleich und niemand (auch die Durchführenden nicht) weiß, wer in welcher Gruppe ist. Danach wertet man die Daten aus - Performance in der Prüfung ist eine Variable, Gruppenzugehörigkeit die andere.
+Stellen wir uns vor, wir hätten ein neues Medikament gefunden, von dem wir glauben, dass es schlauer macht. Um das zu zeigen, gehen wir so vor: wir konstruieren ein Experiment, mit dem sich widerlegen lässt, dass unser Medikament schlauer macht. Dazu operationalisieren wir "schlauer werden" z.B. über eine Prüfungssituation mit kognitiven Aufgaben. Die Probanden werden zufällig in zwei Gruppen aufgeteilt. Eine Gruppe bekommt ein Placebo, die andere das Medikament, sonst ist alles gleich und niemand (auch die Durchführenden nicht) weiß, wer in welcher Gruppe ist. Danach wertet man die Daten aus - Performance in der Prüfung ist eine Variable, Gruppenzugehörigkeit die andere.
 
 Die Nullhypothese ist nun: das Medikament wirkt nicht. Die Alternative ist, dass das Medikament schlauer macht. Wenn wir die Performance als normalverteilt annehmen, können wir einen zwei-Sample-t-Test machen. Wenn $p < 0.05$ ist, verwerfen wir die Nullhypothese, schließen also, dass diese Beobachtung kein Zufall sein kann, sondern die Variable 'Gruppenzugehörigkeit' einen signifikanten Einfluss auf die Performance hat.
 :::
@@ -563,7 +551,7 @@ Die Nullhypothese ist nun: das Medikament wirkt nicht. Die Alternative ist, dass
 Wenn $p < 0.05$ ist, kann natürlich immer noch ein Fehler erster Art auftreten, denn $0.05 \neq 0$.
 Die Nullhypothese war $\mu_1 = \mu_2$, wenn $\mu_i$ die Mittelwerte aus den beiden Gruppen sind. Die Alternative $\mu_1 \neq \mu_2$. In unserer Herleitung vom t-Test haben wir die t-Statistik aufgestellt und dabei den Mittelwert des Samples mit einem fixen $\mu_0$ verglichen. Dabei lässt sich die Rolle von Hypothese und Alternative nicht vertauschen!
 
-Man sieht diese Nicht-Vertauschbarkeit auch bei der natürlichsprachlich formulierten Hypothese: "das Medikament wirkt nicht" ist eigentlich die Aussage "das Medikament einzunehmen oder nicht hat keinen Einfluss auf die Testperformance". Wir formalisiert man "hat einen Einfluss auf die Testperformance" mathematisch?
+Man sieht diese Nicht-Vertauschbarkeit auch bei der natürlichsprachlich formulierten Hypothese: "das Medikament wirkt nicht" ist eigentlich die Aussage "das Medikament einzunehmen oder nicht hat keinen Einfluss auf die Testperformance". Wie formalisiert man "hat einen Einfluss auf die Testperformance" mathematisch?
 
 Was man wiederum machen kann ist ein Test auf einen explizit beschriebenen Zusammenhang, z.B. die Hypothese, dass man nach Einnahme des Medikaments genau 10 Punkte mehr im Test macht, also die Gleichung $\mu_1 + 10 = \mu_2$. Man beachte, dass dies wieder eine Gleichung ist, hingegen $\mu_1 \neq \mu_2$ nicht ebenso getestet werden kann.
 
@@ -583,12 +571,12 @@ Wir könnten noch eine ganze Reihe Tests benötigen, und deren Voraussetzungen, 
 **Zwei Samples vergleichen**
 
 * Pearson's Korrelation:
-  $H_0$: Die zwei Samples sind unabhängig
-  Voraussetzung: beide Samples sind iid und normalverteilt mit gleicher Varianz
+  $H_0$: Die zwei Samples sind unkorreliert ($\rho = 0$)
+  Voraussetzung: beide Samples sind iid und gemeinsam normalverteilt
   `scipy.stats.pearsonr`
 * Chi-Quadrat:
   $H_0$: Die zwei Samples sind unabhängig
-  Voraussetzung: die untersuchte Variable ist kategoriell, wenigstens 25 Instanzen pro Eintrag in der Kontingenztabelle
+  Voraussetzung: die untersuchte Variable ist kategoriell, erwartete Häufigkeit von wenigstens $5$ in jedem Feld der Kontingenztabelle
   `scipy.stats.chi2_contingency`
 
 ## Exkurs: Konnte eine Umfrage die Fünf-Prozent-Frage beantworten?

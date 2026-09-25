@@ -1,8 +1,10 @@
 # Was ist Data Science?
 
+[Vorlesungsaufzeichnung Überblick (VL 0)](https://media.hhu.de/channel/video/data-science-vl-0-ueberblick-2025/95a1f14466cb299f6063e931d38e733a/167)
+
 ## Vorab: ein Tabellenblatt, das Europa sparen ließ
 
-Im Jahr 2010 veröffentlichten die Harvard-Ökonomen Carmen Reinhart und Kenneth Rogoff eine Auswertung von zwei Jahrhunderten Staatsschulden und Wirtschaftswachstum {cite}`reinhart2010`. Ihr Befund: Sobald die Schulden eines Landes 90 % seiner Wirtschaftsleistung übersteigen, schrumpft die Wirtschaft im Mittel, um 0,1 % pro Jahr. Die Zahl machte Karriere. Sie stand im Haushaltsentwurf des US-Kongresses, der EU-Währungskommissar zitierte sie, und sie war ein Argument für die Sparpolitik in Europa nach der Finanzkrise.
+Im Jahr 2010 veröffentlichten die Harvard-Ökonomen Carmen Reinhart und Kenneth Rogoff eine Auswertung von zwei Jahrhunderten Staatsschulden und Wirtschaftswachstum {cite}`reinhart2010`. Ihr Befund: Sobald die Schulden eines Landes 90 % seiner Wirtschaftsleistung übersteigen, schrumpft die Wirtschaft im Mittel um 0,1 % pro Jahr. Die Zahl machte Karriere. Sie stand im Haushaltsentwurf des US-Kongresses, der EU-Währungskommissar zitierte sie, und sie war ein Argument für die Sparpolitik in Europa nach der Finanzkrise.
 
 Drei Jahre später bekam Thomas Herndon, Doktorand in Amherst, in einem Seminar die Aufgabe, eine bekannte Studie nachzurechnen. Er bat um das Tabellenblatt und fand darin einen markierten Zellbereich, der fünf Zeilen zu kurz war: Australien, Österreich, Belgien, Kanada und Dänemark fehlten im Mittelwert, alles Länder mit hohen Schulden und ordentlichem Wachstum. Dazu kamen ausgelassene Jahre und eine ungewöhnliche Gewichtung. Mit allen drei Korrekturen wurden aus $-0{,}1\,\%$ Wachstum $+2{,}2\,\%$ {cite}`herndon2014`. Die Klippe bei 90 % gab es nicht.
 
@@ -71,7 +73,7 @@ Patil beschreibt also, woran man gute Data Scientists erkennt: an fachlicher Tie
 
 Ein signifikanter Teil der Arbeit eines Data Scientist besteht in der Aufbereitung von Daten, dem sogenannten "Daten schrubben". Dabei kommen viele klassische Programmiertechniken zum Einsatz, etwa reguläre Ausdrücke und Kenntnis über Industriestandards bei Datentypen und die Abweichungen von Standards, die in der Praxis auftauchen. Die Liste ist erstaunlich konkret: Zeit- und Datumsformate samt Zeitzonen und Sommerzeitumstellung, GIS-Datenformate für alles Räumliche, Ländercodes (von denen es mehrere konkurrierende Systeme gibt), Unicode und die Encodings, die es ersetzen sollte, und die gängigen Abweichungen vom CSV-Standard — Trennzeichen, Anführungszeichen, Zeilenumbrüche mitten im Feld. Das Handwerk dazu hat in diesem Buch ein eigenes Kapitel, [Daten putzen](data-cleaning.ipynb).
 
-Drei Punkte dieser Liste lernt man allerdings in keiner Vorlesung: Geduld, Übung und Fachkenntnisse über das Anwendungsgebiet. Ob ein Blutdruckwert von $400$ ein Messfehler ist oder ein Alter von $0$ ein fehlender Wert, steht in keinem Datenformat — das weiß nur, wer das Gebiet kennt oder jemanden fragt, der es kennt.
+Drei Dinge, die man dafür außerdem braucht, lernt man in keiner Vorlesung: Geduld, Übung und Fachkenntnisse über das Anwendungsgebiet. Ob ein Blutdruckwert von $400$ ein Messfehler ist oder ein Alter von $0$ ein fehlender Wert, steht in keinem Datenformat — das weiß nur, wer das Gebiet kennt oder jemanden fragt, der es kennt.
 Auch im maschinellen Lernen, etwa beim Deep Learning, kann man durch Pflegen der Trainingsdaten erheblich bessere Ergebnisse erzielen.
 
 

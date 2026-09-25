@@ -37,23 +37,23 @@ $$
 
 gilt, denn mit $g = \ln$ ist dann das Lemma bewiesen ($c=f(2)$).
 
-Seien $n,k,l \in \mathbb{N}$ sodass $2^{l-1} \leq n^k \leq 2^l$.
+Seien $n,k,m \in \mathbb{N}$ sodass $2^{m-1} \leq n^k \leq 2^m$.
 Aus der Monotonie folgt dann
 
 $$
-f(2^{l-1}) \leq f(n^k) \leq f(2^l)
+f(2^{m-1}) \leq f(n^k) \leq f(2^m)
 $$
 
 und aus der Additivität
 
 $$
-(l-1)f(2) \leq kf(n) \leq lf(2)
+(m-1)f(2) \leq kf(n) \leq mf(2)
 $$
 
 ebenso die gleiche Ungleichungskette für $g$ anstelle $f$, aber das multiplizieren wir noch mit $-1$:
 
 $$
--lg(2) \leq -kg(n) \leq -(l-1)g(2).
+-mg(2) \leq -kg(n) \leq -(m-1)g(2).
 $$
 
 Die Summe dieser beiden Ungleichungsketten können wir nun vereinfachen zu
@@ -67,15 +67,15 @@ dass $f(n)g(2) - f(2)g(n) \to 0$ geht (für $k \to \infty$, wovon es gar nicht a
 :::
 
 :::{admonition} Lemma
-Wenn eine stetige Funktion $F \colon \mathbb{R} \to \mathbb{R}$ die Funktionalgleichung $F(xy) = xF(y) + F(x)y$ erfüllt und schneller wächst als $x$, so existiert eine Konstante $c \in \mathbb{R}$ sodass $F(x) = -x\log(x)c$.
+Wenn eine stetige Funktion $F \colon \mathbb{R} \to \mathbb{R}$ die Funktionalgleichung $F(xy) = xF(y) + F(x)y$ erfüllt und $F(x)/x$ monoton wachsend ist, so existiert eine Konstante $c \in \mathbb{R}$ sodass $F(x) = -x\log(x)c$.
 :::
 
 :::{admonition} Beweis
-Die Funktion $g(x) := F(x)/x$ erfüllt $g(xy) = g(x) + g(y)$ und wächst monoton, also gibt es $c'$ mit $g(x) = c'\log(x)$, und $c:=-c'$ funktioniert.
+Die Funktion $g(x) := F(x)/x$ erfüllt $g(xy) = g(x) + g(y)$ und ist nach Voraussetzung monoton, also gibt es $c'$ mit $g(x) = c'\log(x)$, und $c:=-c'$ funktioniert.
 :::
 
 :::{admonition} Bemerkung
-Wir sehen also, dass die Information $I(x) = -x\log(x)$ eine sehr natürliche Größe ist.
+Wir sehen also, dass der Entropie-Beitrag $-p\log(p)$ eines Ergebnisses mit Wahrscheinlichkeit $p$ eine sehr natürliche Größe ist. (Die *Information* $I(x) = -\log P(\{x\})$ aus dem Kapitel [Erwartungswert und Varianz](erwartungswert.md) ist der Faktor hinter dem $p$.)
 :::
 
 :::{admonition} Lemma
@@ -109,7 +109,7 @@ $\leq \log\left( \sum_{i=1}^n 1 \right) = \log(n)$
 :::
 
 
-## Relative Entropie
+## Definition und Eigenschaften
 
 :::{admonition} Definition
 Seien $p,r \in \Delta_n$ (der Menge der Wahrscheinlichkeitsvektoren in $\mathbb{R}^n$, also Vektoren, deren Einträge zwischen $0$ und $1$ liegen und deren Summe über alle Einträge genau $1$ ist).
@@ -148,18 +148,19 @@ dabei haben wir wieder die Konkavität des Logarithmus ausgenutzt.
 :::
 
 :::{admonition} Beispiel
-Die relative Entropie ist nicht symmetrisch und kann durchaus unendlich groß werden:
+Die relative Entropie ist nicht symmetrisch und kann unendlich groß werden. Sei $p_t := (t,\ 1-t)$ für $0 < t < 1$, eine Münze, die für kleines $t$ fast sicher auf $1$ fällt. In der einen Richtung ist
 
 $$
-H\left(u_2 \big\Vert  \begin{pmatrix} t \\ 1-t \end{pmatrix} \right) = \frac{1}{2} \log \left( \frac{1}{2t} \right) + \frac{1}{2}\log \left(\frac{1}{2(1-t)}\right) \xrightarrow{t \to 0} \log(\infty) = \infty.
+H\left(u_2 \,\Vert\, p_t\right) = \frac{1}{2} \log \frac{1}{2t} + \frac{1}{2}\log \frac{1}{2(1-t)} \xrightarrow{t \to 0} \infty,
 $$
 
-Wie zuvor besprochen ist $H\left( \begin{pmatrix} t \\ 1-t \end{pmatrix} \big\Vert  u_2 \right) = \log(n) - H\left( \begin{pmatrix} t \\ 1-t \end{pmatrix} \right)$
-und
+denn der erste Summand wächst wie $-\frac12\log t$ über alle Grenzen. In der anderen Richtung liefert die Proposition oben
 
 $$
-H(u_2) = t\log(t) - (1-t)\log(1-t) \xrightarrow{t \to 0} 0 - 1\log(1) = 0
+H\left(p_t \,\Vert\, u_2\right) = \log(2) - H(p_t), \qquad H(p_t) = -t\log t - (1-t)\log(1-t) \xrightarrow{t \to 0} 0,
 $$
+
+also $H(p_t \Vert u_2) \to \log 2$: endlich, zur Basis $2$ genau ein Bit. Wer die fast sichere Münze $p_t$ für fair hält, zahlt höchstens ein Bit; wer umgekehrt die faire Münze für $p_t$ hält, wird von der Seite, die er für unmöglich hielt, unendlich überrascht.
 :::
 
 ## Verbundentropie
@@ -217,7 +218,7 @@ H(X,Y) &:= -\sum_{i=1}^n \sum_{j=1}^n P(X = z_i, Y = z_j) \log P(X = z_i, Y = z_
 :::
 
 :::{admonition} Definition
-Die *gemeinsame Information* von zwei Zufallsvariablen $X,Y$ ist definiert als
+Die *gemeinsame Information* (auch *Transinformation*, englisch *mutual information*) von zwei Zufallsvariablen $X,Y$ ist definiert als
 
 $$
 I(X;Y) := H(X)+H(Y)-H(X,Y)= H(X,Y  \Vert X\times Y)
@@ -243,7 +244,7 @@ $$
 :::{admonition} Beispiel
 Die gemeinsame Information von $X$ mit sich selbst ist genau die Entropie $I(X;X) = H(X)$.
 
-Wenn $X,Y$ unabhängig sind, ist $I(X,Y) = H(X) + H(Y) - (H(X) + H(Y)) = 0$.
+Wenn $X,Y$ unabhängig sind, ist $I(X;Y) = H(X) + H(Y) - (H(X) + H(Y)) = 0$.
 :::
 
 :::{admonition} Proposition
@@ -278,12 +279,14 @@ Entropie, bedingte Entropie, Verbundentropie und gemeinsame Information in einem
 
 
 :::{admonition} Definition
-Die *Kreuzentropie* von $X$ (verteilt nach $p \in \Delta^n$) und $Y$ (verteilt nach $r \in \Delta^n$) ist
+Die *Kreuzentropie* von $X$ (verteilt nach $p \in \Delta_n$) und $Y$ (verteilt nach $r \in \Delta_n$) ist
 
 $$
-H(X; Y) = \mathbb{E}_X I(Y) = -\sum_{i,\ r_i > 0}^n p_i \log r_i \in \mathbb{R} \cup \{\infty\}.
+H(X; Y) = \mathbb{E}_X I(Y) = -\sum_{i,\ p_i > 0}^n p_i \log r_i \in \mathbb{R} \cup \{\infty\}.
 $$
 :::
+
+Ein Summand mit $p_i > 0$ und $r_i = 0$ hat dabei den Wert $\infty$ (mit $\log 0 = -\infty$): Ein Ereignis, das nach $r$ unmöglich ist, aber nach $p$ vorkommt, kostet unendlich viel.
 
 *Achtung*: Leider wird die Kreuzentropie von manchen Autoren auch mit $H(X, Y)$ notiert, was man also leicht mit der Verbundentropie verwechseln kann. Außerdem ähnelt die Notation $H(X;Y)$ der gemeinsamen Information $I(X;Y)$ von oben, die etwas ganz anderes ist.
 
@@ -326,7 +329,7 @@ Leider ist die differentielle Entropie nicht invariant unter beliebigen Transfor
 
 Jaynes hat vorgeschlagen, sich immer feiner werdende Histogramme vorzustellen, also eine Menge von $N$ diskreten Punkten $\{x_i\}$,
 dann schreiben wir
-$M(a,b) = \lim_{N \to \infty} \frac{1}{n} (\text{Anzahl } x_i : a < x_i < b)$
+$M(a,b) = \lim_{N \to \infty} \frac{1}{N} (\text{Anzahl } x_i : a < x_i < b)$
 und eine Dichte $m$ mit $M(a,b) = \int_a^b m(x) dx$ nennen wir *invariantes Maß*.
 Damit schreiben wir nun
 
@@ -343,7 +346,7 @@ $$
 Zum Einen wollen wir festhalten, dass die "diskrete Entropie" einer stetigen Verteilung eigentlich $\infty$ ist.
 Zum Anderen, dass offensichtlich für einen sinnvollen Entropiebegriff zwangsläufig Bezug genommen werden muss auf eine weitere Verteilung (hier das "invariante Maß").
 
-Wenn man vom theoretischen Standpunkt analysiert, was $h(X)$ und $H(X)$ sind, so kommt man zur allgemeinen relativen Entropie $H(P,Q)$, sodass $h(X) = H(f\lambda | \lambda)$ mit $\lambda$ dem Lebesgue-Maß und $f$ einer Dichte von $X$.
+Wenn man vom theoretischen Standpunkt analysiert, was $h(X)$ und $H(X)$ sind, so kommt man zur allgemeinen relativen Entropie $H(P,Q)$, sodass $h(X) = -H(f\lambda \,\Vert\, \lambda)$ mit $\lambda$ dem Lebesgue-Maß und $f$ einer Dichte von $X$.
 
 :::{admonition} Definition
 Seien $P,R$ stetige Verteilungen. Die *relative Entropie* $H(P \Vert R)$ (auch: Kullback-Leibler-Divergenz $D_{KL}(P,R)$) ist
@@ -355,7 +358,7 @@ $$
 dabei ist $\dfrac{dR}{dP}$ die Radon-Nikodym-Ableitung eines Maßes bezüglich eines anderen.
 :::
 
-Das wollen wir jetzt auch nicht weiter diskutieren, sondern lieber festhalten, dass das für $P$ und $R$ mit Dichtefunktionen $p,r \colon \mathbb{R}^n \to [0,1]$ einfacher aussieht:
+Das wollen wir jetzt auch nicht weiter diskutieren, sondern lieber festhalten, dass das für $P$ und $R$ mit Dichtefunktionen $p,r \colon \mathbb{R}^n \to [0,\infty)$ einfacher aussieht:
 
 $$
 H(P \Vert R) = \int_\Omega p(x) \log \frac{p(x)}{r(x)} dx

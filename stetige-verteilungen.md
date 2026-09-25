@@ -9,14 +9,14 @@ Wenn $\Omega$ kein diskreter Wahrscheinlichkeitsraum ist (z.B. weil $\Omega$ ein
 :::
 
 :::{admonition} Definition
-Man nennt die kleinste Menge $A \subset \mathbb{R}$ mit $P(X \in A)=1$ den *Träger* von $X$ und schreibt auch
+Der *Träger* von $X$ ist die kleinste **abgeschlossene** Menge $A \subseteq \mathbb{R}$ mit $P(X \in A) = 1$,
 
 $$
-\operatorname{supp}(X) = \overline{\bigcap \{ A \subseteq \mathbb{R} : P(X \in A) = 1 \}}
+\operatorname{supp}(X) = \bigcap \{ A \subseteq \mathbb{R} \text{ abgeschlossen} : P(X \in A) = 1 \}.
 $$
 :::
 
-In der Formel steckt ein Querstrich: $\overline{M}$ ist der *Abschluss* von $M$, die kleinste abgeschlossene Menge, die $M$ enthält. Er steht da, damit der Träger nicht an Randpunkten hängen bleibt, die einzeln keine Wahrscheinlichkeit tragen.
+Das Wort *abgeschlossen* ist dabei keine Dekoration. Ohne es wäre der Schnitt für jede Verteilung mit Dichte leer: Für $X \sim U([0,1])$ hat $[0,1] \setminus \{x\}$ für jedes einzelne $x$ noch Wahrscheinlichkeit $1$ (einzelne Punkte sind Nullmengen, dazu gleich mehr), also läge kein Punkt in allen diesen Mengen. Verlangt man abgeschlossene Mengen, kommt $[0,1]$ heraus, wie es sein soll. (Dass der Schnitt selbst wieder Wahrscheinlichkeit $1$ hat, weil man mit abzählbar vielen der $A$ auskommt, benutzen wir nicht weiter.)
 
 :::{admonition} Definition
 Eine Menge $M \subseteq \mathbb{R}^n$ heißt *abgeschlossen*, wenn sie die Grenzwerte ihrer eigenen konvergenten Folgen enthält: Liegt eine Folge $(x_k)$ ganz in $M$ und konvergiert gegen $x$, so ist auch $x \in M$.
@@ -24,13 +24,13 @@ Eine Menge $M \subseteq \mathbb{R}^n$ heißt *abgeschlossen*, wenn sie die Grenz
 
 Abgeschlossen sind zum Beispiel jedes Intervall der Form $[a,b]$, ganz $\mathbb{R}$ und jede endliche Menge. Nicht abgeschlossen ist dagegen $(0,1]$: Die Folge $\frac1k$ liegt darin, ihr Grenzwert $0$ nicht. Der Abschluss von $(0,1]$ ist $[0,1]$.
 
-Für eine diskrete Verteilung mit pmf $p$ vereinfacht sich der Träger zu
+Für eine diskrete Verteilung mit pmf $p$ und endlich vielen Werten vereinfacht sich der Träger zu
 
 $$
-\operatorname{supp}(P) = \{\, x \ \mid\ p(x) > 0 \,\},
+\operatorname{supp}(X) = \{\, x \ \mid\ p(x) > 0 \,\},
 $$
 
-also zu der Menge der Werte, die überhaupt vorkommen können.
+also zu der Menge der Werte, die überhaupt vorkommen können (bei unendlich vielen Werten kommen noch deren Häufungspunkte dazu, denn der Träger ist abgeschlossen).
 
 :::{admonition} Beispiel
 Die Gleichverteilung auf $\Omega = \{1,\dots,n\}$ hat als Verteilung *auf $\Omega$* den Träger $\Omega$ selbst — dort ist jedes Element möglich.
@@ -38,7 +38,7 @@ Die Gleichverteilung auf $\Omega = \{1,\dots,n\}$ hat als Verteilung *auf $\Omeg
 Dieselbe Verteilung lässt sich aber auch als Verteilung auf $\mathbb{R}$ auffassen, indem man alle übrigen reellen Zahlen mit Wahrscheinlichkeit $0$ versieht. Dann ist der Träger $\{1,\dots,n\} \subset \mathbb{R}$, eine endliche und damit abgeschlossene Teilmenge der reellen Zahlen. Der Träger hängt also nicht nur von der Verteilung ab, sondern auch davon, als Verteilung *worauf* man sie liest.
 :::
 
-Der Träger ist auch für diskrete reelle Zufallsvariablen definiert - der offensichtliche Unterschied ist, dass per definitionem diskrete Zufallsvariablen einen diskreten Träger haben (d.h. eine Menge reeller Zahlen, die keinen Häufungspunkt hat, insbesondere kein Intervall enthält).
+Der Träger ist auch für diskrete reelle Zufallsvariablen definiert - der offensichtliche Unterschied ist, dass der Träger einer diskreten Zufallsvariable kein Intervall enthält.
 
 ## Dichtefunktionen
 
@@ -55,7 +55,7 @@ Wir nennen für jedes Wahrscheinlichkeitsmaß $P$, welches sich so schreiben lä
 Gegeben eine reelle Zufallsvariable $X \colon \Omega \to \mathbb{R}$, deren Verteilung $P_X$ durch eine Dichte $f$ gegeben ist, gilt also für $A \subseteq \mathbb{R}$
 
 $$
-\int_{X^{-1}(A)} d\omega = P(X \in A) = P_X(A) = \int_A f(x) dx
+\int_{X^{-1}(A)} dP(\omega) = P(X \in A) = P_X(A) = \int_A f(x) dx
 $$
 
 Dieses rechte Integral ist nun ein Integral im Wertebereich von $X$.
@@ -65,13 +65,13 @@ Analog können wir auch den Erwartungswert und die Varianz berechnen:
 Sei $X$ eine stetige Zufallsvariable, deren Verteilung durch eine Dichte $f \colon D \to [0,\infty)$ gegeben ist. Dann heißt
 
 $$
-\mathbb{E}(X) = \int_\Omega X(\omega) d \omega = \int_D x f(x) dx
+\mathbb{E}(X) = \int_\Omega X(\omega)\, dP(\omega) = \int_D x f(x) dx
 $$
 
 der *Erwartungswert* von $X$ und
 
 $$
-\mathbb{V}(X) = \int_\Omega \left(X(\omega)-\mathbb{E}(X)\right)^2 d \omega = \int_D \left(x-\mathbb{E}(X)\right)^2 f(x) dx
+\mathbb{V}(X) = \int_\Omega \left(X(\omega)-\mathbb{E}(X)\right)^2 dP(\omega) = \int_D \left(x-\mathbb{E}(X)\right)^2 f(x) dx
 $$
 
 die *Varianz* von $X$, sofern diese Integrale existieren. Für $D = \mathbb{R}$ ist etwa $\mathbb{E}(X) = \int_{-\infty}^{\infty} x f(x) dx$.

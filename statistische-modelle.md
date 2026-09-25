@@ -1,5 +1,7 @@
 # Statistische Modelle und Schätzer
 
+[Vorlesungsaufzeichnung Statistische Modelle und Maximum Likelihood (VL 17)](https://media.hhu.de/channel/video/data-science-vl-17-maximum-likelihood-2025/edefe4fe4cf095537fbe80bf1a401b21/167)
+
 Im Data Science Prozess, also dem Weg von den Daten zu einem Produkt (sei es ein Bericht, eine Vorhersage oder neue interessante Daten), modellieren wir die Daten. Genau genommen modellieren wir Teilaspekte, Ausschnitte der Daten (wie ja auch schon die Daten selbst nur ein Ausschnitt aus der Realität sind).
 Dabei können wir zum einen daran interessiert sein, wie die Daten entstanden sind, zum anderen aber auch geleitet sein von dem Wunsch, etwas bestimmtes darüber sagen bzw. damit machen zu können. Es ist also hilfreich, sich klar zu machen, welche Art von Information man den Daten entlocken möchte, und dann darauf Modelle abzustimmen.
 Oftmals ist es dabei möglich, verschiedene Ansätze zu wählen, um die gleiche Art von Information zu berechnen. Die Ergebnisse können sich dabei durchaus unterscheiden und häufig (im unsupervised learning) können wir die berechneten Ergebnisse nicht mit dem "richtigen" Ergebnis vergleichen. Es bleibt dann nur noch, den Informationsgehalt der Modelle zu vergleichen (die Entropie auszurechnen), alle Modell-Annahmen auf Plausibilität zu untersuchen und allgemeine Kriterien für die Güte von Modellen zu entwickeln. Letzteres wollen wir jetzt anpacken.
@@ -39,7 +41,7 @@ Die beiden Formeln liefern also merklich verschiedene Zahlen — gut zwei Prozen
 In diesen Formeln muss man nun etwas aufpassen, wenn man das praktisch implementieren will - denn was ist $\mu$?
 In der Anwendung kenne ich $\mu(X)$ nicht, muss also $\mu(x)$ verwenden. Dann aber stellt sich heraus, dass die Information in $\{x_i-\mu(x)\}_{i=1}^{n-1}$ genügt, um $x_n - \mu(x)$ zu berechnen, denn nach Definition von $\mu(x)$ ist $x_n - \mu(x) = \sum_{i=1}^{n-1} (\mu(x) - x_i)$. Gewissermaßen gibt es also, wenn man $\mu(x)$ anstelle von $\mu(X)$ verwendet, einen Freiheitsgrad weniger als $n$. Wir werden gleich sehen, wie sich das auf die Eigenschaften dieser beiden Schätzer für $\sigma(X)$ auswirkt.
 
-Wenn man statistische Modelle formal definiert hat, kann man auch sehr gut über Konfidenzintervalle und Hypothesentests sprechen, was wir dann gleich im Anschluss erledigen. Konfidenzintervalle erweitern des Ansatz des bloßen Schätzens einer Statistik um die Information, welchen Fehlerbereich man dieser Schätzung beimisst. Hypothesentests erweitern den Ansatz darum, schließlich zu Entscheidungen zu kommen. Bei der Diskussion um Hypothesentests ist es unvermeidlich, auch über den problematischen Begriff der **Signifikanz** zu sprechen. Aber eins nach dem anderen!
+Wenn man statistische Modelle formal definiert hat, kann man auch sehr gut über Konfidenzintervalle und Hypothesentests sprechen, was das Kapitel [Statistische Tests](statistische-tests.md) erledigt. Konfidenzintervalle erweitern des Ansatz des bloßen Schätzens einer Statistik um die Information, welchen Fehlerbereich man dieser Schätzung beimisst. Hypothesentests erweitern den Ansatz darum, schließlich zu Entscheidungen zu kommen. Bei der Diskussion um Hypothesentests ist es unvermeidlich, auch über den problematischen Begriff der **Signifikanz** zu sprechen. Aber eins nach dem anderen!
 
 Als Landkarte für die folgenden Definitionen — links, worüber man redet, rechts, was es formal wird:
 
@@ -70,7 +72,7 @@ Wenn man im Kontext eines statistischen Modells von Erwartungswerten (also z.B. 
 :::{admonition} Definition
 Ein statistisches Modell heißt **parametrisches Modell**, wenn die Parametermenge $\Theta$ eine Teilmenge eines $\mathbb{R}^d$ ist für ein $d \in \mathbb{N}$. Für $d=1$ sagt man auch **einparametriges Modell**.
 
-Wenn die Stichprobenmenge $\mathcal{X}$ diskret ist (höchstens abzählbar), und $\mathcal{F} = \mathcal{P}(X)$, nennt man das Modell **diskret** und in dem Fall haben alle $P_\theta$ eine Zähldichte $p_\theta$, d.h. $p_\theta(x) = P_\theta({x})$.
+Wenn die Stichprobenmenge $\mathcal{X}$ diskret ist (höchstens abzählbar), und $\mathcal{F} = \mathcal{P}(\mathcal{X})$, nennt man das Modell **diskret** und in dem Fall haben alle $P_\theta$ eine Zähldichte $p_\theta$, d.h. $p_\theta(x) = P_\theta(\{x\})$.
 
 Wenn die Stichprobenmenge $\mathcal{X}$ eine (Borel)-meßbare Teilmenge des $\mathbb{R}^n$ ist (z.B. eine offene Menge oder die Niveaumenge einer stetigen Funktion) und $\mathcal{F}$ eine Einschränkung der Borel-$\sigma$-Algebra von $\mathbb{R}^n$ ist, und außerdem jedes $P_\theta$ eine Dichtefunktion $f_\theta$ besitzt, dann heißt das statistische Modell ein **stetiges Modell**.
 
@@ -88,7 +90,7 @@ Die Projektionen $X_i \colon \mathcal{X}^N \to \mathcal{X}$ sind dann unabhängi
 :::
 
 :::{admonition} Beispiel
-Wir modellieren einen Würfelwurf eines potentiell unfairen Würfels mit einem diskreten Modell: $\mathcal{X} = \{1,\dots,6\}$ und $\Theta = \Delta_6$, die Menge aller möglichen diskreten Verteilungen auf einer sechselementigen Menge (geschrieben als Wahrscheinlichkeitsvektoren in $\mathbb{R}^6$), und $P_\theta(k) = \theta_k$. Konkret für $\theta = (\theta_1,\dots,\theta_n)$ ist also die Wahrscheinlichkeit, eine $6$ zu werfen im Modell mit Parameter $\theta$ gegeben durch $P_\theta(6) = \theta_6$.
+Wir modellieren einen Würfelwurf eines potentiell unfairen Würfels mit einem diskreten Modell: $\mathcal{X} = \{1,\dots,6\}$ und $\Theta = \Delta_6$, die Menge aller möglichen diskreten Verteilungen auf einer sechselementigen Menge (geschrieben als Wahrscheinlichkeitsvektoren in $\mathbb{R}^6$), und $P_\theta(k) = \theta_k$. Konkret für $\theta = (\theta_1,\dots,\theta_6)$ ist also die Wahrscheinlichkeit, eine $6$ zu werfen im Modell mit Parameter $\theta$ gegeben durch $P_\theta(6) = \theta_6$.
 :::
 
 :::{admonition} Beispiel
@@ -98,7 +100,7 @@ Den zweifach wiederholten Würfelwurf modellieren wir also mit $\mathcal{X}^2$ (
 :::{admonition} Beispiel
 Wir können auch modellieren, ob beim zweifachen Wurf ein Pasch gewürfelt wurde oder nicht - und somit $\mathcal{X} = \{\text{Pasch}, \text{Keinpasch}\}$ als Stichprobenraum betrachten.
 Dabei können wir einfach den Parameterraum $\Theta = \Delta_6$ beibehalten, das ist ein mögliches statistisches Modell.
-Wir sehen allerdings, dass $P_\theta^{\otimes}(k,k) = \theta_k^2$ ist, also ist $P_\theta(\text{Pasch}) = \sum_{k=1}^6 \theta_k^2$,
+Wir sehen allerdings, dass $P_\theta^{\otimes 2}(k,k) = \theta_k^2$ ist, also ist $P_\theta(\text{Pasch}) = \sum_{k=1}^6 \theta_k^2$,
 also genügt uns eigentlich der Parameter $s = \sum_{k=1}^6 \theta_k^2$ und wir könnten uns also einen kleineren Parameterraum vorstellen.
 Dann stellt sich allerdings die Frage, welche Verteilung $P_s$ wir dem Parameter $s$ zuordnen wollen. Eine konkret sinnvolle Wahl ist dabei die Verteilung $\theta$ mit maximaler Entropie, also eine Verteilung möglichst nah an der Gleichverteilung. Das wird nicht eindeutig, weil Permutationen von $\{1,\dots,6\}$ den Parameter $s$ und die Entropie $H(\theta)$ nicht ändern. Will man trotzdem ein irgendwie kanonisches Modell wählen, kann man z.B. eine Anordnung auf den $\theta$ fordern, also $\theta_k \geq \theta_{k+1}$.
 Wir sehen hier also: ein 'zu großer' Parameterraum ist manchmal das einfachere Modell.
@@ -163,7 +165,7 @@ $$
 $$
 
 Eine Folge von Schätzern $T_n \colon \mathcal{X}^n \to \Sigma$ für $\tau$ in $n$-fachen Produktmodellen heißt **konsistent** wenn für $n\to\infty$
-der Schätzer stochastisch gegen $\tau$ konvergiert: $\lim_{n\to\infty} T_n \xrightarrow{P_\theta} \tau(\theta)$. Stochastische Konvergenz (auch: Konvergenz in Wahrscheinlichkeit) heißt $\forall \epsilon > 0 : \lim_{n\to\infty} P(|T_n - \tau(\theta)| > \epsilon) = 0$.
+der Schätzer stochastisch gegen $\tau$ konvergiert: $T_n \xrightarrow{P_\theta} \tau(\theta)$. Stochastische Konvergenz (auch: Konvergenz in Wahrscheinlichkeit) heißt $\forall \epsilon > 0 : \lim_{n\to\infty} P(|T_n - \tau(\theta)| > \epsilon) = 0$.
 
 Die Folge $T_n$ heißt **asymptotisch erwartungstreu**, wenn $\lim_{n\to\infty} \mathbb{E}_{\theta}(T_n) = \tau(\theta)$.
 :::
@@ -197,7 +199,7 @@ Ein solcher Schätzer hat also minimale Streuung um den zu schätzenden Wert unt
 **Ausblick (nicht klausurrelevant):** Die Cramér-Rao-Ungleichung und die Fisher-Information in diesem Abschnitt sind Hintergrund dafür, dass es überhaupt beste Schätzer geben kann. Sie werden im Kurs nicht benötigt, um die Ergebnisse zu benutzen.
 :::
 
-Im Allgemeinen ist es sehr schwer, gleichmäßig beste erwartungstreue Schätzer zu bestimmen (es gibt sie im Allgemeinen nicht). Ausblick: Die *Cramer-Rao-Ungleichung* für *reguläre* statistische Modelle liefert eine Abschätzung der Varianz eines Schätzers durch die *Fisher-Information* (eine Größe, die sich auch aus der relativen Entropie berechnen lässt) und erlaubt so, gleichmäßig beste Schätzer daran zu erkennen, dass sie diese Varianzschranke nicht überschreiten. Für einen erwartungstreuen Schätzer $T$ eines reellen Parameters $\theta$ lautet sie
+Im Allgemeinen ist es sehr schwer, gleichmäßig beste erwartungstreue Schätzer zu bestimmen (es gibt sie im Allgemeinen nicht). Ausblick: Die *Cramér-Rao-Ungleichung* für *reguläre* statistische Modelle liefert eine Abschätzung der Varianz eines Schätzers durch die *Fisher-Information* (eine Größe, die sich auch aus der relativen Entropie berechnen lässt) und erlaubt so, gleichmäßig beste Schätzer daran zu erkennen, dass sie diese Varianzschranke nicht überschreiten. Für einen erwartungstreuen Schätzer $T$ eines reellen Parameters $\theta$ lautet sie
 
 $$
 \mathbb{V}_\theta(T) \geq \frac{1}{I(\theta)}, \qquad I(\theta) := \mathbb{E}_\theta\left[\left(\frac{\partial}{\partial\theta} \log p_\theta(X)\right)^2\right],
@@ -214,7 +216,7 @@ Für viele praktisch wichtige Modelle gibt es aber gar keine geschlossene Formel
 Gegeben ein statistisches Standardmodell $(\mathcal{X}, P_\theta : \theta \in \Theta)$ mit Dichte $f_\theta$ für $P_\theta$ heißt $\rho \colon \mathcal{X} \times \Theta \to \mathbb{R}_{\geq 0}$ mit $\rho(x, \theta) := L_x(\theta) := f_\theta(x)$ die **Likelihood-Funktion** und für festes $x$ heißt $L_x =\rho(x, \cdot) \colon \Theta \to \mathbb{R}_{\geq 0}$ die **Likelihood**-Funktion zum Beobachtungswert $x$.
 :::
 
-Wenn wir also Daten $x$ gegeben haben, drückt die Likelihood-Funktion zu $x$ für jeden Parameter $\theta$ aus, wie die Wahrscheinlichkeitsdichte an der Stelle $x$ von $P_\theta$ ausfällt. Ist die Dichte groß, so ist $x$ eine Beobachtung, die unter dem Parameter $\theta$ wahrscheinlich ist. Ist die Dichte klein, so ist $x$ unter $\theta$ unwahrscheinlich. Zur Erinnerung: Wenn wir die Hypothese $H = ( \theta$ ist der wahre Parameter $)$ haben, und $D=x$ (für Daten) schreiben, so ist $P(D|H) = L_x(\theta) = f_\theta(x)$ die Likelihood (vgl. Abschnitt über den Satz von Bayes).
+Wenn wir also Daten $x$ gegeben haben, drückt die Likelihood-Funktion zu $x$ für jeden Parameter $\theta$ aus, wie die Wahrscheinlichkeitsdichte an der Stelle $x$ von $P_\theta$ ausfällt. Ist die Dichte groß, so ist $x$ eine Beobachtung, die unter dem Parameter $\theta$ wahrscheinlich ist. Ist die Dichte klein, so ist $x$ unter $\theta$ unwahrscheinlich. Zur Erinnerung: Wenn wir die Hypothese $H = ( \theta$ ist der wahre Parameter $)$ haben, und $D=x$ (für Daten) schreiben, so ist $P(D|H) = L_x(\theta) = f_\theta(x)$ die Likelihood (vgl. den Satz von Bayes, Fassung 3, im Kapitel [Kovarianz und Abhängigkeit](kovarianz.md)).
 
 :::{admonition} Definition
 Ein Schätzer $T \colon \mathcal{X} \to \Theta$ für den Parameter $\theta$ heißt **Maximum-Likelihood-Schätzer** (maximum likelihood estimator, MLE), wenn für alle $x \in \mathcal{X}$ gilt:
@@ -253,7 +255,7 @@ Im Allgemeinen ist die Likelihood allerdings schwerer zu berechnen (man betracht
 
 **Trick**
 
-Anstatt die Likelihood von $x$ über alle möglichen $\theta$ zu maximieren, kann man auch den Logarithmus der Likelihood bilden, die sogenannte **log-Likelihood** $\log \rho(x,\theta)$ und diese maximieren. Wegen der Konkavität des Logarithmus ist ein Maximum der log-Likelihood auch ein Maximum der Likelihood.
+Anstatt die Likelihood von $x$ über alle möglichen $\theta$ zu maximieren, kann man auch den Logarithmus der Likelihood bilden, die sogenannte **log-Likelihood** $\log \rho(x,\theta)$ und diese maximieren. Weil der Logarithmus streng monoton wächst, haben Likelihood und log-Likelihood dieselben Maximalstellen.
 
 Wenn z.B. $\rho$ die Form $e^{A}e^{B}$ hat (etwa bei einem $2$-fachen Produktmodell), hat $\log\rho$ die Form $A+B$ und Ableitungen gleich $0$ setzen wird deutlich einfacher. Auch mit diesem Trick lässt sich aber im Allgemeinen keine analytische geschlossene Lösung finden - also kann die Informatik mit Approximations-Algorithmen glänzen, wie z.B. den *Expectation Maximization Algorithmus*, den wir später in der Vorlesung noch behandeln.
 
@@ -288,21 +290,11 @@ Für die Beobachtungen $1, 2, 3, 4$ etwa ist $\texttt{mean}(x) = 2{,}5$ und dami
 :::
 
 :::{admonition} Proposition
-Wenn $\theta_0$ der 'wahre' Parameter für $X$ ist (mit dem $x$ gesampelt wurde), so konvergiert der Maximum-Likelihood-Schätzwert $\hat{\theta}$ für eine Stichprobe der Größe $n$ gegen den Wert $\theta$, für den die relative Entropie zwischen $P_{\theta_0}$ und $P_{\theta}$ minimiert wird (wenn das Modell gut aufgesetzt ist, ist dieses Minimum genau $0$). Um das einzusehen, benutzt man den zuvor erwähnten Trick und das Gesetz der großen Zahlen und den Zusammenhang, dass der Erwartungswert der log-Likelihood gleich der negativen Kreuzentropie $-H(x;P_{\theta_0})$ ist.
+Wenn $\theta_0$ der 'wahre' Parameter für $X$ ist (mit dem $x$ gesampelt wurde), so konvergiert der Maximum-Likelihood-Schätzwert $\hat{\theta}$ für eine Stichprobe der Größe $n$ gegen den Wert $\theta$, für den die relative Entropie zwischen $P_{\theta_0}$ und $P_{\theta}$ minimiert wird (wenn das Modell gut aufgesetzt ist, ist dieses Minimum genau $0$). Um das einzusehen, benutzt man den zuvor erwähnten Trick und das Gesetz der großen Zahlen und den Zusammenhang, dass der Erwartungswert der log-Likelihood gleich der negativen Kreuzentropie $-H(P_{\theta_0}; P_\theta)$ ist.
 :::
 
 :::{admonition} Beispiel
-Angenommen, wir betrachten Server-Logfiles einer Web-Anwendung, insbesondere die Zeitstempel. Daraus können wir die konsekutiven Abstände berechnen, also die Wartezeit zwischen zwei Aufrufen. Wir möchten gerne wissen, mit welcher Wartezeit wir im Mittel rechnen können (um zusammen mit der durchschnittlichen Laufzeit eines Aufrufs zu einer Einschätzung zu kommen, welche Last wir erwarten können). Die Wartezeiten sind exponentialverteilt mit Parameter $\lambda > 0$, den wir schätzen wollen. zur Erinnerung: Die Dichte einer Exponentialverteilung ist $f(x) = \lambda e^{-\lambda x}$ und der Erwartungswert ist $\frac{1}{\lambda}$.
-
-Die Likelihood für eine Stichprobe der Größe $N$ ist $L_x(\lambda) = \prod_{i=1}^N \lambda e^{-\lambda x_i}$ und die log-Likelihood ist demnach
-
-$$
-l_x(\lambda) := \log L_x(\lambda) = \left( \sum_{i=1}^N \log\lambda - \lambda x_i\right) = n \left( \log\lambda - \lambda \texttt{mean}(x) \right).
-$$
-
-Die Ableitung nach $\lambda$ ist einfach $\frac{n}{\lambda} - n \texttt{mean}(x)$, eine Nullstelle liegt bei $\hat{\lambda} = \frac{1}{\texttt{mean}(x)}$. Die zweite Ableitung von $l_x$ ist $-\frac{n}{\lambda^2}$, was bei $\hat{\lambda}$ den Wert $-n{\texttt{mean}(x)}^2 < 0$ annimmt, also ist $\hat{\lambda}$ ein Maximum und wir haben den Maximum-Likelihood-Schätzer bestimmt.
-
-Wir rechnen also mit einer mittleren Wartezeit zwischen den Server-Aufrufen von $\texttt{mean}(x)$, wenn $x$ die beobachteten Wartezeiten sind.
+**Anwendung: Server-Logfiles.** Aus den Zeitstempeln einer Web-Anwendung berechnen wir die Abstände zwischen zwei Aufrufen, also Wartezeiten $x_1,\dots,x_n$. Um zusammen mit der mittleren Laufzeit eines Aufrufs die zu erwartende Last abzuschätzen, modellieren wir sie als $\operatorname{Exp}(\lambda)$-verteilt und schätzen $\lambda$ wie im Beispiel oben: $\hat\lambda = 1/\texttt{mean}(x)$. Wir rechnen also mit einer mittleren Wartezeit von $\texttt{mean}(x)$ zwischen zwei Aufrufen, und für die Anzahl der Aufrufe je Zeiteinheit mit der Poissonverteilung zum selben $\lambda$ (Kapitel [Wichtigste diskrete Verteilungen](wichtigste-diskrete-verteilungen.ipynb)).
 :::
 
 :::{admonition} Beispiel

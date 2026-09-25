@@ -10,7 +10,7 @@ project:
       affiliations:
         - Heinrich-Heine Universität Düsseldorf
       url: http://www.konradvoelkel.com
-  license: CC-BY-4.0
+  license: CC-BY-SA-4.0
   copyright: 2026 CC-BY-SA 4.0
   exclude:
     - README.md

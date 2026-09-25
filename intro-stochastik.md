@@ -1,5 +1,7 @@
 # Herleitung des mathematischen Formalismus der Stochastik
 
+[Vorlesungsaufzeichnung Wahrscheinlichkeitsmaß (VL 2, erster Teil)](https://media.hhu.de/channel/video/data-science-vl-2-wahrscheinlichkeitsmass-zufallsvariable-pmf-2025/d5149a6bce20e827dc30685847505f16/167)
+
 Sie haben bereits in Mathematik für Informatik 3 die Grundlagen der (diskreten) Wahrscheinlichkeitstheorie kennen gelernt. Wir werden diese auch noch im für uns nötigen Umfang wiederholen. In der Vorlesung werden wir vor allem die Begrifflichkeiten der Wahrscheinlichkeitsmassefunktion (für diskrete Zufallsvariablen) und Wahrscheinlichkeitsdichtefunktion (für stetige Zufallsvariablen) verwenden, die aber beide auf dem Begriff des Wahrscheinlichkeitsmaß aufbauen. An dieser Stelle gibt es einen kleinen Exkurs, um zu erklären, warum es eigentlich genau so gemacht wird, und wie man auf den Begriff des Wahrscheinlichkeitsmaßes kommen kann. Der Begriff der Sigma-Algebra ($\sigma$-Algebra) und der messbaren Funktionen sind essentiell, um in der Stochastik Beweise zu führen und auch um komplexere Begriffe (wie sie etwa in der Finanzmathematik oder in der Theorie des maschinellen Lernens benötigt werden) einzuführen - wir können uns hier damit begnügen, mitzunehmen, wann wir über diese Begriffe hinweglesen können.
 
 Man kann Stochastik als Oberbegriff für Wahrscheinlichkeitstheorie und Statistik auffassen. Die Statistik beschäftigt sich mit stochastischen Modellen, die anhand von Beobachtungen entwickelt werden, und macht Schlussfolgerungen. Die Wahrscheinlichkeitstheorie beschäftigt sich mit der Untersuchung von Modellen und der Theorie dahinter.
@@ -26,7 +28,7 @@ $$
 
 oder, wie man es in einer Programmiersprache hinschreiben würde, `(!N) || R || G`. Das Modell ist nützlich, aber es beantwortet die Frage nicht, die uns beim Blick auf den nassen Rasen tatsächlich umtreibt: Welche der beiden Möglichkeiten war es? Regnet es hier oft? Hat überhaupt schon einmal jemand diesen Rasen gegossen? Die Aussagenlogik kann darauf nur mit „mindestens eine von beiden“ antworten.
 
-Statistische Modelle erweitern diese Alles-oder-nichts-Logik nun um verschiedene Grade von Plausibilität: wenn der Rasen nass ist, ist es plausible, anzunehmen, dass es vor kurzem regnete. Es ist ebenso plausibel, anzunehmen, dass jemand den Rasen gewässert hat mit einem Gartenschlauch. Was wir plausibler finden, hängt davon ab, was wir sonst über die Realität wissen. Durch längere Beobachtung des Rasens können wir feststellen, welche Gründe wie oft zu einem nassen Rasen führen, und daran unser Modell schärfen.
+Statistische Modelle erweitern diese Alles-oder-nichts-Logik nun um verschiedene Grade von Plausibilität: wenn der Rasen nass ist, ist es plausibel, anzunehmen, dass es vor kurzem regnete. Es ist ebenso plausibel, anzunehmen, dass jemand den Rasen gewässert hat mit einem Gartenschlauch. Was wir plausibler finden, hängt davon ab, was wir sonst über die Realität wissen. Durch längere Beobachtung des Rasens können wir feststellen, welche Gründe wie oft zu einem nassen Rasen führen, und daran unser Modell schärfen.
 
 Um mit Plausibilität genau so rechnen zu können wie mit Boolescher Logik, und schließlich auch im Computer zu implementieren, müssen wir die Plausibilitätswerte mit Zahlen versehen. Eine geeignete Abstraktion sind reelle Zahlen, denn reelle Zahlen sind der einzige archimedisch angeordnete vollständige Körper, der die rationalen Zahlen enthält (und die darin enthaltene Unteralgebra der berechenbaren reellen Zahlen hat uns schon viele gute Dienste geleistet).
 
@@ -63,10 +65,10 @@ denn genau eines von beiden trifft zu. Damit liegt jede Plausibilität zwischen 
 
 Reicht das schon, um zu diesen Zahlen „Wahrscheinlichkeit“ zu sagen? Nicht ganz — aber fast.
 
-Wenn man diese Forderungen präzisiert, kann man das [Cox-Jaynes-Theorem](https://en.wikipedia.org/wiki/Cox%27s_theorem) beweisen, dass besagt, dass es eine mathematische Abbildung $cj$ von den reellen Zahlen in das geschlossene Intervall $[0,1]$ gibt, die Plausibilitäten auf "Wahrscheinlichkeiten" abbildet, sodass (fast) alle Regeln der klassischen Wahrscheinlichkeitstheorie erfüllt sind. So erfüllt $P := cj \circ p \colon X \to [0,1]$ die Regeln
+Wenn man diese Forderungen präzisiert, kann man das [Cox-Jaynes-Theorem](https://en.wikipedia.org/wiki/Cox%27s_theorem) beweisen, das besagt, dass es eine mathematische Abbildung $cj$ von den reellen Zahlen in das geschlossene Intervall $[0,1]$ gibt, die Plausibilitäten auf "Wahrscheinlichkeiten" abbildet, sodass (fast) alle Regeln der klassischen Wahrscheinlichkeitstheorie erfüllt sind. So erfüllt $P := cj \circ p \colon \mathcal{A} \to [0,1]$ die Regeln
 1. $P(WAHR) = 1$ und $P(FALSCH) = 0$.
 1. Wenn $A_1,\dots,A_n$ eine endliche Menge paarweise unvereinbarer (sich gegenseitig ausschließender) Aussagen sind, dann gilt endliche Additivität:
-$ P\left( \bigcup_{i=1} A_i \right) = \sum_{i=1}^n P(A_i) $
+$ P(A_1 \vee \dots \vee A_n) = \sum_{i=1}^n P(A_i) $
 
 Wir werden uns nun der modernen Fassung des Wahrscheinlichkeitsbegriffs nähern. Dabei soll der Begriff der sigma-Algebra hier nur erwähnt werden, man darf ihn danach (für diese Vorlesung) wieder vergessen.
 
@@ -101,7 +103,7 @@ Wenn wir eine unserer Forderungen verschärfen, nämlich von der endlichen Addit
 Eine sehr praktische Definition für jede Menge $M$ auf der es einen Abstandsbegriff gibt (genauer: $M$ ein metrischer Raum) ist diese:
 Eine Menge $U \subseteq M$ heißt *offen* wenn es um jeden Punkt $u \in U$ einen Abstand $\epsilon > 0$ gibt, sodass alle Punkte $x \in M$ mit Abstand $d(x,u) < \epsilon$ bereits gänzlich in $U$ liegen, also $x \in U$. Für $M=\mathbb{R}$ sind z.B. endliche Vereinigungen von offenen Intervallen solche offenen Mengen, daher der Name.
 
-Man kann nun zeigen, dass die klassische $\epsilon$-$\delta$-Definition von Stetigkeit äquivalent ist zu: $f \colon X \to Y$ heißt *stetig* wenn die Urbilder offener Mengen $U \subseteq Y$ auch offene Mengen $f^{-1}(U) \subseteq M$ sind.
+Man kann nun zeigen, dass die klassische $\epsilon$-$\delta$-Definition von Stetigkeit äquivalent ist zu: $f \colon X \to Y$ heißt *stetig* wenn die Urbilder offener Mengen $U \subseteq Y$ auch offene Mengen $f^{-1}(U) \subseteq X$ sind.
 
 Wenn wir auf den Zahlen im Intervall $[0,1]$ eine Gleichverteilung definieren wollen (so wie im unendlichen Münzwurf-Beispiel), oder auch gleich auf allen reellen Zahlen, dann wissen wir eigentlich schon ganz genau, wie wir mit Intervallen verfahren wollen: für ein Intervall $[a,b]$ soll die Wahrscheinlichkeit / das Maß eben $b-a$ sein.
 
@@ -156,7 +158,7 @@ Das Tripel $(\Omega, \mathcal{F}, P)$ heißt *Wahrscheinlichkeitsraum*.
 Vergleichen Sie dazu im Skript "Mathematik für Informatik" Definition 12.2.5 sowie Bemerkung 12.2.8, in der als Spezialfall $\mathcal{F} = \mathcal{P}(\Omega)$ und $\Omega$ endlich angenommen werden.
 
 :::{admonition} Beispiel
-Bleiben wir beim nassen Rasen. Wir setzen $\Omega = \{R, G, T\}$ für die drei Erklärungen „es hat geregnet“, „jemand hat gegossen“, „es war Tau“, und als $\sigma$-Algebra nehmen wir die Potenzmenge $\mathcal{F} = \mathcal{P}(\Omega)$. Die einelementigen Ereignisse $\{R\}, \{G\}, \{T\}$ heißen **Elementarereignisse**; auf einer endlichen Menge legen ihre Wahrscheinlichkeiten bereits das ganze Maß fest, denn jedes andere Ereignis ist eine disjunkte Vereinigung von ihnen.
+Bleiben wir beim nassen Rasen. Wir setzen $\Omega = \{R, G, T\}$ (die Buchstaben stehen jetzt für Ergebnisse, nicht mehr wie oben für Ereignisse) für die drei Erklärungen „es hat geregnet“, „jemand hat gegossen“, „es war Tau“, und als $\sigma$-Algebra nehmen wir die Potenzmenge $\mathcal{F} = \mathcal{P}(\Omega)$. Die einelementigen Ereignisse $\{R\}, \{G\}, \{T\}$ heißen **Elementarereignisse**; auf einer endlichen Menge legen ihre Wahrscheinlichkeiten bereits das ganze Maß fest, denn jedes andere Ereignis ist eine disjunkte Vereinigung von ihnen.
 
 Ein erster Versuch: $P(\{R\}) = \frac23$, $P(\{G\}) = \frac16$, $P(\{T\}) = \frac13$. Das ist kein Wahrscheinlichkeitsmaß. Aus der $\sigma$-Additivität folgt nämlich
 
@@ -178,7 +180,7 @@ Daran sieht man, was bei der Modellierung die eigentliche Arbeit ist: nicht das 
 :::
 
 :::{admonition} Beispiel
-Auf einer endlichen Menge $\Omega$ von Kardinalität $N := |\Omega|$ (also Anzahl der Elemente $N$) ist mit $\mathcal{F} := \mathcal{P}(\Omega)$ und $P(A) := |A| / N$ ein Wahrscheinlichkeitsmaß definiert, dass wir *Gleichverteilung* nennen.
+Auf einer endlichen Menge $\Omega$ von Kardinalität $N := |\Omega|$ (also Anzahl der Elemente $N$) ist mit $\mathcal{F} := \mathcal{P}(\Omega)$ und $P(A) := |A| / N$ ein Wahrscheinlichkeitsmaß definiert, das wir *Gleichverteilung* nennen.
 
 Der faire Würfel ist der Fall $\Omega = \{1,\dots,6\}$: Das Ereignis „gerade Augenzahl“ ist $\{2,4,6\}$ und hat die Wahrscheinlichkeit $P(\{2,4,6\}) = \frac{3}{6} = \frac12$. Nachrechnen lässt sich das auch im Code, siehe [Stochastik programmieren](stochastik-programmieren.ipynb).
 :::
@@ -205,11 +207,11 @@ Für jeden Wahrscheinlichkeitsraum $(\Omega,\mathcal{F},P)$ mit $A,B \in \mathca
 
 :::{admonition} Beweis
 1. $1 = P(\Omega) = P(\emptyset \cup \Omega) = P(\emptyset) + P(\Omega) = P(\emptyset) + 1$
-1. $P(A \cup B) = P(A \cup (B - A)) = P(A) + P(B - A)$ und
-   $P(B - A) + P(A \cap B) = P((B - A) \cup (A \cap B)) = P(B)$ also
-   $P(A \cup B) + P(A \cap B) = P(A) + P(B - A) + P(A \cap B) = P(A) + P(B)$
-1. $A \subseteq B \implies B = A \cup (B - A)$
-   $\phantom{A \subseteq B} \implies P(A) \leq P(A) + P(B - A) = P(A \cup (B - A)) = P(B)$
+1. $P(A \cup B) = P(A \cup (B \setminus A)) = P(A) + P(B \setminus A)$ und
+   $P(B \setminus A) + P(A \cap B) = P((B \setminus A) \cup (A \cap B)) = P(B)$ also
+   $P(A \cup B) + P(A \cap B) = P(A) + P(B \setminus A) + P(A \cap B) = P(A) + P(B)$
+1. $A \subseteq B \implies B = A \cup (B \setminus A)$
+   $\phantom{A \subseteq B} \implies P(A) \leq P(A) + P(B \setminus A) = P(A \cup (B \setminus A)) = P(B)$
 1. den Leser\*innen als Übung überlassen.
 :::
 

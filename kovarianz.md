@@ -1,6 +1,6 @@
 # Multivariate Statistik: Kovarianz und Abhängigkeit
 
-[Vortragsaufzeichnung Kovarianz, Korrelation](https://media.hhu.de/channel/video/data-science-vl-11-kovarianz-korrelation-2025/92283e63495a6413e5e1b55a17ed31fb/167)
+[Vorlesungsaufzeichnung Kovarianz und Korrelation (VL 11)](https://media.hhu.de/channel/video/data-science-vl-11-kovarianz-korrelation-2025/92283e63495a6413e5e1b55a17ed31fb/167)
 
 ## Gemeinsame Verteilung und Bayes
 
@@ -24,7 +24,7 @@ Dabei ist $\Delta \colon \Omega \to \Omega \times \Omega$ die *Diagonalabbildung
 
 :::{admonition} Definition
 Zu einer Zufallsvariable $X \colon \Omega \to \mathbb{R}^n$ können wir $X = (X_1,\dots,X_n)$ schreiben mit $X_i \colon \Omega \to \mathbb{R}$ gegeben als $\pi_i \circ X$, wobei $\pi_i \colon \mathbb{R}^n \to \mathbb{R}$ die $i$-te Koordinatenprojektion ist.
-Die Zufallsvariablen $X_i$ heißen **Randverteilungen** oder **Marginalverteilungen**.
+Die Verteilungen der $X_i$ heißen **Randverteilungen** oder **Marginalverteilungen** von $X$.
 :::
 
 Allgemeiner wird auch z.B. $(X_1,X_3,X_9)$ als Marginalverteilung von $X$ bezeichnet,
@@ -34,7 +34,7 @@ oder auch jede Verkettung von $X$ mit einer linearen Projektion $\pi \colon \mat
 Die Verteilung von $X_i$ ist $P(X_i \in A) = P(X \in \pi_i^{-1}(A))$.
 
 Zu einer Zufallsvariable $(X,Y) \colon \Omega \to \mathbb{R}^2$ können wir die Verteilung von $Y$ berechnen als
-$P(Y \in A) = \sum_{x \in X(\Omega)} P((X,Y) \in \{x\} \times A)$ im diskreten Fall (und mit einem entsprechenden Integral im stetigen Fall), wobei wir $\pi_1^{-1}(A) = X(\Omega)\times A$ in disjunkte Teilmengen zerlegt haben.
+$P(Y \in A) = \sum_{x \in X(\Omega)} P((X,Y) \in \{x\} \times A)$ im diskreten Fall (und mit einem entsprechenden Integral im stetigen Fall), wobei wir $\pi_2^{-1}(A) = X(\Omega)\times A$ in disjunkte Teilmengen zerlegt haben.
 :::
 
 :::{admonition} Bemerkung
@@ -97,7 +97,7 @@ $$
 P(A|B) = \dfrac{0{,}99 \cdot 0{,}001}{0{,}99 \cdot 0{,}001 + 0{,}01 \cdot 0{,}999} = \dfrac{0{,}00099}{0{,}00099 + 0{,}00999} \approx 0{,}09.
 $$
 
-$P(A|B)$ ist eben nicht $P(B|A)$, sondern $P(B|A)$ *mal* das Verhältnis $P(A)/P(B)$, und $P(B)$ wird von der großen Gruppe der Gesunden dominiert. Wer die beiden bedingten Wahrscheinlichkeiten verwechselt, begeht den *Basisratenfehler* — der ist so häufig, dass er einen eigenen Namen hat. Bei der Titanic-Regel „Frauen überleben“ lagen Recall $0{,}68$ und Precision $0{,}74$ nahe beieinander, weil Überlebende und Frauen ähnlich häufig sind; hier liegt zwischen $0{,}99$ und $0{,}09$ eine Basisrate von einem Promille. (Woher der Nenner kommt, klärt der nächste Satz.)
+$P(A|B)$ ist eben nicht $P(B|A)$, sondern $P(B|A)$ *mal* das Verhältnis $P(A)/P(B)$, und $P(B)$ wird von der großen Gruppe der Gesunden dominiert. Wer die beiden bedingten Wahrscheinlichkeiten verwechselt, begeht den *Basisratenfehler* — der ist so häufig, dass er einen eigenen Namen hat. Bei der Titanic-Regel „Frauen überleben“ lagen Recall $0{,}68$ und Precision $0{,}74$ nahe beieinander, weil Überlebende und Frauen ähnlich häufig sind; hier liegt zwischen $0{,}99$ und $0{,}09$ eine Basisrate von einem Promille. (Woher der Nenner kommt, klärt der Satz von der totalen Wahrscheinlichkeit unten.)
 :::
 
 :::{admonition} Beweis
@@ -163,7 +163,7 @@ Drei Rollen sind dabei sauber zu trennen: die *datenerzeugende Verteilung*, die 
 **von Bayes, Fassung 4:**
 
 $$
-\text{Posterior} = \dfrac{ \text{Likelihood} * \text{Prior} }{ \text{Evidenz} }.
+\text{Posterior} = \dfrac{ \text{Likelihood} \cdot \text{Prior} }{ \text{Evidenz} }.
 $$
 :::
 
@@ -186,11 +186,11 @@ Gegeben zwei Zufallsvariablen $X,Y \colon \Omega \to \mathbb{R}$ ist die **Kovar
 definiert als
 
 $$
-\operatorname{Cov}(X,Y) := \mathbb{E}\left( \left( X - \mathbb{E}X \right) \left( Y - \mathbb{E}Y \right) \right),
+\operatorname{Cov}(X,Y) := \mathbb{E}\left( \left( X - \mathbb{E}X \right) \left( Y - \mathbb{E}Y \right) \right).
 $$
 :::
 
-also auch $\mathbb{V}(X) = \operatorname{Cov}(X,X)$.
+Insbesondere ist $\mathbb{V}(X) = \operatorname{Cov}(X,X)$.
 
 Die Kovarianz hat die gleiche Krankheit wie die Varianz: sie ist skalenabhängig. Zur Heilung normiert man mit den Standardabweichungen:
 
@@ -206,6 +206,23 @@ Klar: $\rho(X,Y)=0$ genau dann wenn $\operatorname{Cov}(X,Y)=0$.
 Man sagt, $X$ und $Y$ sind **positiv korreliert**, wenn $\rho(X,Y) > 0$ ist,
 **negativ korreliert** (oder antikorreliert), wenn $\rho(X,Y) < 0$ ist,
 und **unkorreliert**, wenn $\rho(X,Y)=0$ ist.
+:::
+
+:::{admonition} Bemerkung
+**Für Daten.** Liegen $x, y \in \mathbb{R}^n$ als zwei Spalten einer Tabelle vor, so ersetzt man in den Definitionen den Erwartungswert durch den Mittelwert und erhält die *empirische Kovarianz* und den *empirischen Korrelationskoeffizienten*
+
+$$
+\operatorname{Cov}(x,y) := \frac{1}{n} \sum_{i=1}^n (x_i - \bar x)(y_i - \bar y) = \frac{1}{n}\, \tilde x \cdot \tilde y, \qquad r := \frac{\operatorname{Cov}(x,y)}{\sigma(x)\,\sigma(y)} = \frac{\tilde x \cdot \tilde y}{\lVert \tilde x \rVert \, \lVert \tilde y \rVert},
+$$
+
+mit den zentrierten Vektoren $\tilde x, \tilde y$ aus dem Kapitel [Erwartungswert und Varianz](erwartungswert.md). Der Korrelationskoeffizient von Daten ist also wörtlich der Kosinus des Winkels zwischen den zentrierten Spalten. Das ist die Zahl, die `np.corrcoef(x, y)[0, 1]` im Kapitel [Titanic EDA](explorative-analyse-mit-numpy.ipynb) ausgibt; `np.cov(x, y, ddof=0)` liefert die Kovarianzmatrix in der $n$-Version (ohne `ddof=0` teilt Numpy hier, anders als bei `np.var`, durch $n-1$). Für die Iris-Aufgabe aus dem Kapitel [Deskriptive Statistik](deskriptive-statistik.md) rechnet man einmal über alle Zeilen und einmal je Spezies:
+
+```python
+x = datasets.load_iris().data; y = datasets.load_iris().target
+print(np.corrcoef(x[:, 0], x[:, 1])[0, 1])                          # -0.118
+for s in range(3):
+    print(s, np.corrcoef(x[y == s, 0], x[y == s, 1])[0, 1])         # 0.743, 0.526, 0.457
+```
 :::
 
 :::{admonition} Proposition
@@ -262,7 +279,7 @@ Im stetigen Fall ersetzt man die Summen durch Integrale über die gemeinsame Dic
 Die Umkehrung gilt nicht: Unkorrelierte Zufallsvariablen können abhängig sein. Ein Beispiel ist $X$ gleichverteilt auf $[-1,1]$ und $Y = X^2$: Dann ist $\mathbb{E}(XY) = \mathbb{E}(X^3) = 0 = \mathbb{E}X\,\mathbb{E}Y$, also $\operatorname{Cov}(X,Y) = 0$, aber $Y$ ist eine Funktion von $X$. Die Kovarianz misst nur *lineare* Zusammenhänge. Für gemeinsam normalverteilte $(X,Y)$ gilt die Umkehrung dagegen doch, wie wir im nächsten Kapitel sehen.
 :::
 
-Damit verhält sich die Kovarianz wie ein Skalarprodukt — allerdings nur „modulo Konstanten“, denn konstante Zufallsvariablen haben Kovarianz $0$ mit allem, auch mit sich selbst. Man kann das rigoros machen, und die Kovarianz als Skalarprodukt in einem $\mathcal{L}^2$-Raum von Zufallsvariablen auffassen, in dem man zwei Zufallsvariablen identifiziert, die sich nur um eine Konstante unterscheiden. Der Korrelationskoeffizient spielt dann die Rolle des Kosinus des Winkels zwischen zwei Zufallsvariablen. Im diskreten Fall ist es genau das, weshalb im maschinellen Lernen oft auch 'cosine similarity' als Maß für die Korrelation angegeben wird.
+Damit verhält sich die Kovarianz wie ein Skalarprodukt — allerdings nur „modulo Konstanten“, denn konstante Zufallsvariablen haben Kovarianz $0$ mit allem, auch mit sich selbst. Man kann das rigoros machen, und die Kovarianz als Skalarprodukt in einem $\mathcal{L}^2$-Raum von Zufallsvariablen auffassen, in dem man zwei Zufallsvariablen identifiziert, die sich nur um eine Konstante unterscheiden. Der Korrelationskoeffizient spielt dann die Rolle des Kosinus des Winkels zwischen zwei Zufallsvariablen. Für Daten ist es wörtlich so (siehe die Bemerkung *Für Daten* oben); die im maschinellen Lernen verbreitete 'cosine similarity' ist derselbe Kosinus, nur ohne das Zentrieren.
 
 Man kann etwas üben, in einem Scatterplot zweier Variablen den Korrelationskoeffizienten zu 'sehen',
 etwa mit dem Spiel ['Guess the Correlation' von Omar Wagih](https://www.guessthecorrelation.com).

@@ -1,6 +1,8 @@
 # Deskriptive Statistik und Visualisierung
 
-[Vorlesungsaufzeichnung Deskriptive Statistik](https://media.hhu.de/channel/video/data-science-vl-9-stetige-verteilungen-2025/39016f5414ef3b8edd0dff941f802314/167?t=3244)
+[Vorlesungsaufzeichnung Deskriptive Statistik (VL 9, ab Minute 54)](https://media.hhu.de/channel/video/data-science-vl-9-stetige-verteilungen-2025/39016f5414ef3b8edd0dff941f802314/167?t=3244)
+[Vorlesungsaufzeichnung Skalenniveaus und Plots (VL 10, ab Minute 49)](https://media.hhu.de/channel/video/data-science-vl-10-skalenniveaus-2025/9b824315922a75d933e081f31c1da388/167?t=2940)
+[Vorlesungsaufzeichnung Simpson-Paradoxon (VL 12)](https://media.hhu.de/channel/video/data-science-vl-12-simpsons-und-pandas-2025/5a80e62a517e312ab8bf8f9155b91bf1/167)
 
 In {cite}`dds`, S.41 ist schematisch dargestellt, wie wir 'Data Science' betreiben:
 
@@ -40,7 +42,7 @@ Die rechte Spalte ist das Vokabular des Kurses „Einführung in Deep Learning�
 Die *explorative Datenanalyse* ist das Berechnen summarischer Statistik und Visualisierung (also deskriptiver Statistik), um eine bessere Einschätzung über die Informationen in einem Datensatz zu erlangen. Sie ist ein menschengesteuerter, iterativer Prozess und braucht Wissen über das Anwendungsgebiet — ohne eine Vorstellung davon, welche Werte plausibel sind und welche Fragen sich lohnen, produziert man Diagramme statt Erkenntnisse.
 Beim *Data Mining* geht es darum, diesen Arbeitsschritt in einem Data Science Projekt zu automatisieren, also die automatische Entdeckung von Mustern und Zusammenhängen, oft nach einem vorher festgelegten Schema.
 
-Man kann die verschiedenen Kulturen des Modellierens noch etwas feiner aufschlüsseln, wie es C. Molnar in dem Buch ``Modeling Mindsets: The Many Cultures Of Learning From Data'' getan hat {cite}`molnarmindsets`; dazu ist es aber hilfreich, bereits den Maximum-Likelihood-Ansatz und den Satz von Bayes zu kennen.
+Man kann die verschiedenen Kulturen des Modellierens noch etwas feiner aufschlüsseln, wie es C. Molnar in dem Buch „Modeling Mindsets: The Many Cultures Of Learning From Data“ getan hat {cite}`molnarmindsets`; dazu ist es aber hilfreich, bereits den Maximum-Likelihood-Ansatz und den Satz von Bayes zu kennen.
 
 
 
@@ -125,7 +127,7 @@ Die beschreibende (deskriptive) Statistik besteht aus den Datenanalysen, die *vo
   
     Mit Kovarianz und Korrelation werden wir uns bald beschäftigen müssen. Die Kovarianz verhält sich zur Varianz wie ein Skalarprodukt zu einer Norm. Der (Pearson)-Korrelationskoeffizient wird so normiert, dass er skaleninvariant ist.
 
-[Für eine kurze lockere Übersicht über einen Teil der Frage ``Was sind eigentlich Daten'', insb. der Frage der Skalen, gibt es ein Video vom HeiCAD-Programm ``KI für Alle''](https://www.youtube.com/watch?v=hJVOudzjnEI).
+[Für eine kurze lockere Übersicht über einen Teil der Frage „Was sind eigentlich Daten“, insb. der Frage der Skalen, gibt es ein Video vom HeiCAD-Programm „KI für Alle“](https://www.youtube.com/watch?v=hJVOudzjnEI).
     
 (skalenniveau-und-zulaessige-masszahlen)=
 ### Skalenniveau und zulässige Maßzahlen
@@ -224,16 +226,12 @@ Der Iris-Datensatz (den wir ab dem Kapitel [Iris](iris.ipynb) oft benutzen) enth
 
 :::{admonition} Lösung
 :class: dropdown
-Über alle Pflanzen hinweg ist der Zusammenhang schwach negativ (Korrelationskoeffizient etwa $-0{,}12$): breitere Kelchblätter gehen mit kürzeren einher. Innerhalb jeder Spezies ist er deutlich positiv (setosa etwa $0{,}74$, versicolor $0{,}53$, virginica $0{,}46$). Die Spezies ist der Confounder: *setosa* hat kurze, breite Kelchblätter, die anderen beiden lange, schmale. Wer die Spezies nicht kennt, sieht einen Trend, der in keiner Gruppe gilt. Wie man die Zahlen berechnet, steht im Kapitel [Kovarianz](kovarianz.md).
+Über alle Pflanzen hinweg ist der Zusammenhang schwach negativ (Korrelationskoeffizient etwa $-0{,}12$): breitere Kelchblätter gehen mit kürzeren einher. Innerhalb jeder Spezies ist er deutlich positiv (setosa etwa $0{,}74$, versicolor $0{,}53$, virginica $0{,}46$). Die Spezies ist der Confounder: *setosa* hat kurze, breite Kelchblätter, die anderen beiden lange, schmale. Wer die Spezies nicht kennt, sieht einen Trend, der in keiner Gruppe gilt. Wie man die Zahlen berechnet, steht in der Bemerkung *Für Daten* im Kapitel [Kovarianz](kovarianz.md).
 :::
 
 ## Visualisierung
 
-Wozu visualisieren?
-
-Ein zweiter Grund, immer zu plotten, ist das Simpson-Paradoxon von oben: Eine Kennzahl über alle Daten kann das Gegenteil von dem sagen, was in jeder Gruppe gilt, und im Plot sieht man die Gruppen.
-
-[Alberto Cairo hat den 'Datasaurus' erfunden](http://www.thefunctionalart.com/2016/08/download-datasaurus-never-trust-summary.html) um auf den Unterschied zwischen zusammenfassender Statistik und Visualisierung hinzuweisen:
+Wozu visualisieren? Der erste Grund: Zusammenfassende Zahlen können lügen, ohne dass man es ihnen ansieht. [Alberto Cairo hat den 'Datasaurus' erfunden](http://www.thefunctionalart.com/2016/08/download-datasaurus-never-trust-summary.html) um auf den Unterschied zwischen zusammenfassender Statistik und Visualisierung hinzuweisen:
 
 > Never trust summary statistics alone; always visualize your data.
 >
@@ -249,9 +247,11 @@ Justin Matejka und George Fitzmaurice haben daraus die 'Datasaurus Dozen' entwic
 The Datasaurus Dozen, inspiriert von Anscombe's Quartett. Abbildung: Justin Matejka und George Fitzmaurice, Autodesk Research 2017 {cite}`matejka2017`.
 ```
 
+Der zweite Grund, immer zu plotten, ist das Simpson-Paradoxon von oben: Eine Kennzahl über alle Daten kann das Gegenteil von dem sagen, was in jeder Gruppe gilt, und im Plot sieht man die Gruppen.
+
 * Wichtigste Arten von Plots
 
-  * Histogramme ("historical diagram")
+  * Histogramme
   
     Um die Häufigkeitsverteilung kardinal skalierter Merkmale zu visualisieren, kann man das Merkmal auf der x-Achse auftragen und nebeneinander liegende Rechtecke, deren Flächeninhalt der Häufigkeit einer Klasse darstellen, die durch Aufsummieren der Häufigkeit über das zugrunde liegende Intervall auf der x-Achse zustande kommen. Die Intervalllänge heißt Eimergröße (bucket size), binsize oder Klassengröße. Die Wahl der richtigen binsize ist eine Wissenschaft für sich und es gibt verschiedene Algorithmen zur Berechnung einer "guten" binsize.
     
@@ -280,11 +280,11 @@ The Datasaurus Dozen, inspiriert von Anscombe's Quartett. Abbildung: Justin Mate
     
   * Boxplot, auch Box-and-Whiskers-plot
   
-    Werden wir beim Thema Konfidenzintervalle kennen lernen, denn das (und Quantile) kann man damit gut darstellen.
+    Zeigt Median, Quartile und Ausreißer einer Verteilung in einem Bild: Der Kasten reicht von $Q_1$ bis $Q_3$, die „Whiskers“ bis zum letzten Wert innerhalb von $1{,}5$ Interquartilsabständen, alles dahinter wird als einzelner Punkt gezeichnet. In Matplotlib `plt.boxplot(x)`; das Kapitel [Daten putzen](data-cleaning.ipynb) benutzt dieselbe Regel für Ausreißer.
     
   * Linienplot
   
-    Wenn man eine oder mehrere Funktionsgraphen plottet (so wie wir es mit den PDF getan haben), sind das Lininenplots. Man kann ebenso Daten auf Kardinalskalen mit einem Linienplot darstellen, aber das Verbinden von Punkten suggeriert eine Datenfülle, die nicht unbedingt vorliegt.
+    Wenn man eine oder mehrere Funktionsgraphen plottet (so wie wir es mit den PDF getan haben), sind das Linienplots. Man kann ebenso Daten auf Kardinalskalen mit einem Linienplot darstellen, aber das Verbinden von Punkten suggeriert eine Datenfülle, die nicht unbedingt vorliegt.
 
     Umgekehrt ist der Linienplot genau das richtige Werkzeug, wenn die Daten tatsächlich von einer Kurve stammen: Man sampelt Punkte entlang der Kurve und verbindet sie. Ein Kreis etwa entsteht so:
 
@@ -298,7 +298,7 @@ The Datasaurus Dozen, inspiriert von Anscombe's Quartett. Abbildung: Justin Mate
     
   * Tortendiagramm
   
-    Generell hat sich herausgestellt, dass sich immer dann, wenn man ein Tortendiagramm verwenden kann, auch einen Barplot machen kann, der lesbarer ist. Tortendiagramme haben daher vor allem einen Wert, wenn man einen Text auflockern will, ohne wesentlich auf die dargestellte Statistik einzugehen. Grundsätzlich geeignet sind nominal- oder ordinalskalierte Merkmale, denn die Torte stellt die Anteile der einzelnen Ausprägungen an einem Ganzen dar — sie ist ein ungewöhnlich gezeichnetes Balkendiagramm.
+    Generell gilt: Wo ein Tortendiagramm geht, geht auch ein Balkendiagramm, und das ist lesbarer. Tortendiagramme haben daher vor allem einen Wert, wenn man einen Text auflockern will, ohne wesentlich auf die dargestellte Statistik einzugehen. Grundsätzlich geeignet sind nominal- oder ordinalskalierte Merkmale, denn die Torte stellt die Anteile der einzelnen Ausprägungen an einem Ganzen dar — sie ist ein ungewöhnlich gezeichnetes Balkendiagramm.
     
   * Violinenplot
   
@@ -391,9 +391,8 @@ The Datasaurus Dozen, inspiriert von Anscombe's Quartett. Abbildung: Justin Mate
 
     Erstens die Umstände. Ein Plot wird im Sonnenlicht auf einem Laptop angesehen, über einen schlecht kalibrierten Beamer projiziert oder ausgedruckt — früher regelmäßig in Graustufen. Was bleibt, ist die Helligkeit. Eine Farbskala sollte also auch dann noch funktionieren, wenn man ihr die Farbe wegnimmt, und Kurven unterscheidet man zusätzlich über den Linienstil (`linestyle="--"`, gepunktet, verschiedene Strichstärken) oder über Marker (`marker="x"`, Kreise, Dreiecke).
 
-    Zweitens die Betrachter\*innen selbst: Etwa jeder zwölfte Mann und jede zweihundertste Frau nimmt Farben anders wahr als die Mehrheit, am häufigsten Rot und Grün. In einer Vorlesung mit zweihundert Zuhörenden sitzen also typischerweise mehrere Menschen, für die eine Rot-Grün-Skala keine Skala ist. Das ist häufig genug, um es zur Gewohnheit zu machen und nicht zur Ausnahme:
-    
-    
+    Zweitens die Betrachter\*innen selbst: Etwa jeder zwölfte Mann und jede zweihundertste Frau nimmt Farben anders wahr als die Mehrheit, am häufigsten Rot und Grün. In einer Vorlesung mit zweihundert Zuhörenden sitzen also typischerweise mehrere Menschen, für die eine Rot-Grün-Skala keine Skala ist. Das ist häufig genug, um es zur Gewohnheit zu machen und nicht zur Ausnahme.
+
 Eine Farbpalette, die auch bei eingeschränkter Farbwahrnehmung gut funktioniert, ist diese:
 
 ![Gute Palette](images/gute-palette.png)

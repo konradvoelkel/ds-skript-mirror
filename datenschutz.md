@@ -10,7 +10,7 @@ Das Kapitel steht an dieser Stelle, weil wir ab dem nächsten Kapitel mit echten
 
 **Personenbezogene Daten** sind alle Informationen, die sich auf eine identifizierte oder identifizierbare natürliche Person beziehen. Eine Person gilt als identifizierbar, wenn sie direkt oder indirekt, z. B. durch Namen, Standortdaten oder Online-Kennungen, identifiziert werden kann.
 
-Auch **pseudonymisierte**, **verschlüsselte** oder **anonymisierte Daten**, die wieder einer Person zugeordnet werden können, fallen unter den Schutz der DSGVO.
+Auch **pseudonymisierte** oder **verschlüsselte** Daten fallen unter den Schutz der DSGVO, ebenso vermeintlich **anonymisierte** Daten, sobald sich der Personenbezug mit vertretbarem Aufwand wiederherstellen lässt (Erwägungsgrund 26).
 
 Beispiele:
 - Die Lieblingsfarbe von Gummibärchen ist kein personenbezogenes Datum. Dieselbe Angabe in einer Tabelle mit Matrikelnummer ist eins.
@@ -79,9 +79,9 @@ Beispiele zu den Prinzipien:
 
 Beispiele: Voreinstellungen dürfen keine unnötige Datenerhebung zulassen. Ein Cookie-Banner, bei dem alle Häkchen schon gesetzt sind, verstößt gegen Privacy by Default. TikTok stellte Konten von Kindern standardmäßig öffentlich und bekam dafür 345 Mio. € ([ETid-2032](https://www.enforcementtracker.com/ETid-2032), 2023).
 
-## Datensparsamkeit
+## Datenminimierung in der Praxis
 
-Ein zentrales Prinzip im Datenschutz. Es bedeutet:
+Datenminimierung (Art. 5 Abs. 1 lit. c; im alten BDSG hieß dasselbe Prinzip *Datensparsamkeit*, § 3a BDSG a.F.) bedeutet praktisch:
 - Keine Erhebung irrelevanter Daten
 - Verzicht auf optionale Angaben (z. B. Alter bei Bestellung, wenn nicht erforderlich)
 - Hinweis auf Freiwilligkeit und Voreinstellung auf "nicht erheben"
@@ -147,7 +147,7 @@ Die Beträge sind extrem rechtsschief (wenige Fälle über 100 Mio. €, die mei
 
 ## Rechtsrahmen der EU jenseits der DSGVO
 
-Die DSGVO schützt personenbezogene Daten. Seit 2020 verfolgt die EU mit der **Europäischen Datenstrategie** (Mitteilung der Kommission vom 19. Februar 2020) ein zweites, ergänzendes Ziel: Daten sollen innerhalb Europas leichter geteilt und genutzt werden können, und zwar unter europäischen Regeln. Daraus ist eine Reihe von Verordnungen entstanden, die nebeneinander gelten und die man auseinanderhalten sollte — grob nach drei Stoßrichtungen: Schutz der Betroffenen (DSGVO), Regeln für Märkte und Plattformen (DMA, DSA), Zugang zu und Teilen von Daten (DGA, Data Act, AI Act).
+Die DSGVO schützt personenbezogene Daten. Seit 2020 verfolgt die EU mit der **Europäischen Datenstrategie** (Mitteilung der Kommission vom 19. Februar 2020) ein zweites, ergänzendes Ziel: Daten sollen innerhalb Europas leichter geteilt und genutzt werden können, und zwar unter europäischen Regeln. Daraus ist eine Reihe von Verordnungen entstanden, die nebeneinander gelten und die man auseinanderhalten sollte — grob nach drei Stoßrichtungen: Schutz der Betroffenen (DSGVO), Regeln für Märkte und Plattformen (DMA, DSA), Zugang zu und Teilen von Daten (DGA, Data Act) — und quer dazu der AI Act als Produktregulierung für KI-Systeme.
 
 - **KI-Verordnung / AI Act** ([Verordnung (EU) 2024/1689](https://eur-lex.europa.eu/eli/reg/2024/1689/oj)): erster umfassender Rechtsrahmen für KI-Systeme, vorgeschlagen im April 2021, verabschiedet 2024. Der Ansatz ist risikobasiert — verbotene Praktiken (etwa Social Scoring durch Behörden), Hochrisiko-Anwendungen mit umfangreichen Pflichten (Medizin, Personalauswahl, Strafverfolgung), Transparenzpflichten für den Rest. Wer ein Modell in ein Produkt einbaut, wird hier selbst zum Adressaten.
 - **Digital Markets Act (DMA)** ([Verordnung (EU) 2022/1925](https://eur-lex.europa.eu/eli/reg/2022/1925/oj)): Pflichten für sehr große Plattformen, die als *Gatekeeper* benannt sind — etwa Interoperabilität von Messengern und das Verbot, eigene Dienste zu bevorzugen.

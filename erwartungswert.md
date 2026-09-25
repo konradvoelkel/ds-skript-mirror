@@ -7,8 +7,8 @@
 
 Am Ende des vorigen Kapitels standen zwei Verteilungen nebeneinander: die Verteilung der Daten und die Modellverteilung. Die Frage, die jetzt ansteht, ist, wie man ihren Unterschied in eine Zahl fasst. Die genaue Antwort ist die relative Entropie, und die heben wir uns für ein späteres Kapitel auf. Es gibt aber einen viel direkteren Weg: Statt die Verteilungen zu vergleichen, vergleichen wir die Daten selbst mit dem, was das Modell vorhersagt — also die echten Daten mit synthetischen Daten, im Datenraum, Punkt für Punkt. Das ist der Weg, den dieses Kapitel geht, und weil man dabei Abstände zwischen Zahlen bildet, arbeiten wir ab hier mit reellen Daten.
 
-Gegeben zwei Vektoren $x,y \in \mathbb{R}^n$ (wir stellen uns vor: $x$ sind unsere Daten, $y$ das, was wir erwarten),
-ist die mittlere Abweichung interessant: $\sum \frac{x_i - y_i}{n}$.
+Gegeben zwei Vektoren $v,w \in \mathbb{R}^n$ (wir stellen uns vor: $v$ sind unsere Daten, $w$ das, was wir erwarten),
+ist die mittlere Abweichung interessant: $\sum_{i=1}^n \frac{v_i - w_i}{n}$.
 Ein Problem dieser Größe ist, dass sich positive mit negativen Abweichungen herauskürzen.
 
 ### Absolute Abweichung
@@ -59,7 +59,7 @@ Ist $165$ die beste Wahl? Das ist genau die Frage nach dem Minimum, und sie hat,
 :::
 
 :::{admonition} Definition
-$\texttt{median}(v) := \arg\min_{c \in \mathbb{R}} \texttt{mae}(v,c)$ ist \`\`der'' *Median* von $v$.
+$\texttt{median}(v) := \arg\min_{c \in \mathbb{R}} \texttt{mae}(v,c)$ ist „der“ *Median* von $v$.
 :::
 
 Das bedeutet also, der Median ist definiert als eine Zahl $c \in \mathbb{R}$ mit der Eigenschaft, dass die Zahl $\texttt{mae}(v,c)$ minimal wird.
@@ -112,7 +112,7 @@ $$
 d_2(v,w)^2 := \sum_{i=1}^n {\left( v_i - w_i \right)}^2 = \left\| v - w \right\|_2^2 = n \cdot \texttt{mse}(v,w).
 $$
 
-Der $\texttt{mse}$ hat gegenüber dem $\texttt{mae}$ die Einheit zum Quadrat — bei Körpergrößen in Zentimetern also Quadratzentimeter, was sich schlecht interpretieren lässt. Deshalb zieht man am Ende meist die Wurzel; das ist die Sample-Standardabweichung im nächsten Unterabschnitt.
+Der $\texttt{mse}$ hat gegenüber dem $\texttt{mae}$ die Einheit zum Quadrat — bei Körpergrößen in Zentimetern also Quadratzentimeter, was sich schlecht interpretieren lässt. Deshalb zieht man am Ende meist die Wurzel; für das konstante Modell $w = \texttt{mean}(v)$ ist das die Sample-Standardabweichung im nächsten Unterabschnitt.
 
 :::{admonition} Proposition
 Für einen Vektor $v \in \mathbb{R}^n$ minimiert der (arithmetische) *Mittelwert* von $v$ die mittlere quadratische Abweichung:
@@ -284,10 +284,6 @@ $\mathbb{E}(X) = \sum_{i \in I} x_i P(X = x_i)$.
 
 Der Erwartungswert ist also das mit den Wahrscheinlichkeiten gewichtete Mittel der Werte von $X$.
 
-:::{admonition} Beispiel
-Der Erwartungswert einer Gleichverteilung auf $\Omega = \{1,\dots,n\}$ ist $\sum_{i=1}^n \frac{i}{n}$, also $\frac{n(n+1)}{2n} = \frac{n+1}{2}$.
-:::
-
 Für endliches $\Omega$ ist die Summe endlich und existiert immer. Ist $\Omega$ abzählbar unendlich, so ist die Summe eine Reihe, und die muss nicht konvergieren: Es gibt Zufallsvariablen, für die sich kein Erwartungswert bestimmen lässt. Ein Beispiel: Auf $\Omega = \{1, 2, 3, \dots\}$ ist durch $P(\{k\}) := \frac{6}{\pi^2 k^2}$ ein Wahrscheinlichkeitsmaß gegeben (weil $\sum_{k \geq 1} \frac{1}{k^2} = \frac{\pi^2}{6}$), und für $X(k) := k$ wird die Reihe $\sum_{k \geq 1} k \cdot \frac{6}{\pi^2 k^2} = \frac{6}{\pi^2} \sum_{k \geq 1} \frac{1}{k}$ zur harmonischen Reihe, die divergiert. Diese Zufallsvariable hat keinen Erwartungswert.
 
 Festhalten lässt sich: Nimmt $X$ nur endlich viele Werte an, so existieren nicht nur der Erwartungswert, sondern auch alle höheren Momente $\mathbb{E}(X^k)$ — es sind endliche Summen, und die konvergieren immer. Bei abzählbar unendlich vielen Werten muss man dagegen jedes Mal hinsehen. Ein Beispiel, das nicht nur ein mathematisches Kuriosum ist: Beim *St.-Petersburg-Paradoxon* wird so lange eine Münze geworfen, bis zum ersten Mal Kopf fällt, und bei $k$ Würfen $2^k$ Euro ausgezahlt. Die Wahrscheinlichkeit dafür ist $2^{-k}$, der Erwartungswert also $\sum_{k \geq 1} 2^k \cdot 2^{-k} = \sum_{k \geq 1} 1 = \infty$. Ein Spiel mit unendlichem Erwartungswert — und trotzdem würde niemand einen hohen Einsatz dafür zahlen.
@@ -317,14 +313,14 @@ Es gibt einen inneren Zusammenhang zwischen dem Erwartungswert und den Stichprob
 
 Ist eine unendliche Folge $(X_i)_{i \in \mathbb{N}}$ von Zufallsvariablen $\Omega \to \mathbb{R}$ gegeben, so sagt man, dass diese Folge einem *starken Gesetz der großen Zahlen* genügt, wenn die Mittelwert-Abweichungs-Zufallsvariablen $\overline{X_n^\ast} := \dfrac{1}{n} \sum_{i=1}^n \left( X_i - \mathbb{E}(X_i) \right)$ gegen $0$ konvergieren, und zwar $P$-fast sicher (d.h. $P(\lim_{n\to\infty} \overline{X_n^\ast} = 0) = 1$).
 
-Wenn die $X_i$ nun unabhängig und identisch verteilt sind ($X_i = X$ für festes $X$) mit existierendem Erwartungswert $\mathbb{E}(X)$,
+Wenn die $X_i$ nun unabhängig und identisch verteilt sind (kurz *iid*: jedes $X_i$ hat dieselbe Verteilung wie ein festes $X$, wir schreiben $X_i \sim X$) mit existierendem Erwartungswert $\mathbb{E}(X)$,
 dann genügen die $X_i$ einem starken Gesetz der großen Zahlen, d.h.
 dann konvergiert $\overline{X_n^\ast} = \overline{X_n} - \mathbb{E}X$, die Abweichung des arithmetischen Mittels einer Stichprobe von $X$ der Größe $n$ vom Erwartungswert, $P$-fast sicher gegen $0$.
 Das bedeutet umgekehrt auch: Die Wahrscheinlichkeit, dass das Stichprobenmittel für beliebig große $n$ vom Erwartungswert abweicht, ist $0$.
 :::
 
 Aus der $P$-fast sicheren Konvergenz folgt auch die stochastische Konvergenz:
-$\lim_{n\to\infty} P\left(|\overline{X_n}| \geq \epsilon \right) = 0$ für jedes $\epsilon > 0$.
+$\lim_{n\to\infty} P\left(|\overline{X_n^\ast}| \geq \epsilon \right) = \lim_{n\to\infty} P\left(|\overline{X_n} - \mathbb{E}X| \geq \epsilon \right) = 0$ für jedes $\epsilon > 0$.
 
 Wir wollen uns im Folgenden nicht mehr über Konvergenzbegriffe der Stochastik den Kopf zerbrechen (das kann man bei Bedarf immer noch nachholen und das lohnt sich auch je nach Anwendung), sondern in gewohnter Tradition das gute Gefühl mitnehmen, dass der Erwartungswert eine geeignete Größe ist, um erwartungsvoll eine Stichprobe zu analysieren. Je größer die Stichprobe, desto geringer dürfte die Abweichung des Stichprobenmittels vom Erwartungswert sein - so will es das Gesetz. Umgekehrt findet man also zu jeder vorgegebenen Schranke $\epsilon > 0$ eine Stichprobengröße $n$ sodass das Stichprobenmittel einer zufällig gezogenen Stichprobe fast immer um weniger als $\epsilon$ vom Erwartungswert abweicht.
 
@@ -334,17 +330,17 @@ Damit schließt sich der Kreis zum idealisierten Sample vom Anfang des Abschnitt
 :::{admonition} Lemma
 **Rechenregeln für den Erwartungswert:**
 
-0 . Der Erwartungswert ist linear in $X$, also für $\alpha,\beta \in \mathbb{R}$ und $X,Y \colon \Omega \to \mathbb{R}$ Zufallsvariable ist
+1. Linearität: Der Erwartungswert ist linear in $X$, also für $\alpha,\beta \in \mathbb{R}$ und $X,Y \colon \Omega \to \mathbb{R}$ Zufallsvariable ist
 
 $$
 \mathbb{E}\left( \alpha X + \beta Y \right) = \alpha \mathbb{E} X + \beta \mathbb{E}Y.
 $$
 
-1. Der Erwartungswert ist monoton in $X$, also für $X \leq Y$ ist $\mathbb{E}X \leq \mathbb{E}Y$.
+2. Monotonie: Der Erwartungswert ist monoton in $X$, also für $X \leq Y$ ist $\mathbb{E}X \leq \mathbb{E}Y$.
 
-2. $\sigma$-Additivität: für eine Folge $X_i \geq 0$ ist $\mathbb{E}(\sum_{i \geq 1} X_i) = \sum_{i \geq 1} \mathbb{E}(X_i)$.
+3. $\sigma$-Additivität: für eine Folge $X_i \geq 0$ ist $\mathbb{E}(\sum_{i \geq 1} X_i) = \sum_{i \geq 1} \mathbb{E}(X_i)$.
 
-3. Produktregel: Sind $X$ und $Y$ unabhängig, so ist $\mathbb{E}(XY) = \mathbb{E}(X)\mathbb{E}(Y)$.
+4. Produktregel: Sind $X$ und $Y$ unabhängig, so ist $\mathbb{E}(XY) = \mathbb{E}(X)\mathbb{E}(Y)$.
 
 **Ohne Beweis**
 :::
@@ -386,7 +382,7 @@ Für eine zentrierte Zufallsvariable, d.h. mit $\mathbb{E}(X) = 0$, ist offensic
 :::{admonition} Definition
 Man nennt allgemein auch $\mathbb{E}(X^n)$ das $n$-te *Moment* und $\mathbb{E}((X - \mathbb{E}X)^n)$ das $n$-te *zentrale Moment*.
 Der Erwartungswert ist also das erste Moment und die Varianz das zweite zentrale Moment.
-Das dritte zentrale Moment heißt auch *Schiefe* (skewness) und das vierte *Wölbung* (kurtosis).
+Das dritte zentrale Moment, geteilt durch $\sigma^3$, heißt *Schiefe* (skewness), das vierte, geteilt durch $\sigma^4$, *Wölbung* (kurtosis); durch das Teilen werden beide einheitenlos und skalenunabhängig.
 Die Schiefe ist ein Maß dafür, wie symmetrisch die Verteilung um den Erwartungswert ist.
 Man nennt $\sigma(X) := \sqrt{\mathbb{V}(X)}$ die *Standardabweichung* von X.
 :::
@@ -442,7 +438,7 @@ $$
 P\left( | X - \mathbb{E} X | \geq k\sigma \right) \leq \dfrac{1}{k^2}.
 $$
 
-Daran sehen wir: Abweichungen von $2\sigma$ haben eine Wahrscheinlichkeit $\leq \frac{1}{4}$, und Abweichungen von $3\sigma$ bereits nur noch $\leq \frac{1}{9}$. Wenn wir also Abweichungen in Vielfachen von $\sigma$ messen, so ist die Wahrscheinlichkeit für so große Abweichungen näherungsweise umgekehrt quadratisch proportional (so steht's ja oben schon in der Ungleichung). Damit haben wir auch ein Kriterium zur Hand, um in Daten fehlerhafte Datenpunkte auszusortieren - wenn Abweichung größer $k\sigma$ mit $k > 1$ häufiger als erwartet zu sehen sind, dann gehören diese Datenpunkte zumindest nicht zu der Verteilung, die man erwartet.
+Daran sehen wir: Abweichungen von $2\sigma$ haben eine Wahrscheinlichkeit $\leq \frac{1}{4}$, und Abweichungen von $3\sigma$ bereits nur noch $\leq \frac{1}{9}$. Wenn wir also Abweichungen in Vielfachen von $\sigma$ messen, so ist die Wahrscheinlichkeit für so große Abweichungen näherungsweise umgekehrt quadratisch proportional (so steht's ja oben schon in der Ungleichung). Damit haben wir auch ein Kriterium zur Hand, um in Daten fehlerhafte Datenpunkte auszusortieren - wenn Abweichungen größer $k\sigma$ mit $k > 1$ häufiger als erwartet zu sehen sind, dann gehören diese Datenpunkte zumindest nicht zu der Verteilung, die man erwartet.
 
 Die wichtigste Anwendung der Ungleichung ist das Stichprobenmittel selbst. Damit können wir das Gesetz der großen Zahlen von oben in einer schwächeren Form tatsächlich beweisen, und zwar genau mit den Werkzeugen, die wir jetzt haben:
 
@@ -475,7 +471,7 @@ Das schwache Gesetz ist außerdem das Gesetz der großen Zahlen mit einer Zahl d
 Im Deep Learning ist der wahre Loss eines Modells der Erwartungswert der Loss-Funktion über die Verteilung der Daten, und den kann man nicht ausrechnen, weil man diese Verteilung nicht kennt. Ein Mini-Batch aus wenigen Datenpunkten liefert stattdessen ein Stichprobenmittel des Loss: billig, aber mit hoher Varianz, also genau die Situation des schwachen Gesetzes der großen Zahlen, und $\mathbb{V}X / n$ sagt, wie viel Rauschen ein Batch der Größe $n$ mitbringt. Die Vorlesung *Einführung in Deep Learning* baut darauf auf (stochastischer Gradientenabstieg).
 :::
 
-Wendet man das Gesetz der großen Zahlen auf die Zufallsvariable ${\left(X-\mathbb{E}(X)\right)}^2$ an, so sieht man, dass auch die Standardabweichung gegen die Sample-Standardabweichung konvergiert. Damit ist also die Sample-Standardabweichung ein guter Ersatz, wenn sich die wahre Varianz der Zufallsvariable nicht bestimmen lässt.
+Wendet man das Gesetz der großen Zahlen auf die Zufallsvariable ${\left(X-\mathbb{E}(X)\right)}^2$ an, so sieht man, dass auch die Sample-Standardabweichung gegen die Standardabweichung konvergiert. Damit ist also die Sample-Standardabweichung ein guter Ersatz, wenn sich die wahre Varianz der Zufallsvariable nicht bestimmen lässt.
 
 
 ### Einschub: Logarithmus
@@ -582,7 +578,7 @@ eine reelle Zufallsvariable. Ihr Erwartungswert ist die mittlere Information von
 
 $$
 \begin{aligned}
-H(X) := \mathbb{E}\left( I(X) \right) &= \sum_{\omega' \in \Omega'} -\log_b(P(\{X(\omega')\})P(X(\omega')) \\
+H(X) := \mathbb{E}\left( I(X) \right) &= \sum_{\omega' \in \Omega'} -\log_b\big(P_X(\{X(\omega')\})\big)\, P_{\Omega'}(\{\omega'\}) \\
                                       &= - \sum_{\omega \in \Omega} \log_b(P(\{\omega\}))P(\{\omega\}).
 \end{aligned}
 $$
@@ -602,7 +598,7 @@ $$
 Bei einer Gleichverteilung auf $\Omega = \{1,\dots,n\}$ ist für $x\in\Omega$ stets $P(\{x\}) = \frac{1}{n}$,
 also $I(x) = -\log_2(P(\{x\})) = -\log_2\frac{1}{n} = \log_2(n)$ und somit
 $H(X) = \sum_{i=1}^n \frac{\log_2(n)}{n} = \log_2(n)$.
-Diese Zahl verrät uns, dass wir im Mittel $\log_2(n)$ bits an Information brauchen, um ein Sample der Größe $n$ zu rekonstruieren, wenn wir die Verteilung von $X$ kennen. Es gibt andere Verteilungen, die es erlauben mit im Mittel weniger Information ein Sample zu rekonstruieren. Genau genommen sogar jede, denn die Gleichverteilung hat maximale Entropie unter allen diskreten Verteilungen. Sie korrespondiert dazu, dass wir maximal wenig wissen und daher alle Ergebnisse als gleich wahrscheinlich annehmen.
+Diese Zahl verrät uns, dass wir im Mittel $\log_2(n)$ bit brauchen, um ein einzelnes Ergebnis von $X$ mitzuteilen, wenn Sender und Empfänger die Verteilung kennen; ein Sample der Größe $N$ kostet dann $N \log_2(n)$ bit. Es gibt andere Verteilungen, bei denen im Mittel weniger Information je Ergebnis genügt. Genau genommen sogar jede, denn die Gleichverteilung hat maximale Entropie unter allen diskreten Verteilungen. Sie korrespondiert dazu, dass wir maximal wenig wissen und daher alle Ergebnisse als gleich wahrscheinlich annehmen.
 :::
 
 :::{admonition} Beispiel
@@ -635,7 +631,7 @@ Auf einer endlichen Menge $\Omega$ gilt also stets $0 \leq H(X) \leq \log_2|\Ome
 wobei das Minimum genau von den Dirac-Verteilungen angenommen wird (davon gibt es $|\Omega|$ Stück, eine je Element)
 und das Maximum ausschließlich von der Gleichverteilung.
 
-Am besten versteht man die Entropie als eine relative Größe, und das werden wir später noch tun. Im weiteren Verlauf des Kurses begegnet sie uns an drei Stellen: beim Zusammenführen von Datensätzen (wie viel Information kommt durch eine weitere Spalte wirklich hinzu?), beim Aufstellen statistischer Modelle — das Maximum-Entropie-Prinzip im Kapitel [Normalverteilung](normalverteilung.ipynb) und das eng verwandte Maximum-Likelihood-Prinzip im Kapitel [Statistische Modelle und Schätzer](statistische-modelle.md) — und schließlich bei der Bewertung der Modellgüte, wo Kreuzentropie und relative Entropie im Kapitel [Relative Entropie](relative-entropie.md) die Werkzeuge sind.
+Am besten versteht man die Entropie als eine relative Größe, und das werden wir später noch tun. Im weiteren Verlauf des Kurses begegnet sie uns an zwei Stellen: beim Aufstellen statistischer Modelle — das Maximum-Entropie-Prinzip im Kapitel [Normalverteilung](normalverteilung.ipynb) und das eng verwandte Maximum-Likelihood-Prinzip im Kapitel [Statistische Modelle und Schätzer](statistische-modelle.md) — und bei der Bewertung der Modellgüte, wo Kreuzentropie und relative Entropie im Kapitel [Relative Entropie](relative-entropie.md) die Werkzeuge sind.
 
 
 ## Unabhängigkeit
@@ -725,7 +721,7 @@ $$
 die *bedingte Wahrscheinlichkeit* von $A$ bedingt $B$.
 :::
 
-Klar: $A$ und $B$ sind unabhängig voneinander genau dann wenn $P(A | B) = P(A)$.
+Klar: Für $P(B) > 0$ sind $A$ und $B$ unabhängig voneinander genau dann, wenn $P(A | B) = P(A)$.
 Im Bonbon-Beispiel oben ist $P(B \mid A) = \frac{P(A \cap B)}{P(A)} = \frac{1/6}{1/3} = \frac12$, und das ist nicht $P(B) = \frac13$ — so sieht Abhängigkeit in Zahlen aus.
 Bedingte Wahrscheinlichkeiten treten also stets dann auf (bzw. sind besonders interessant), wenn zwei Ereignisse (bzw. Zufallsvariablen) nicht unabhängig sind.
 
@@ -734,7 +730,7 @@ Unabhängigkeit ist eine Alles-oder-nichts-Eigenschaft; in echten Daten ist die 
 
 Das erste ist die **Kovarianz** und der aus ihr gebildete Korrelationskoeffizient (Kapitel [Kovarianz und Abhängigkeit](kovarianz.md)). Sie misst *lineare* Zusammenhänge. Aus Unabhängigkeit folgt, dass die Kovarianz $0$ ist — aber nicht umgekehrt: Zwei Größen können perfekt voneinander abhängen und trotzdem unkorreliert sein, etwa $X$ und $X^2$ bei symmetrisch verteiltem $X$. „Korreliert“ ist also eine stärkere Aussage als „abhängig“, und „unkorreliert“ eine schwächere als „unabhängig“.
 
-Das zweite Maß erfasst Abhängigkeit beliebiger Form: die **relative Entropie** zwischen der gemeinsamen Verteilung und dem Produkt der Einzelverteilungen, auch *Transinformation* genannt (Kapitel [Relative Entropie](relative-entropie.md)). Sie ist genau dann $0$, wenn die beiden Zufallsvariablen unabhängig sind — sie misst also wirklich Abhängigkeit und nicht nur ihren linearen Anteil. Der Preis dafür: Man braucht die gemeinsame Verteilung, und die zu schätzen ist deutlich aufwendiger, als eine Kovarianz auszurechnen.
+Das zweite Maß erfasst Abhängigkeit beliebiger Form: die **relative Entropie** zwischen der gemeinsamen Verteilung und dem Produkt der Einzelverteilungen, auch *Transinformation* oder *gemeinsame Information* $I(X;Y)$ genannt (Kapitel [Relative Entropie](relative-entropie.md)). Sie ist genau dann $0$, wenn die beiden Zufallsvariablen unabhängig sind — sie misst also wirklich Abhängigkeit und nicht nur ihren linearen Anteil. Der Preis dafür: Man braucht die gemeinsame Verteilung, und die zu schätzen ist deutlich aufwendiger, als eine Kovarianz auszurechnen.
 :::
 
 ### Rechenregeln für die Varianz
@@ -777,7 +773,7 @@ $$
 $$
 
 Sind $X$ und $Y$ unabhängig, so ist der Klammerausdruck nach der Produktregel gleich $0$.
-Der allgemeine Fall folgt per Induktion über $n$.
+Der allgemeine Fall folgt genauso durch Ausmultiplizieren: Alle gemischten Terme $\mathbb{E}(X_iX_j) - \mathbb{E}X_i\,\mathbb{E}X_j$ mit $i \neq j$ verschwinden, und dafür genügt paarweise Unabhängigkeit (Kapitel [Kovarianz](kovarianz.md)).
 :::
 
 Der Term $\mathbb{E}(XY) - \mathbb{E}(X)\mathbb{E}(Y)$, der hier gerade verschwindet, ist eine eigene interessante Größe:
