@@ -273,7 +273,7 @@ dann ist $H(X,Y) = H(Y)$ und $H(X|Y) = 0$.
 :align: center
 :name: entropy-diagram
 
-Entropie, bedingte Entropie, Verbundentropie und gemeinsame Information in einem Venn-Diagramm.
+Entropie, bedingte Entropie, Verbundentropie und gemeinsame Information in einem Venn-Diagramm. Abbildung: [Wikimedia Commons, Benutzer KonradVoelkel](https://commons.wikimedia.org/wiki/File:Entropy-mutual-information-relative-entropy-relation-diagram.svg) (2010, gemeinfrei).
 ```
 
 

@@ -45,7 +45,7 @@ Um diese Grafik richtig lesen zu können, müssen wir noch die *IPCC Calibrated 
 :align: center
 :name: likelihood-scale
 
-IPCC Likelihood scale
+Die *Likelihood scale* der IPCC Calibrated Language {cite}`sr15`.
 ```
 
 Nun sehen wir, dass es sich beim grau schattierten Bereich um den Bereich handelt, in dem mit mind. $2/3$ Wahrscheinlichkeit die tatsächlichen Messwerte liegen werden (laut Modell). Anhand dieser Information kann man deutlich besser einschätzen, welche zukünftigen Erwärmungen zu erwarten sind, selbst wenn wir 'Glück haben' oder auch wie schlimm es werden könnte, wenn wir 'Pech haben'. Der grau schattierte Bereich ist genau genommen ein **Prognoseintervall**, in dem der tatsächliche Wert in Zukunft mit hoher Wahrscheinlichkeit vermutet wird. Eng verwandt ist ein **Konfidenzintervall**, welches der Bereich ist, in dem der tatsächliche Wert in (z.B.) 95\% der erwarteten Beobachtungen vermutet wird.
@@ -521,7 +521,7 @@ Nochmal zur Erinnerung: **Fehler erster Art** ist falsche Ablehnung der Nullhypo
 :align: center
 :name: xkcd-significant
 
-XKCD 882: Significant (So, uh, we did the green study again and got no link. It was probably a-- "RESEARCH CONFLICTED ON GREEN JELLY BEAN/ACNE LINK; MORE STUDY RECOMMENDED!")
+Randall Munroe, [xkcd 882 „Significant“](https://xkcd.com/882/) (CC BY-NC 2.5) (So, uh, we did the green study again and got no link. It was probably a-- "RESEARCH CONFLICTED ON GREEN JELLY BEAN/ACNE LINK; MORE STUDY RECOMMENDED!")
 ```
 
 Zur Publikation in wichtigen Fachzeitschriften müssen Studien oft signifikante Ergebnisse vorweisen. Das ist problematisch, denn

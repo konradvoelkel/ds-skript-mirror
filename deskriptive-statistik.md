@@ -9,7 +9,7 @@ In {cite}`dds`, S.41 ist schematisch dargestellt, wie wir 'Data Science' betreib
 :align: center
 :name: ds-process
 
-Der "Data Science Prozess"
+Der "Data Science Prozess". Abbildung nach {cite}`dds`, S. 41 (Cathy O'Neil und Rachel Schutt, O'Reilly 2013).
 ```
 
 Fokus hier: Explorative Datenanalyse
