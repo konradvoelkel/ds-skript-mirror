@@ -308,7 +308,7 @@ The Datasaurus Dozen, inspiriert von Anscombe's Quartett.
   
     Mit einem Bild einer Landkarte (oder anderer Karte, z.B. Netzwerktopologien) im Hintergrund lassen sich Merkmale räumlich darstellen, etwa als Farbe einer umgrenzten Fläche. Das ist ähnlich zu einem Histogramm, denn anstelle eines Scatterplots werden zweidimensionale Bereiche (anstatt Intervalle) zusammengefasst, bevor eine Darstellung der aggregierten Daten vorgenommen wird. Ein Spezialfall ist eine "Landkarte" die aus einem Raster besteht, in das nun Häufigkeiten aufgetragen werden, ein zweidimensionales Histogramm.
     
-  * unzählige weitere, seltener gebrauchte oder nicht in diesem Schema kategorisierbare Visualisierungen - es kommt immer auf den Anwendungsfall an, was das geeigneteste Kommunikationsmittel ist.
+  * unzählige weitere, seltener gebrauchte oder nicht in diesem Schema kategorisierbare Visualisierungen - es kommt immer auf den Anwendungsfall an, was das geeignetste Kommunikationsmittel ist.
 
 
 * Wichtigste Werkzeuge zum Plotten mit Python

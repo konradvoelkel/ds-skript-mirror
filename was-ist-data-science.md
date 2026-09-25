@@ -19,7 +19,7 @@ Wenn wir bei der Darstellung und Weitergabe einer Mitteilung vom verwandten Medi
 Die zugeordnete Bedeutung heißt eine *Information*.
 Man nennt das Paar <Nachricht, zugeordnete Information> ein *Datum*. Der Plural ist Daten (englisch data).
 
-Eine CSV-Datei können wir also genau dann "Daten" nennen, wenn wir einen Kontext haben, um den darin enthaltenen Bitstrings Bedeutung zuzuordnen. Viel von diesem Kontext nehmen wir meist gar nicht wahr - wir gehen z.B. davon aus, dass sich eine CSV-Datei mit einem Texteditor öffnen lässt und die Inhalte so als Strings kodiert sind, dass wir durch blosses Betrachten die Datentypen erraten könnten. Welche Felder einer Tabelle aber genau wie kodiert sind, ist oft nicht der Tabelle selbst zu entnehmen, dafür braucht man Metadaten.
+Eine CSV-Datei können wir also genau dann "Daten" nennen, wenn wir einen Kontext haben, um den darin enthaltenen Bitstrings Bedeutung zuzuordnen. Viel von diesem Kontext nehmen wir meist gar nicht wahr - wir gehen z.B. davon aus, dass sich eine CSV-Datei mit einem Texteditor öffnen lässt und die Inhalte so als Strings kodiert sind, dass wir durch bloßes Betrachten die Datentypen erraten könnten. Welche Felder einer Tabelle aber genau wie kodiert sind, ist oft nicht der Tabelle selbst zu entnehmen, dafür braucht man Metadaten.
 
 Wenn wir etwa die Antworten zu einer Single-Choice-Frage betrachten, so ist meist in der Nachricht erfasst, welche Nr. die gewählte Antwort hat, nicht aber der String der tatsächlichen Antwort. Diesen notiert man in einem *Code Book*, einer Kodierungstabelle. Um also die Antworten als Daten begreifen zu können, müssen wir auf die Kodierungstabelle zurückgreifen.
 

@@ -322,7 +322,7 @@ Damit ist der Weg abgesteckt, den der Rest des Kurses geht, und der sich auch in
 
 
 Nun werden wir Daten selten in Form von Bitfolgen mit völlig unabhängigen Bits interpretieren.
-Zum Beispiel die menschliche Körpergröße, gemessen in Zentimetern, ist eine relle Zahl größer $0$.
+Zum Beispiel die menschliche Körpergröße, gemessen in Zentimetern, ist eine reelle Zahl größer $0$.
 Gegeben eine Meßreihe, also eine Stichprobe der Größe $N$ von Körpergrößen, können wir ein statistisches Modell bilden.
 Dabei reden wir hier nicht über Kausalität oder Korrelationen mit anderen Daten, wie z.B. Geschlecht oder Alter.
 Trotzdem können wir Modelle bilden, die uns eine gewisse Vorhersage erlauben.

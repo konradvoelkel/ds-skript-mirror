@@ -107,7 +107,7 @@ Wenn wir auf den Zahlen im Intervall $[0,1]$ eine Gleichverteilung definieren wo
 
 Da sich jede offene Menge in $\mathbb{R}$ als abzählbare Vereinigung von Intervallen schreiben lässt, wissen wir also, wie den offenen Mengen ein Maß zugeordnet werden kann: als abzählbare Summe über die Längen eben dieser Intervalle. Es stellt sich heraus, dass man so eine Gleichverteilung definieren kann, nur eben nicht für beliebige Teilmengen von $\mathbb{R}$ oder $[0,1]$ einen Wahrscheinlichkeitswert bestimmen. Man sagt, es gibt *nicht-messbare Mengen*.
 
-Aus dieser Beobachtung leiten wir nun die Forderung ab, dass unsere Wahrscheinlichkeit $P$ nicht nur endlich additiv sein soll, sondern $\sigma$-additiv. Nach dem Satz von Vitali akzeptieren wir, dass nicht jede Teilmenge von $\mathbb{R}$ messbar ist und begnügen uns damit, eine Teilalgebra von $\mathcal{P}(\mathbb{R})$ auszuzeichen, die *messbaren Mengen*.
+Aus dieser Beobachtung leiten wir nun die Forderung ab, dass unsere Wahrscheinlichkeit $P$ nicht nur endlich additiv sein soll, sondern $\sigma$-additiv. Nach dem Satz von Vitali akzeptieren wir, dass nicht jede Teilmenge von $\mathbb{R}$ messbar ist und begnügen uns damit, eine Teilalgebra von $\mathcal{P}(\mathbb{R})$ auszuzeichnen, die *messbaren Mengen*.
 
 ## Formalismus
 
