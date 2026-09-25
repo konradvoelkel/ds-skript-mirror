@@ -1,0 +1,287 @@
+% !Mode:: "TeX:UTF-8"
+\input{Data Science 2026 header}
+
+\title{Data Science, VL 20}
+\subtitle{Lineare Regression}
+\date{30.06.2026}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}[separator]
+  \frametitle{Lineare Regression}
+\end{frame}
+
+\begin{frame}
+\frametitle{Beispiel zur Linearen Regression}
+Wir haben bereits ein Beispiel gesehen: Blütenblattbreite aus Blütenblattlänge.
+
+\vspace{0.5cm}
+
+\uncover<2->{
+  Weiteres Beispiel: Mit einem Datensatz von Häusern in einer australischen Großstadt wollen wir den Hauspreis $Y$ vorhersagen aus der Entfernung zum Stadtzentrum $X_1$ und dem Alter des Hauses $X_2$.
+  }
+
+\uncover<3->{
+Das lineare Modell ist $Y = \beta_1 X_1 + \beta_2 X_2 + \beta_0 + \epsilon$.
+}
+
+\uncover<4->{
+  Achtung: In der Informatik / im maschinellen Lernen üblich: \\
+  $f(x_1,x_2;\beta_0,\beta_1,\beta_2) := \beta_1 x_2 + \beta_2 x_2 + \beta_0$ wird \alert{linear} genannt,
+  obwohl nur $(x_1,x_2) \mapsto \beta_1 x_1 + \beta_2 x_2$ wirklich linear ist; \\
+  $f$ heißt in der Mathematik \alert{affin-lineare Funktion}.
+}
+
+\vspace{0.5cm}
+\uncover<5->{
+  Wie finden wir nun 'gute' Parameter $\beta$ und was ist 'gut' für uns?
+}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Lineare Regression, formal}
+% hier auch beide Varianten, mit und ohne Bias.
+Ein Regressionsmodell der Form $Y = f(X;w) + \epsilon$ mit $f(x;w) = w^T x$ heißt\\ \alert{lineare Regression}.
+\uncover<2->{Die Parameter $w$ heißen auch \alert{Gewichte} (weights).}
+
+\vspace{0.5cm}
+
+\uncover<3->{
+Ein Regressionsmodell der Form $Y = f(X;w, w_0) + \epsilon$ mit $f(x;w) = w^T x + w_0$ heißt\\ \alert{lineare Regression} mit \alert{Bias} $w_0$.
+}
+
+\vspace{1cm}
+
+\uncover<4->{
+  Wenn wir statt $(X_1,\dots,X_k)$ als Eingabe $X_+ := (1,X_1,\dots,X_k)$ verwenden und nicht $w = (w_1,\dots,w_k)$ sondern $w_+ := (w_0,w_1,\dots,w_k)$
+  dann ist $(w_+)^T X_+ = w^T X + w_0$.
+
+  \vspace{0.5cm}
+
+  Daher ist jede lineare Regression mit Bias auch eine sehr spezielle lineare Regression ohne Bias.
+  }
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Lineare Regression mit Scipy.optimize}
+  
+\begin{lstlisting}[language=Python]
+from scipy.optimize import curve_fit
+
+def f(x, beta_0, beta_1):
+    return beta_1*x + beta_0
+
+params, covariance_matrix = curve_fit(f, x, y)
+\end{lstlisting}
+
+\uncover<2->{
+  Die Variable \texttt{params} ist das 2-Tupel $\beta$.
+
+  \vspace{0.5cm}
+
+  Aus der Dokumentation von \texttt{curve\_fit}:
+  
+  Use non-linear least squares to fit a function, f, to data.
+
+Assumes \texttt{ydata = f(xdata, *params) + eps}.
+}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Lineare Regression als Schätzer}
+\begin{definition}
+  Wenn man in einem Regressionsmodell die \alert{Residuenquadratsumme}
+  $\sum_{i=1}^N {\left(y_i - f(x_i;\beta)\right)}^2$ minimiert,
+  spricht man von einem Schätzer für $\beta$, der als \alert{kleinste-Quadrate-Schätzer} (least squares) bekannt ist.
+\end{definition}
+
+\uncover<2->{
+Der kleinste-Quadrate-Schätzer ist ein Maximum-Likelihood-Schätzer.
+}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Kleinste Quadrate}
+Wenn wir zu Punkten $(x_i,y_i)$ in der Ebene eine Gerade berechnen,
+die den gemeinsamen Abstand zu allen Punkten minimiert (eine sogenannte Ausgleichsgerade),
+so ist dies genau eine Regression mit $f(x, \beta) = \beta_0 + \beta_1 x$.
+Die Regressionsgleichung $Y_i = f(X_i, \beta)$ wird zur Geradengleichung
+$y_i = \beta_0 + \beta_1 x_i$
+wobei $\beta_0$ der y-Achsenabschnitt (bei $x_i=0$) und $\beta_1$ die Steigung der Geraden ist.
+
+\vspace{0.5cm}
+
+\uncover<2->{
+Die kleinste-Quadrate-Methode ist nun, $\beta_0$ und $\beta_1$ so zu schätzen,
+dass $\sum_{i=1}^N {\left(y_i - \beta_1x_i - \beta_0  \right)}^2$ minimiert wird.
+}
+\end{frame}
+
+\begin{frame}
+\frametitle{Kleinste Quadrate von Hand, pt. 1}
+Wenn $\beta_0 = 0$ ist (die Ausgleichsgerade durch den Ursprung verläuft), ist $\beta_1$ leicht zu schätzen:
+Wir leiten die Residuenquadratsumme nach $\beta_1$ ab und finden Nullstellen.
+
+\uncover<2->{
+\begin{eqnarray*}
+0 &= \sum_{i=1}^N 2{\left(y_i - \beta_1 x_i  \right)}{\left(- x_i  \right)} \\
+  &= \sum_{i=1}^N 2 \left( \beta_1 x_i^2 - y_i x_i \right) \\
+  &= 2\left(\beta_1 \sum_{i=1}^N x_i^2 - \sum_{i=1}^N x_iy_i \right)
+\end{eqnarray*}
+
+also ist $\beta_1 = \dfrac{\sum_{i=1}^N x_iy_i}{\sum_{i=1}^N x_i^2}$.
+}
+\end{frame}
+
+\begin{frame}
+\frametitle{Kleinste Quadrate von Hand, pt. 2}
+Im Allgemeinen lässt sich $\beta_0$ berechnen mit der Formel
+
+$$
+\beta_0 = \texttt{mean}(y) - \beta_1\texttt{mean}(x).
+$$
+
+\vspace{0.5cm}
+
+\uncover<2->{
+Um also zunächst $\beta_1$ im Allgemeinen zu bestimmen, verschiebt man die Daten um die Mittelwerte, also ersetzt $x_i$ durch $x_i' = x_i - \texttt{mean}(x)$ und $y_i$ durch $y_i' = y_i - \texttt{mean}(y)$. Damit erhält man die Formel
+
+$$
+\beta_1 = \dfrac{\sum_{i=1}^N (x_i - \texttt{mean}(x))(y_i - \texttt{mean}(y))}{\sum_{i=1}^N (x_i - \texttt{mean}(x))^2}
+$$
+}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Lineare Regression mit Scipy.Stats}
+  Statt curve fitting lässt sich auch direkt lineare Regression verwenden:
+  
+\begin{lstlisting}
+from scipy.stats import linregress
+
+linregress_result = linregress(x, y)
+slope, intercept, r, p, se = linregress_result
+\end{lstlisting}
+
+\uncover<2->{
+  Dabei ist \texttt{slope} die Steigung, also $\beta_1$ und \texttt{intercept} der y-intercept, der y-Achsenabschnitt der Geraden, also der Bias $\beta_0$.
+  Weiterhin sind \texttt{r} der Korrelationskoeffizient, \texttt{p} ein $p$-Wert und \texttt{se} der quadrierte Fehler (squared error), also das mittlere Residuenquadrat.
+}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Achtung: Verwechslungsgefahr}
+% Gerade maximaler Varianz != Regressionsgerade
+
+Die Regressionsgerade (=Ausgleichsgerade) ist \alert{nicht} die Richtung maximaler Varianz!
+
+\uncover<2->{
+  Zeichnet man die Abstände ein, die in beiden Fällen gemessen werden, sieht man den Unterschied:
+
+  Bei der Regressionsgerade minimiert man die (Quadrate der) Residuen, die parallel zur y-Achse verlaufen,
+  bei der Richtung maximaler Varianz minimiert man die Abstände zur Geraden, die senkrecht zur Geraden verlaufen.
+
+  (Wir betrachten später noch mehr Bilder im Notebook).
+}
+\end{frame}
+
+\begin{frame}
+\frametitle{Multilineare Regression}
+
+Wenn wir nur einen univariaten Regressor $X = (X_1)$ haben,
+also Gewicht $w = w_1$ und Bias $w_0$, sprechen wir von einer \alert{einfachen linearen Regression}.
+
+\uncover<2->{
+Wenn der Regressor multivariat ist, also $X = (X_1,\dots,X_k)$ und damit das Gewicht ein Gewichtsvektor $w = (w_1,\dots,w_k)$ (mit Bias $w_0$) ist, sprechen wir von einer \alert{multilinearen Regression}.
+}
+
+\vspace{1cm}
+
+\uncover<3->{
+  Während   \texttt{scipy.stats.linregress} nur einfache lineare Regression unterstützt,
+  bietet Scikit-Learn auch multilineare Regression an mit der Klasse \texttt{sklearn.linear\_model.LinearRegression}.
+  }
+\end{frame}
+
+
+\begin{frame}[separator]
+  \frametitle{Lineare Regression mit Basisfunktionserweiterung}
+\end{frame}
+
+\begin{frame}
+\frametitle{Beispiel zur Basisfunktionserweiterung}
+Gegeben bivariate Daten $(X_1,X_2)$ wie z.B. Blütenblattlänge und -breite,
+könnten wir auch einen Zusammenhang zwischen Kelchblattlänge (sepal length) $Y$ und der Blütenblattfläche (petal leaf area) vermuten.
+
+\uncover<2->{
+Wir bilden ein neues Feature $X_3 := X_1 X_2$ (das Produkt) und betrachten die lineare Regression $Y = w_1 X_3 + w_0 + \epsilon$.
+}
+\end{frame}
+
+\begin{frame}
+\frametitle{Basisfunktionserweiterung}
+Wir haben die Funktion $\phi(X_1,X_2) := X_1 X_2$ auf die ursprünglichen Daten angewendet.
+
+Das ist eine \alert{Basisfunktionserweiterung} mit $\phi$.
+
+\uncover<2->{
+  \begin{definition}
+    Die lineare Regression mit Regressor $\phi(X_1,\dots,X_k)$ wird lineare Regression mit Regressor $X_1,\dots,X_k$ und Basisfunktionserweiterung mit $\phi$ genannt.
+  \end{definition}
+}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Noch mehr Beispiele für Basisfunktionserweiterungen}
+
+  Wir kennen bereits den Trick $\phi(X) = (1,X)$ bzw. $\phi(X_1,\dots,X_k) = (1,X_1,\dots,X_k)$.
+  
+  Eine lineare Regression mit dieser Basisfunktionserweiterung ist wie eine lineare Regression mit Bias-Term $w_0$.
+\end{frame}
+
+\begin{frame}
+\frametitle{Polynomiale Regression}
+Erweiterung mit $\phi(X) = (1,X,X^2)$ nennt man \alert{quadratische Regression},
+allgemeiner $\phi(X) = (1,X,X^2,\dots,X^d)$ \alert{polynomiale Regression} von Grad $d$.
+
+\uncover<2->{
+  Auch die polynomiale Regression ist eine lineare Regression, denn\\
+  \textcolor{darkgray}{Sie ist linear in den Gewichten, nicht in den Features}.
+}
+\end{frame}
+
+
+
+\begin{frame}
+  \frametitle{Ab jetzt ins Notebook}
+  Im Notebook schauen wir uns \alert{Overfitten bei der polynomialen Regression} und dann ein \alert{Anwendungsbeispiel} mit dem Melbourne Housing Datensatz an, bei dem wir auch Scikit-Learn's \alert{Pipelines} kennen lernen.
+
+  Im Notebook lernen wir noch ein weiteres zentrales Thema im maschinellen Lernen kennen, was wir bei der linearen Regression anwenden: \alert{Regularisierung}.
+
+  \vspace{1cm}
+  
+\uncover<2->{
+  Den Ansatz der Basisfunktionserweiterung kann man noch wilder treiben - nächstes Mal beschäftigen wir uns dann mit den \alert{Kernel-Methoden}.
+ }
+\end{frame}
+
+
+\begin{frame}[separator]
+  \frametitle{Vielen Dank für Ihre Aufmerksamkeit!}
+\end{frame}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

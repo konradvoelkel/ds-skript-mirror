@@ -1,0 +1,32 @@
+\mode<presentation>
+
+\RequirePackage{tikz}
+\RequirePackage[scaled=0.9]{helvet}
+\RequirePackage{graphicx}
+
+\RequirePackage{xcolor}
+%% HHU Corporate Design colours
+\definecolor{hhublue}{HTML}{006ab3} % Blau
+\definecolor{hhudarkblue}{HTML}{003964} % Dunkelblau
+\definecolor{hhuiceblue}{HTML}{b5cbd6} % Eisblau
+\definecolor{hhucyan}{HTML}{57bab1} % Türkis
+\definecolor{hhugreen}{HTML}{8cb110} % Grün
+\definecolor{hhuorange}{HTML}{ee7f00} % Orange
+\definecolor{hhured}{HTML}{be0a26} % Rot
+
+\newcommand{\insertevent}{}
+\newcommand{\insertshortevent}{}
+\newcommand{\event}[2][~]{%
+  \renewcommand{\insertevent}{#2}
+  \renewcommand{\insertshortevent}{#1}
+}
+
+% Settings
+\useinnertheme{hhubeamer}
+\useoutertheme{hhubeamer}
+\usecolortheme{hhubeamer}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{blocks}[rounded]
+
+\mode<all>

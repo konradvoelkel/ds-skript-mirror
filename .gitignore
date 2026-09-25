@@ -51,3 +51,21 @@ todo/
 
 # Rohtranskripte und Standbilder der Aufzeichnungen (erzeugt, nicht versioniert)
 transcripts/
+
+# Folien (slides/): Archiv, Sammel-PDFs und LaTeX-Hilfsdateien bleiben lokal
+slides/slides25/
+slides/auto/
+slides/*Alle Folien*.pdf
+slides/*-handout.tex
+slides/*-handout.pdf
+slides/*header-handout.tex
+slides/*.aux
+slides/*.log
+slides/*.nav
+slides/*.out
+slides/*.snm
+slides/*.toc
+slides/*.vrb
+slides/*.fls
+slides/*.fdb_latexmk
+slides/*.synctex.gz

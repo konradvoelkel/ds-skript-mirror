@@ -1,0 +1,120 @@
+% !Mode:: "TeX:UTF-8"
+\input{Data Science 2026 header}
+
+\title{Data Science, VL 3} % neu in 2026
+\date{23.04.2025}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+
+\section{Einführung in Python}
+
+\begin{frame}
+  \frametitle{Einführung in Python}
+  \begin{itemize}[<+->]
+  \item REPL ist unser Freund
+  \item Einrückung statt Klammern
+  \item Alles ist ein Objekt
+  \item LLMs können Python
+  \end{itemize}
+  \bigskip
+  \href{https://media.hhu.de/channel/video/data-science-python-in-der-repl/1383cd1ccc36f42479354b1c8c0dd373/167}{Erste Schritte in der REPL (Video) unter media.hhu.de/channel/video/data-science-python-in-der-repl/1383cd1ccc36f42479354b1c8c0dd373/167}
+\end{frame}
+
+\subsection{Datentypen}
+
+\begin{frame}
+  \frametitle{Zahlen: \texttt{int} und \texttt{float}}
+  \begin{itemize}[<+->]
+  \item \texttt{int}: Ganze Zahlen, die beliebig groß werden können (kein Overflow).
+  \item \texttt{float}: Kommazahlen (IEEE 754 binary64 double precision auf den meisten Plattformen).
+  \item Typen müssen nicht explizit deklariert werden, Python bindet Variablen dynamisch.
+  \item Operatoren: \texttt{+}, \texttt{-}, \texttt{*}, \texttt{/}.
+  \item Besonderheiten: \texttt{//} für ganzzahlige Division und \texttt{\%} für Modulo.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Text: Strings (\texttt{str})}
+  \begin{itemize}[<+->]
+  \item \texttt{str} repräsentiert Text als Sequenzen von Unicode-Zeichen.
+  \item Strings werden mit einfachen oder doppelten Anführungszeichen erstellt.
+  \item Strings sind unveränderlich (immutable); Modifikationen erzeugen neue Objekte.
+  \item Zugriff auf einzelne Zeichen oder Teilbereiche erfolgt über Slicing (\texttt{x[1:4]}).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Wahrheitswerte und \texttt{None}}
+  \begin{itemize}[<+->]
+  \item \texttt{bool}: Der Datentyp für Wahrheitswerte mit den Konstruktoren \texttt{True} und \texttt{False}.
+  \item Nahezu jedes Objekt kann in Python zu einem Boolean evaluiert werden (z.B. leere Sammlungen sind \texttt{False}).
+  \item \texttt{None}: Ein spezielles Objekt (null in Java).
+  \item Nützlich, um Variablen zu deklarieren, die noch keinen Wert haben.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Listen (\texttt{list})}
+  \begin{itemize}[<+->]
+  \item Eine geordnete, veränderbare und dynamische Sammlung von Objekten (ähnlich ArrayList).
+  \item Werden mit eckigen Klammern \texttt{[]} oder \texttt{list()} initialisiert.
+  \item Längenabfrage funktioniert einfach über die eingebaute Funktion \texttt{len(liste)}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Dictionaries (\texttt{dict})}
+  \begin{itemize}[<+->]
+  \item Speichern von Key-Value-Paaren, (eine Hash-Map).
+  \item Die Syntax nutzt geschweifte Klammern und Doppelpunkte:\\
+    \texttt{\{\dq key\dq: \dq value\dq\}}.
+  \item Als Keys (Schlüssel) sind nur unveränderliche Typen wie\\ \texttt{str}, \texttt{int} oder \texttt{float} erlaubt.
+  \item Wenn ein angefragter Key nicht existiert, wirft Python einen \texttt{KeyError}.
+  \end{itemize}
+\end{frame}
+
+\subsection{Kontrollstrukturen}
+
+\begin{frame}
+  \frametitle{Fallunterscheidungen (\texttt{if} / \texttt{else})}
+  \begin{itemize}[<+->]
+  \item Python verzichtet auf Klammern zur Abgrenzung von Codeblöcken.
+  \item Blöcke werden durch einen Doppelpunkt eingeleitet und eingerückt\\ (4 Leerzeichen sind 'ein Tab').
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Schleifen (\texttt{while} und \texttt{for})}
+  \begin{itemize}[<+->]
+  \item \texttt{while}-Schleifen prüfen eine Bedingung und wiederholen den Körper, bis diese nicht mehr zutrifft.
+  \item \texttt{for}-Schleifen in Python sind eigentlich for-each-Schleifen: Sie iterieren direkt über Sammlungen wie Listen oder Dictionaries.
+  \item Um klassisch über Zahlen zu iterieren, nutzt man das Objekt \texttt{range(a, b)}.
+  \end{itemize}
+\end{frame}
+
+\subsection{Funktionen \& I/O}
+
+\begin{frame}
+  \frametitle{Funktionen definieren (\texttt{def})}
+  \begin{itemize}[<+->]
+  \item Funktionen werden mit dem Schlüsselwort \texttt{def} eingeleitet.
+  \item Im Gegensatz zu \texttt{if} oder Schleifen erzeugt \texttt{def} einen eigenen Geltungsbereich (Scope) für Variablen.
+  \item Funktionen können optionale Argumente (mit Default-Werten) und Keyword-Argumente annehmen.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[separator]
+  \frametitle{Vielen Dank für Ihre Aufmerksamkeit!}
+\end{frame}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

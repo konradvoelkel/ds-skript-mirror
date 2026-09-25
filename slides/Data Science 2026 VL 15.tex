@@ -1,0 +1,340 @@
+% !Mode:: "TeX:UTF-8"
+\input{Data Science 2026 header}
+
+\title{Data Science, VL 15}
+\subtitle{Schätztheorie}
+\date{16.06.2026}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\section{Statistische Modelle}
+
+\begin{frame}[separator]
+  \frametitle{Problem first:\\ verschiedene Schätzungen}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Einstieg: Standardabweichung schätzen}
+
+Gegeben eine Stichprobe $x$ von $n$ \texttt{float}s, die aus einer univariaten normalverteilten Zufallsvariable gezogen sind, wollen wir die Parameter dieser Normalverteilung schätzen:
+{\Large
+  $\mu(X)$ und $\sigma^2(X)$.
+}
+
+\uncover<-1>{
+  {\tiny Beispiel
+    $x = \texttt{np.array}$
+    
+\hspace{2.4cm}$\begin{matrix}
+[ 6.5281 & 3.8003 & 4.9575 & 7.4818 & 6.7351 & 1.0454 \\
+4.9002 & 2.6973 & 2.7936 & 3.8212 & 3.2881 & 5.9085 \\
+4.5221 & 3.2434 & 3.8877 & 3.6673 & 5.9882 & 2.5897 \\
+3.6261 & 1.2918 & -2.1060 & 4.3072 & 4.7289 & 1.5157 \\
+7.5395 & 0.0913 & 3.0915 & 2.6256 & 6.0656 & 5.9387 \\
+3.3099 & 3.7563 & 1.2244 & -0.9616 & 2.3042 & 3.3127 \\
+5.4606 & 5.4048 & 2.2253 & 2.3954 & 0.9029 & 0.1600 \\
+-0.4125 & 6.9016 & 1.9807 & 2.1239 & 0.4944 & 4.5550 ]
+\end{matrix}$
+}
+}
+\uncover<2->{\vspace{-2.2cm}}
+
+\uncover<2->{Geschenkt: $\mu(X)$ schätzen wir mit $\texttt{mean}(x)$.}
+
+\uncover<3>{(Wieso?)}
+
+\uncover<4->{
+    Es gibt zwei übliche Formeln, um $\sigma^2(X)$ aus $x$ zu schätzen:
+  \[\sigma(x)^2 = \dfrac{1}{n} \sum_{i=1}^n (x_i-\mu)^2,\qquad \sigma^\ast(x)^2 = \dfrac{1}{n-1} \sum_{i=1}^n (x_i-\mu)^2\]
+}
+
+\uncover<5->{ Moment mal: was ist $\mu$? }
+\uncover<6->{ Entweder $\mu(X)$ oder $\texttt{mean}(x)$.}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Einstieg: Standardabweichung schätzen}
+  Gegeben eine Stichprobe $x$ von $n$ \texttt{float}s, die aus einer univariaten normalverteilten Zufallsvariable gezogen sind, wollen wir die Parameter dieser Normalverteilung schätzen:
+{\Large
+  $\mu(X)$ und $\sigma^2(X)$.
+}
+
+\vspace{0.5cm}
+
+\uncover<1->{Wenn $x = (x_1,\dots,x_n)$ gegeben ist, können wir $\texttt{mean}(x)$ berechnen. Umgekehrt genügen $n-1$ Werte $(x_1 - \texttt{mean}(x), \dots, x_{n-1} - \texttt{mean}(x))$ zur Berechnung von $x_n - \texttt{mean}(x) = \sum_{i=1}^{n-1}(\texttt{mean}(x) - x_i)$}
+
+
+\vspace{0.5cm}
+
+\uncover<2->{Beobachtung: gegeben $(x_1,\dots,x_{n-1})$ sind $\texttt{mean}(x)$ und $x_n$ gleich viel 'wert'}.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Einstieg: Standardabweichung schätzen}
+  Gegeben eine Stichprobe $x$ von $n$ \texttt{float}s, die aus einer univariaten normalverteilten Zufallsvariable gezogen sind, wollen wir die Parameter dieser Normalverteilung schätzen:
+{\Large
+  $\mu(X)$ und $\sigma^2(X)$.
+}
+
+\vspace{0.5cm}
+
+\uncover<2>{Wenn $\mu = \mu(X)$ bekannt ist, dann ist 
+  \[\sigma(x)^2 = \dfrac{1}{n} \sum_{i=1}^n (x_i-\mu)^2\]
+  eine Schätzung für $\sigma^2(X)$, die für größere Stichproben immer besser wird.}
+
+\uncover<3->{
+\vspace{-2.4cm}
+
+  Wenn $\mu = \texttt{mean}(x)$ geschätzt ist, dann ist 
+  \[\sigma(x)^2 = \dfrac{1}{n} \sum_{i=1}^n (x_i-\mu)^2\]
+  eine Schätzung für $\sigma^2(X)$, die für größere Stichproben immer besser wird.}
+
+\uncover<4->{Aber: der Erwartungswert von $\sigma(x)^2$ für zufällige Stichproben ist nicht $\sigma^2(X)$,
+  sondern $\dfrac{n-1}{n}\sigma^2(X)$. Anders bei $\mu = \mu(X)$, dann klappt es!
+  }
+\end{frame}
+
+\begin{frame}
+  \frametitle{Einstieg: Standardabweichung schätzen}
+  Wir können den Schätzer korrigieren (``Bessel-Korrektur''):
+  \[\sigma^\ast(x)^2 = \dfrac{n}{n-1} \sigma(x)^2\]
+
+  \uncover<2->{
+    Wir sprechen bei $\sigma(x)^2$ von einem \alert{asymptotisch erwartungstreuen Schätzer} für $\sigma(X)^2$. Der Schätzer $\sigma^\ast(x)^2$ ist sogar \alert{erwartungstreu} (frei von \alert{Bias}).
+    
+    [Das besprechen wir noch ausführlicher]
+  }
+
+\vspace{1cm}
+  
+  \uncover<3->{
+    Wir besprechen jetzt einmal den mathematischen Formalismus, wie er auch in Scikit-Learn zur Anwendung kommt.
+    }
+  \end{frame}
+
+\begin{frame}
+  \frametitle{Was ist Schätzen?}
+
+  \begin{itemize}[<+->]
+  \item  Geschätzt wird eine Größe (wie $\mu(X)$) aus einer Stichprobe (wie $x$), um aus einer Familie von Modellen (z.B. Normalverteilungen) eine bestimmte bzw. eine Teilfamilie auszuwählen (die mit dem Parameter $\mu = \mu(x)$).
+  \item Wir formalisieren die 'Größe' als Abbildung, die Familie als \alert{Statistisches Modell} und die (zufällige) Stichprobe als (recht 'große') Zufallsvariable.
+  \item  Das 'Schätzen' ist eine Prozedur, die zu jeder möglichen Stichprobe einen Wert ausspuckt. Auch das modellieren wir als Zufallsvariable!
+  \end{itemize}
+\end{frame}  
+
+  \begin{frame}
+    \frametitle{Statistisches Modell}
+    \begin{definition}
+      Ein statistisches Modell ist ein Tripel $(\mathcal{X}, \mathcal{F}, P_\theta : \theta \in \Theta)$
+      aus
+      \begin{itemize}
+        \item
+          einem Stichprobenraum $\mathcal{X}$,
+        \item einer $\sigma$-Algebra $\mathcal{F}$ auf $\mathcal{X}$ und
+        \item einer Klasse $\{P_\theta\}_{\theta \in \Theta}$ von Wahrscheinlichkeitsmaßen auf $(\mathcal{X}, \mathcal{F})$,\\ die mindestens zwei Elemente enthält, also $|\Theta| > 1$.
+        \end{itemize}
+        Wir schreiben oft einfach $(\mathcal{X}, P_\theta : \theta \in \Theta)$.
+
+    \end{definition}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Parametrische Modelle, Standardmodelle}
+    \begin{definition}
+      Ein statistisches Modell $(\mathcal{X}, P_\theta : \theta \in \Theta)$ heißt \alert{parametrisches Modell}, wenn die Parametermenge $\Theta$ eine Teilmenge eines $\mathbb{R}^d$ ist für ein $d \in \mathbb{N}$. Für $d=1$ sagt man auch \alert{einparametriges Modell}.
+    \end{definition}
+
+\uncover<3>{
+    \begin{definition}    
+Wenn die Stichprobenmenge $\mathcal{X}$ diskret ist (höchstens abzählbar), und $\mathcal{F} = \mathcal{P}(X)$, nennt man das Modell \alert{diskret} und in dem Fall haben alle $P_\theta$ eine pmf $p_\theta$, d.h. $p_\theta(x) = P_\theta(\{x\})$.
+\end{definition}
+}
+
+\vspace{-2.5cm}
+
+\uncover<4>{
+    \begin{definition}
+Wenn die Stichprobenmenge $\mathcal{X}$ eine (Borel)-meßbare Teilmenge des $\mathbb{R}^n$ ist (z.B. eine offene Menge oder die Niveaumenge einer stetigen Funktion) und $\mathcal{F}$ eine Einschränkung der Borel-$\sigma$-Algebra von $\mathbb{R}^n$ ist, und außerdem jedes $P_\theta$ eine pdf $f_\theta$ besitzt, dann heißt das statistische Modell ein \alert{stetiges Modell}.
+\end{definition}
+}
+
+\vspace{-3cm}
+
+\uncover<5>{
+    \begin{definition}
+Ein statistisches Modell $(\mathcal{X}, P_\theta : \theta \in \Theta)$, welches entweder diskret oder stetig ist (es also pmf oder pdf gibt), nennt man auch \alert{Standardmodell}.
+\end{definition}
+}
+\end{frame}
+
+    \begin{frame}
+    \frametitle{Produktmodell}
+    Das mehrfache Wiederholen eines Experiments als eigentlich-ein-Experiment umetikettieren und eine Abfolge von Einzelergebnissen dann ein Ergebnis nennen:
+
+    Zu jedem statistischen Modell lässt sich das \alert{Produktmodell} konstruieren:
+
+$$
+(\mathcal{X}^N, \mathcal{F}^{\otimes N}, P_{\theta}^{\otimes N} : \theta \in \Theta).
+$$
+
+\uncover<2->{
+Die Projektionen $X_i \colon \mathcal{X}^N \to \mathcal{X}$ sind dann unabhängig identisch verteilte Zufallsvariablen bezüglich jeder Verteilung $P_\theta$.
+
+$P_\theta^{\otimes N}$ ordnet einem Ereignis in $\mathcal{X}^N$ von der Form $A_1 \times \cdots \times A_N$ das Produkt $\prod_{i=1}^N P_\theta(A_i)$ zu. Damit ist die $N$-fache Wiederholung modelliert.
+}
+  \end{frame}
+
+    \begin{frame}
+      \frametitle{Beispiel}
+      \begin{itemize}
+        \item  Wir modellieren einen Würfelwurf eines potentiell unfairen Würfels mit einem diskreten Modell: $\mathcal{X} = \{1,\dots,6\}$ und $\Theta = \Delta_6$, die Menge aller möglichen diskreten Verteilungen auf einer sechselementigen Menge (geschrieben als Wahrscheinlichkeitsvektoren in $\mathbb{R}^6$), und $P_\theta(k) = \theta_k$.
+        \item  Konkret für $\theta = (\theta_1,\dots,\theta_n)$ ist also die Wahrscheinlichkeit, eine $6$ zu werfen im Modell mit Parameter $\theta$ gegeben durch $P_\theta(6) = \theta_6$.
+      \item  Den zweifach wiederholten Würfelwurf modellieren wir also mit $\Theta = \Delta_6$ und $\mathcal{X}^2$, der Menge aller geordneten Paare aus $\mathcal{X}$.
+
+        Dabei ist $P_\theta^{\otimes 2}(5,6) = P_\theta(5)P_\theta(6) = \theta_5\theta_6$.
+      \end{itemize}
+    \end{frame}
+  
+    \begin{frame}
+    \frametitle{Beispiel}
+$\mathcal{X}=\mathbb{R}^N$ mit $\Theta = \mathbb{R} \times \mathbb{R}_{> 0}$ und $P_{\theta}^{\otimes N} = P_{\mu,\sigma}^{\otimes N}$ mit $P_{\mu,\sigma}$ eine univariate Normalverteilung ist das Standardmodell einer Stichprobe der Größe $N$ einer univariaten Zufallsvariable, die normalverteilt ist.
+\end{frame}
+
+    \begin{frame}
+    \frametitle{Statistik - als mathematischer Begriff}
+\begin{definition}
+  Sei $(\mathcal{X}, P_\theta : \theta \in \Theta)$ ein statistisches Modell und $\Sigma$ ein weiterer Ereignisraum (d.h. eine Ergebnismenge).
+
+  Dann heißt jede beliebige Zufallsvariable $S \colon \mathcal{X} \to \Sigma$ eine \alert{Statistik} des statistischen Modells.
+\end{definition}
+\end{frame}
+
+
+    \begin{frame}
+    \frametitle{Schätzer - als mathematischer Begriff}
+\begin{definition}
+  Sei $(\mathcal{X}, P_\theta : \theta \in \Theta)$ ein statistisches Modell und $\Sigma$ ein weiterer Ereignisraum.
+  
+  Sei $\tau \colon \Theta \to \Sigma$ eine beliebige Abbildung, die jedem Parameter $\theta \in \Theta$ eine Kenngröße $\tau(\theta) \in \Sigma$ zuordnet.
+  
+Dann nennen wir jede Statistik $T \colon \mathcal{X} \to \Sigma$ einen \alert{Schätzer} für $\tau$  (auch \alert{Punktschätzer}).
+\end{definition}
+\end{frame}
+
+      \begin{frame}
+        \frametitle{Beispiel}
+        \begin{itemize}
+          \item
+Im Standardmodell einer univariaten Normalverteilung mit Stichprobengröße $N$ ist die Projektion $\Theta \to \mathbb{R}$ auf die erste Komponente, also den Erwartungswert $\mu$ eine Abbildung $\tau$, deren Schätzer uns interessieren.
+\item
+  Ein möglicher Schätzer ist die Statistik $c \colon \mathbb{R}^N \to \mathbb{R}$, die konstant $0$ ist.
+\item
+Ein anderer möglicher Schätzer ist das arithmetische Mittel $\texttt{mean} \colon \mathbb{R}^N \to \mathbb{R}$, für den tatsächlich gilt, dass $\texttt{mean}(x)$ für große $N$ beliebig nah an $\mu(X)$ herankommt, wenn $X$ die gesampelte normalverteilte Zufallsvariable ist.
+\end{itemize}
+  \end{frame}
+
+
+      \begin{frame}
+    \frametitle{Beispiel}
+    In den meisten statistischen Modellen können wir die Abbildung $\sigma \colon \Theta \to \mathbb{R}_{\geq 0}$ betrachten, die einem Parameter $\theta$ die Standardabweichung $\sigma(P_\theta)$ der Verteilung $P_\theta$ zuordnet.
+
+    Dafür kennen wir die beiden Schätzer $\sigma,\ \sigma^\ast \colon \mathcal{X} \to \mathbb{R}_{\geq 0}$.
+
+    \vspace{1cm}
+    (Erinnerung Bessel-Korrektur: $\sigma^\ast = \sqrt{\frac{n}{n-1}} \sigma$).
+  \end{frame}
+
+
+      \begin{frame}
+    \frametitle{Bias und Erwartungstreue}
+\begin{definition}
+Ein Schätzer $T \colon \mathcal{X} \to \Sigma$ für $\tau \colon \Theta \to \Sigma$ heißt \alert{erwartungstreu} wenn $\mathbb{E}_{\theta}( T ) = \tau(\theta)$ für alle $\theta \in \Theta$ gilt. Gilt das nicht, heißt der Schätzer \alert{verzerrt} (biased) und die Differenz ist der \alert{Bias} $\mathbb{B}_\theta(T) := \mathbb{E}_{\theta}( T ) - \tau(\theta)$.
+\end{definition}
+
+\begin{definition}
+Der \alert{mittlere quadratische Fehler} des Schätzers zum zu schätzenden Wert ist
+
+$$
+\texttt{mse}(T,\theta) := \mathbb{E}_\theta\left ( (T-\tau(\theta))^2 \right ) = \mathbb{V}_\theta(T) + (\mathbb{B}_\theta(T))^2
+$$
+\end{definition}
+
+
+  \end{frame}
+
+
+      \begin{frame}
+\frametitle{Folgen von Schätzern}
+\begin{definition}
+Eine Folge von Schätzern $T_n \colon \mathcal{X}^n \to \Sigma$ für $\tau$ in $n$-fachen Produktmodellen heißt \alert{konsistent} wenn für $n\to\infty$
+der Schätzer stochastisch gegen $\tau$ konvergiert: $\lim_{n\to\infty} T_n \xrightarrow{P_\theta} \tau(\theta)$.
+
+Stochastische Konvergenz heißt $\forall \epsilon > 0 : \lim_{n\to\infty} P(|T_n - \tau(\theta)| > \epsilon) = 0$.
+\end{definition}
+
+\begin{definition}
+Die Folge $T_n$ heißt \alert{asymptotisch erwartungstreu}, wenn $\lim_{n\to\infty} \mathbb{E}_{\theta}(T_n) = \tau(\theta)$.
+\end{definition}
+  \end{frame}
+
+
+      \begin{frame}
+    \frametitle{Beispiel}
+Im Standardmodell einer $N$-fach wiederholten univariaten Normalverteilung ist das Stichprobenmittel $\texttt{mean}(X_1,\dots,X_N)$ ein erwartungstreuer Schätzer für den Parameter $\mu$.
+  \end{frame}
+
+
+      \begin{frame}
+        \frametitle{Beispiel}
+        \begin{itemize}
+\item    Für die Varianz ist der Schätzer $\sigma_N^2 = \frac{1}{N} \sum_{i=1}^N (X_i - \texttt{mean}(X_1,\dots,X_N))^2$ nicht erwartungstreu, denn $\mathbb{E}(\sigma_N^2) = \frac{N-1}{N}\sigma^2(X)$.
+\item   Der Bias ist also $-\frac{\sigma^2(X)}{n}$, was für $n\to\infty$ verschwindet. Damit ist der Schätzer asymptotisch erwartungstreu.
+\item Der `korrigierte' Schätzer $\frac{N}{N-1} \sigma_N^2 = \frac{1}{N-1} \sum_{i=1}^N (X_i - \texttt{mean}(X_1,\dots,X_N))^2$ ist erwartungstreu.
+\end{itemize}
+\end{frame}
+
+
+      \begin{frame}
+    \frametitle{Gleichmäßig bester erwartungstreuer Schätzer}
+\begin{definition}
+Ein zu einer zu schätzenden Funktion $\tau \colon \Theta \to \mathbb{R}$ erwartungstreuer Schätzer $S$ mit endlicher Varianz heißt \alert{gleichmäßig bester erwartungstreuer Schätzer} für $\tau$, wenn für jeden weiteren erwartungstreuen Schätzer $T$ für $\tau$ mit endlicher Varianz für alle $\theta \in \Theta$ gilt:
+$\mathbb{V}_\theta(S) \leq \mathbb{V}_\theta(T)$
+\end{definition}
+
+Ein solcher Schätzer hat also minimale Streuung um den zu schätzenden Wert unter allen erwartungstreuen Schätzern.
+  \end{frame}
+
+
+  
+      \begin{frame}
+    \frametitle{Ausblick: Wie finden wir den?}
+    Mit der relativen Entropie berechnet man die Fisher-Information und die Cramer-Rao-Ungleichung für reguläre statistische Modelle gibt eine Varianzschranke.
+
+    Für sogenannte exponentielle Familien lässt sich damit direkt der beste erwartungstreue Schätzer beschreiben.
+
+    \uncover<2->{ $\rightarrow$ Stochastik-Vorlesung}
+
+    \uncover<3->{\vspace{1cm}
+
+      Für viele Verteilungen (z.B. kontaminierte Normalverteilung) gibt es keine geschlossene Formel, nur Iterationsverfahren.
+
+      $\rightarrow$ Maximum-Likelihood-Prinzip
+}
+  \end{frame}
+
+  
+\begin{frame}[separator]
+  \frametitle{Vielen Dank für Ihre Aufmerksamkeit!}
+\end{frame}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

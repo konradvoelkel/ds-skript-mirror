@@ -1,0 +1,123 @@
+% !Mode:: "TeX:UTF-8"
+\documentclass{article}
+\usepackage[final]{pdfpages}
+\usepackage{luacode}
+
+\begin{luacode*}
+local lfs = require("lfs")
+
+-- ==========================================
+-- 1. Function: Generate Handout Header
+-- ==========================================
+function create_handout_header()
+    local header_orig = "Data Science 2026 header.tex"
+    local header_handout = "Data Science 2026 header-handout.tex"
+    
+    local f = io.open(header_orig, "r")
+    if not f then return end
+    local content = f:read("*all")
+    f:close()
+    
+    -- Injects the handout option into the beamer documentclass
+    local new_content = content:gsub("(\\documentclass)%[([^%]]-)%]%{(beamer)%}", "%1[%2,handout]{%3}")
+    
+    local out = io.open(header_handout, "w")
+    out:write(new_content)
+    out:close()
+end
+
+-- ==========================================
+-- 2. Function: Generate Handout TeX File
+-- ==========================================
+function create_handout_tex(filename)
+    local tex_handout = filename:gsub("%.tex$", "-handout.tex")
+    
+    local f = io.open(filename, "r")
+    if not f then return nil end
+    local content = f:read("*all")
+    f:close()
+    
+    -- Replaces the header include target
+    content = content:gsub("\\input%{Data Science 2026 header%}", "\\input{Data Science 2026 header-handout}")
+    
+    local out = io.open(tex_handout, "w")
+    out:write(content)
+    out:close()
+    
+    return tex_handout
+end
+
+-- ==========================================
+-- 3. Function: Inclusion & Exclusion Logic
+-- ==========================================
+function merge_presentations()
+    -- Substrings that cause a file to be skipped
+    local exclusions = {"handout", "header", "Alle Folien", "Zusatz", "12", "14", "18", "22", "24"}
+    local files = {}
+    
+    -- Gather files
+    for file in lfs.dir(".") do
+        if file:match("%.tex$") or file:match("%.pdf$") then
+            local exclude = false
+            for _, pattern in ipairs(exclusions) do
+                -- plain string match (true disables regex patterns)
+                if file:find(pattern, 1, true) then 
+                    exclude = true 
+                    break 
+                end
+            end
+            if not exclude then table.insert(files, file) end
+        end
+    end
+    
+    table.sort(files)
+    
+    -- Ensure the modified header exists before processing slides
+    create_handout_header()
+    
+    local processed = {}
+    
+    for _, file in ipairs(files) do
+        local base = file:gsub("%.tex$", ""):gsub("%.pdf$", "")
+        
+        if not processed[base] then
+            if file:match("%.tex$") then
+                -- Generate handout tex, compile it, and include the resulting PDF
+                local h_tex = create_handout_tex(file)
+                local h_pdf = base .. "-handout.pdf"
+                
+                os.execute("lualatex -interaction=nonstopmode --shell-escape \"" .. h_tex .. "\"")
+                tex.sprint("\\includepdf[pages=-, fitpaper=true]{\"" .. h_pdf .. "\"}")
+                
+                processed[base] = true
+                
+            elseif file:match("%.pdf$") then
+                -- If we encounter a PDF, verify a .tex source doesn't exist for it.
+                -- If a .tex exists, skip this PDF and wait for the loop to hit the .tex file.
+                local tex_source = base .. ".tex"
+                local f = io.open(tex_source, "r")
+                
+                if f then
+                    f:close() -- Skip, let the .tex logic handle compilation
+                else
+                    -- Pure external PDF without a corresponding .tex file
+                    tex.sprint("\\includepdf[pages=-, fitpaper=true]{\"" .. file .. "\"}")
+                    processed[base] = true
+                end
+            end
+        end
+    end
+end
+\end{luacode*}
+
+\begin{document}
+
+% Execute the Lua merging logic
+\directlua{merge_presentations()}
+
+\end{document}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% TeX-command-extra-options: "--shell-escape"
+%%% End:

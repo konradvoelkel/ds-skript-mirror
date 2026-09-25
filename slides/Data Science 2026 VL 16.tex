@@ -1,0 +1,152 @@
+% !Mode:: "TeX:UTF-8"
+\input{Data Science 2026 header}
+
+\title{Data Science, VL 16}
+\subtitle{Maximum Likelihood}
+\date{18.06.2026}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\section{Maximum Likelihood}
+
+\begin{frame}[separator]
+  \frametitle{Das Maximum-Likelihood-\\Prinzip}
+\end{frame}
+  
+  
+      \begin{frame}
+    \frametitle{Likelihood-Funktion}
+\begin{definition}
+Gegeben ein statistisches Standardmodell $(\mathcal{X}, P_\theta : \theta \in \Theta)$ mit Dichte $f_\theta$ (entweder pmf oder pdf) für $P_\theta$ heißt $\rho \colon \mathcal{X} \times \Theta \to \mathbb{R}_{\geq 0}$ mit $\rho(x, \theta) := L_x(\theta) := f_\theta(x)$ die \alert{Likelihood-Funktion} und für festes $x$ heißt $L_x =\rho(x, \cdot) \colon \Theta \to \mathbb{R}_{\geq 0}$ die \alert{Likelihood}-Funktion zum Beobachtungswert $x$.
+\end{definition}
+
+\uncover<2->{
+Erinnerung: Wenn wir die Hypothese $H = ( \theta$ ist der wahre Parameter$)$ haben, und $D=x$ (für Daten) schreiben, so ist $P(D|H) = L_x(\theta) = f_\theta(x)$ die Likelihood.}
+  \end{frame}
+
+  
+      \begin{frame}
+    \frametitle{MLE}
+\begin{definition}
+  Ein Schätzer $T \colon \mathcal{X} \to \Theta$ für den Parameter $\theta$ heißt \alert{Maximum-Likelihood-Schätzer} (maximum likelihood estimator, MLE), wenn für alle $x \in \mathcal{X}$ gilt:
+\[L_x(T(x)) = \max_{\theta \in \Theta} L_x(\theta),\]
+also wenn $T(x)$ die Likelihood von $x$ maximiert, für alle $x$. Man schreibt auch
+\[T(x) = \argmax_{\theta \in \Theta} L_x(\theta).\]
+\end{definition}
+\end{frame}
+
+  
+      \begin{frame}
+    \frametitle{Beispiel}
+Im $N$-fachen univariat normalverteilten Modell ist $x \mapsto (\texttt{mean}(x), \sigma(x))$ ein Maximum-Likelihood-Schätzer für den Parameter $(\mu(X), \sigma(X))$. Der Schätzer $\sigma^\ast$ ist hingegen kein Maximum-Likelihood-Schätzer für $\sigma(X)$. Also können sich Erwartungstreue und Maximum-Likelihood-Prinzip gegenseitig ausschließen.
+  \end{frame}
+
+  
+      \begin{frame}
+    \frametitle{Bemerkung} 
+    Mit Hilfe der relativen Entropie lässt sich beweisen, dass unter schwachen Voraussetzungen eine Folge von Maximum-Likelihood-Schätzern stets konsistent ist.
+
+    \uncover<2->{
+      Erinnerung: das heisst dass die Schätzwerte gegen den zu schätzenden Wert konvergieren.
+      }
+  \end{frame}
+
+  
+      \begin{frame}
+        \frametitle{Bemerkung}
+        \begin{itemize}[<+->]
+          \item
+    Wir sind also für eine Familie von Verteilungen $P_\theta$ mit Dichten $f_\theta$ daran interessiert, die Likelihood $f_\theta(x)$ einer Beobachtung $x$ in $\theta$ zu maximieren.
+          \item
+    Um Funktionen zu maximieren, betrachten wir gern die Ableitung\\ (dazu sollte $f$ in $\theta$ differenzierbar sein).
+          \item
+            Schon am Beispiel der univariaten Normalverteilungsdichte $\phi_{\mu,\sigma}$ sehen wir, dass die Ableitung $\frac{d}{d\mu} \phi_{\mu,\sigma}(x) =\frac{(x-\mu)}{\sigma^2} \phi_{\mu,\sigma}(x)$ bei $x=\mu$ verschwindet,\\
+            damit ist $\mu=x$ der MLE für eine Stichprobe der Größe $1$.
+          \item
+            Im Allgemeinen ist die Likelihood allerdings schwerer zu berechnen \\
+            (betrachte ein $n$-faches Produktmodell).
+        \end{itemize}
+      \end{frame}
+
+  
+      \begin{frame}
+    \frametitle{Trick}
+    Anstatt die Likelihood von $x$ über alle möglichen $\theta$ zu maximieren, kann man auch die \alert{log-Likelihood} $\log \rho(x,\theta)$ maximieren.
+
+    $\log$ konkav $\Rightarrow$ ein Maximum der log-Likelihood ist auch ein Max. der Likelihood.
+
+\uncover<2->{
+Wenn z.B. $\rho$ die Form $e^{A}e^{B}$ hat (etwa bei einem $2$-fachen Produktmodell), hat $\log\rho$ die Form $A+B$ und Ableitungen gleich $0$ setzen wird deutlich einfacher.}
+  \end{frame}
+
+  
+      \begin{frame}
+        \frametitle{Beispiel Server-Logfiles}
+        \begin{itemize}[<+->]
+          \item
+    Wir betrachten Server-Logfiles einer Web-Anwendung, insbesondere die Zeitstempel. Daraus können wir die konsekutiven Abstände berechnen, also die Wartezeit zwischen zwei Aufrufen.
+
+    Wir möchten gerne wissen, mit welcher Wartezeit wir im Mittel rechnen können (um zusammen mit der durchschnittlichen Laufzeit eines Aufrufs zu einer Einschätzung zu kommen, welche Last wir erwarten können).
+
+\item
+      Die Wartezeiten sind exponentialverteilt mit Parameter $\lambda > 0$, den wir schätzen wollen. Zur Erinnerung: Die Dichte einer Exponentialverteilung ist $f(x) = \lambda e^{-\lambda x}$ und der Erwartungswert ist $\frac{1}{\lambda}$.
+\end{itemize}
+  \end{frame}
+      
+      \begin{frame}
+        \frametitle{Beispiel Server-Logfiles}
+    Wir betrachten Server-Logfiles (Zeitstempel) und konsekutive Abstände (Wartezeiten zwischen zwei Aufrufen). Die Wartezeiten sind exponentialverteilt mit Parameter $\lambda > 0$, den wir schätzen wollen. Die Dichte ist $f(x) = \lambda e^{-\lambda x}$.
+
+Die Likelihood für eine Stichprobe der Größe $N$ ist $L_x(\lambda) = \prod_{i=1}^N \lambda e^{-\lambda x_i}$ und die log-Likelihood ist demnach
+
+$$
+\ell_x(\lambda) := \log L_x(\lambda) = \left( \sum_{i=1}^N \log\lambda - \lambda x_i\right) = n \left( \log\lambda - \lambda \texttt{mean}(x) \right).
+$$
+
+
+  \end{frame}
+      
+      \begin{frame}
+    \frametitle{Beispiel Server-Logfiles (pt. 2)}
+$$
+\ell_x(\lambda) := \log L_x(\lambda) = \left( \sum_{i=1}^N \log\lambda - \lambda x_i\right) = n \left( \log\lambda - \lambda \texttt{mean}(x) \right).
+$$
+
+Die Ableitung nach $\lambda$ ist einfach $\frac{n}{\lambda} - n \texttt{mean}(x)$, eine Nullstelle liegt bei $\hat{\lambda} = \frac{1}{\texttt{mean}(x)}$. Die zweite Ableitung von $\ell_x$ ist $-\frac{n}{\lambda^2}$, was bei $\hat{\lambda}$ den Wert $-n{\texttt{mean}(x)}^2 < 0$ annimmt, also ist $\hat{\lambda}$ ein Maximum und wir haben den Maximum-Likelihood-Schätzer bestimmt.
+
+\vspace{1cm}
+
+\uncover<2->{
+  Wir rechnen also mit einer erwarteten Wartezeit $\texttt{mean}(x)$ zwischen den Server-Aufrufen, wobei $x$ die beobachteten Wartezeiten sind.
+}
+  \end{frame}
+
+      \begin{frame}
+    \frametitle{Beispiel k-Means} 
+Der k-Means-Algorithmus kann als Schätzer interpretiert werden:
+das statistische Modell ist $\mathcal{X} = \mathbb{R}^{nN}$, wenn $n$ die Dimension der Daten ist (also bei $4$ reellen Variablen, etwa im Iris-Datensatz, $n=4$) und $N$ die Stichprobengröße (bei Iris ist $N=150$).
+
+Der Parameterraum ist $\mathbb{R}^{nk}$ und die Verteilung zu einem Parameter $\theta = (c_1,\dots,c_k) \in \mathbb{R}^{nk}$ (mit $c_i \in \mathbb{R}^n$) ist ein gemischtes Modell aus multivariaten Normalverteilungen mit Erwartungswert $c_i$ und der $n\times n$-Einheitsmatrix als Kovarianzmatrix.
+  \end{frame}
+
+  
+      \begin{frame}
+    \frametitle{Beispiel k-Means} 
+Die 'perfekte' k-Means-Lösung, also die Zentroide $(c_1,\dots,c_k)$, die der k-Means-Algorithmus versucht, zu bestimmen, sind diejenigen, für die die Summe der euklidischen Abstände eines jeden Punktes $x_i$ eines Samples $x \in \mathcal{X}$ minimal sind. Das sind genau die Zentroide, für die die Likelihood der Daten unter der entsprechenden gemischten Verteilung maximal wird.
+\end{frame}
+
+  
+%\begin{frame}[separator]
+%  \frametitle{Vielen Dank für Ihre Aufmerksamkeit!}
+%\end{frame}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

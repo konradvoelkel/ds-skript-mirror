@@ -14,6 +14,7 @@ project:
   copyright: 2026 CC-BY-SA 4.0
   exclude:
     - README.md
+    - slides/**
     - LICENSE
     - .git/*
     - .venv/*
@@ -71,6 +72,7 @@ project:
         - file: statistische-tests.md
         - file: model-selection.ipynb
         - file: expectation-maximization.ipynb
+    - file: folien.md
 site:
   options:
     logo: images/logo-wide.svg

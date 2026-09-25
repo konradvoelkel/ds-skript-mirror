@@ -1,0 +1,149 @@
+\mode<presentation>
+
+\RequirePackage{textpos}
+\setlength{\TPHorizModule}{1mm}
+\setlength{\TPVertModule}{1mm}
+
+\setbeamerfont{title}{size=\Huge}
+
+% Title page
+\defbeamertemplate*{title page}{hhubeamer}[1][]
+{%
+  %% Heine
+  \begin{textblock}{0}[0,0](-10,21.5)
+     % trim={left lower right upper}
+    {\includegraphics[trim={10cm 8.65cm 0 7.5cm},clip,width=5.8cm]%
+      {fig/template/Heine.jpg}}
+  \end{textblock}
+  %% Logo top left
+  \begin{textblock}{0}[0,0](-5.5,.5)
+    {\includegraphics[height=18.6mm]{fig/template/HHU-Bildmarke.pdf}}
+  \end{textblock}
+  %% Front matter
+  \begin{textblock}{130}(20,35)%
+      \begin{beamercolorbox}[wd=12cm,leftskip=3cm,#1]{title page header}
+        \usebeamerfont{title}\inserttitle\par%
+      \end{beamercolorbox}%
+      % Authors
+      \vspace{5mm}
+      \begin{beamercolorbox}[wd=12cm,leftskip=3cm,#1]{author}
+        \usebeamerfont{author}\insertauthor%
+      \end{beamercolorbox}
+      % Date
+      \vspace{5mm}
+      \begin{beamercolorbox}[wd=12cm,leftskip=3cm,#1]{date}
+        \usebeamerfont{author}\insertevent%
+      \end{beamercolorbox}
+  \end{textblock}
+  \begin{textblock}{0}(-21,77)%
+    \begin{beamercolorbox}[wd=12cm,leftskip=3cm,#1]{date}
+      \usebeamerfont{date}\bf\insertdate%
+    \end{beamercolorbox}
+  \end{textblock}
+  \vfill
+}
+
+% make beamer always use the frametitle template, even if frametitle is empty
+\RequirePackage{etoolbox}
+\patchcmd{\endbeamer@frameslide}{\ifx\beamer@frametitle\@empty}{\iffalse}{}{\errmessage{failed to patch}}
+
+
+% Frame title
+\defbeamertemplate*{frametitle}{hhubeamer}[1][]
+{%
+% Don't do anything on title page
+\ifnum\value{page}>1%
+  \begin{beamercolorbox}[wd=\paperwidth,ht=2.11cm]{frametitle}
+    \begin{tikzpicture}
+      \useasboundingbox[fill=white](0,0) rectangle(\the\paperwidth,2.11);
+      \ifx\insertframetitle\@empty%
+      \else%
+        % D on the left
+        \fill[hhublue] (0,1.5) rectangle ++(0.3,-0.5);
+        \fill[hhublue] (0.3,1.25) circle (0.25);
+        % bottom line in header
+        \draw[hhuiceblue!65,thick] (.9,0.4) -- ++(12,0);
+      \fi
+      % Logo
+      \node[anchor=south] at (14.5,-.02) {\includegraphics[height=16.8mm]{fig/template/HHU-vertikal.pdf}};
+      % Captions
+      \ifx\insertframesubtitle\@empty%
+          {\node[anchor=west, hhublue,font=\LARGE] at (.75,1.22){\insertframetitle};}
+      \else%
+          {\node[anchor=west, hhublue,font=\LARGE] at (.75,1.22){\insertframetitle};
+          \node[anchor=west, hhublue,font=\large] at (.75,0){\insertframesubtitle};}%
+      \fi
+    \end{tikzpicture}
+  \end{beamercolorbox}
+  \ifx\insertframetitle\@empty%
+    \vspace{-1.5cm}
+  \fi
+\fi
+}
+
+\BeforeBeginEnvironment{frame}{%
+  \setbeamertemplate{frametitle}[hhubeamer]%
+}
+
+\define@key{beamerframe}{separator}[true]{%
+  \setbeamertemplate{frametitle}[separator]%
+}
+
+\define@key{beamerframe}{empty}[true]{%
+  \setbeamertemplate{frametitle}[empty]%
+}
+
+\defbeamertemplate*{frametitle}{separator}
+{%
+  %% Heine
+  \begin{textblock}{0}[0,0](-12,-12.5)
+    {\includegraphics[trim={10cm 8.5cm 0 0},clip,width=7.2cm]%
+      {fig/template/Heine.jpg}}
+  \end{textblock}
+  \begin{beamercolorbox}[wd=\paperwidth,ht=2.11cm]{frametitle}
+    \begin{tikzpicture}
+      \useasboundingbox[](0,0) rectangle(\the\paperwidth,2.11);
+      % Logo
+      \node at (0,0) {};
+      \node[anchor=south] at (14.5,-.02) {\includegraphics[height=16.8mm]{fig/template/HHU-vertikal.pdf}};
+    \end{tikzpicture}
+  \end{beamercolorbox}
+  \begin{textblock}{130}(10,35)%
+    \ifx\insertframesubtitle\@empty%
+      \begin{flushright}
+          \huge\insertframetitle%
+      \end{flushright}
+    \else%
+      \begin{flushright}
+          \huge\insertframetitle%
+      \end{flushright}
+      \begin{flushright}
+          \Large\insertframesubtitle%
+      \end{flushright}
+    \fi
+  \end{textblock}
+}
+
+\defbeamertemplate*{frametitle}{empty}[1][]
+{%
+  \vspace{.64cm}
+}
+
+% itemize
+\setbeamertemplate{itemize items}[circle]
+
+% toc
+\setbeamertemplate{section in toc}{{\color{hhublue}\inserttocsectionnumber.}~~\inserttocsection}
+\setbeamertemplate{section in toc shaded}[default][40]
+\setbeamertemplate{subsection in toc}{%
+  \hspace{5mm}{\raisebox{.6mm}{%
+    \tikz\draw[hhuiceblue!70,fill=hhuiceblue!70] (0,0) circle (.3ex);}}%
+    ~~\inserttocsubsection}
+\setbeamertemplate{subsection in toc shaded}{%
+  \hspace{5mm}{\raisebox{.6mm}{%
+    \tikz\draw[hhuiceblue!70,fill=hhuiceblue!70] (0,0) circle (.3ex);}}%
+    ~~\color{black!40}\inserttocsubsection}
+
+
+\mode
+<all>

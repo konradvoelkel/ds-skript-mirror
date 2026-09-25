@@ -1,0 +1,193 @@
+% !Mode:: "TeX:UTF-8"
+\input{Data Science 2026 header}
+
+\title{Data Science, VL 17}
+\subtitle{Maximum Likelihood}
+\date{23.06.2026}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\section{Dimensionsreduktion mit PCA}
+
+\begin{frame}[separator]
+  \frametitle{Herleitung der PCA}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{PCA}
+\alert{Principal Component Analysis} (PCA, Hauptkomponentenanalyse) ist ein \emph{unsupervised} Verfahren; \\
+meist sind damit Schritte 1-2 oder auch 1-3 gemeint:
+
+\begin{enumerate}[<+->]
+\item (fit) Berechnung einer linearen invertierbaren Koordinatentransformation \\(einer OrthoNormalBasis) aus Daten
+\item (transform) Anwenden der Transformation auf Daten
+\item(Dimensionsreduktion) Projektion der Daten auf einen niedrigdimensionalen linearen Unterraum 
+\end{enumerate}
+
+\uncover<4->{
+  Dabei werden die Daten so transformiert, dass die neuen Koordinatenachsen (sog. Hauptkomponenten/Hauptachsen) geordnet sind danach, wo die Daten die höhere Varianz aufweisen.
+  }
+\end{frame}
+
+\begin{frame}{Beispiel}\framesubtitle{(1/2)}
+  \vspace*{-2.3cm}
+
+  \hspace{-3cm}
+\includegraphics[height=1.1\textheight]{figures/case_a_dual_proj.png}
+\end{frame}
+
+\begin{frame}{Beispiel}\framesubtitle{(2/2)}
+  \vspace*{-2.3cm}
+
+  \hspace{-3cm}
+\includegraphics[height=1.1\textheight]{figures/case_b_dual_proj.png}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Beispiel}
+  \framesubtitle{Die vorigen Plots in Worte gefasst}
+Wenn man Daten im dreidimensionalen Raum hat, bei denen aber die dritte Koordinate $z$
+ stets $1$ ist, so ändert eine Projektion auf die $xy$-Ebene \alert{nichts} am Informationsgehalt der Daten.
+
+\uncover<2->{
+Wenn die Daten hingegen in der $z$-Koordinate geringfügig um die $1$ variieren, in den $x$- und $y$-Koordinaten aber deutlich stärker variieren, so ändert eine Projektion auf die 
+$xy$-Ebene nur \alert{wenig} am Informationsgehalt der Daten.
+}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{PCA als Koordinatentransformation}
+  \begin{itemize}[<+->]
+   \item Eine Koordinatentransformation ist genau die Matrixmultiplikation mit einer invertierbaren Matrix.
+\item  Die Spalten der Matrix sind die Bilder der Basisvektoren.
+\item  Die PCA entspricht einer Orthonormalmatrix, d.h. die Spalten sind normiert und stehen senkrecht aufeinander.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Richtung der größten Varianz}
+  \begin{itemize}[<+->]
+  \item Ziel der PCA 1) \\Richtung (Vektor, Hauptachse) finden sodass in der Richtung die höchste Varianz vorliegt.
+  \item Ziel der PCA 2) \\Für das Orthogonalkomplement der Hauptachse wiederum PCA.
+  \item Ergebnis: \\Liste mit Hauptachsen (=Matrix), die senkrecht aufeinander stehen (=Orthogonalmatrix).
+  \item Transformation auf die neue Basis mit dem \alert{Inversen} dieser Matrix.
+  \end{itemize}
+  \end{frame}
+
+
+\begin{frame}
+\frametitle{Beispiel}
+Wenn wir ein Sample einer bivariaten Standardnormalverteilung betrachten, können wir einen Kreis um das 95\%-Quantil zeichnen.
+Die Matrix $\begin{pmatrix} 2 & 0 \\ 0 & 1\end{pmatrix}$ ist eine Streckung auf der $x$-Achse, die aus dem hübschen Kreis eine langgezogene Ellipse macht.
+Die Richtung der größten Varianz ist dann genau die $x$-Achse.
+
+\uncover<2->{
+Wenn eine beliebige invertierbare Matrix $M = \begin{pmatrix} a & b \\ c & d \end{pmatrix}$ auf ein Sample einer bivariaten Standardnormalverteilung angewendet wird, dann können wir die Richtungen mit größter Varianz bestimmen als die Richtungen, die von $M$ am stärksten gestreckt werden. Dass wäre ein Vektor $v$ mit $Mv = \lambda v$ für das größte solche $\lambda$.
+}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Beobachtung}
+Wenn wir die Kovarianzmatrix einer bivariaten Standardnormalverteilung betrachten, also $\begin{pmatrix} \mathbb{V}(X) & Cov(X,Y) \\ Cov(Y,X) & \mathbb{V}(Y) \end{pmatrix} = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}$
+und dann, wie sich die Kovarianzmatrix eines Samples ändert, wenn wir die Koordinatentransformation $\begin{pmatrix} 2 & 0 \\ 0 & 1\end{pmatrix}$ durchführen,
+beobachten wir eine Quadrierung: beim Berechnen der Sample-Kovarianz $Cov(x,y) = \frac{1}{n} \sum_{i=1}^n x_iy_i$ geht die Skalierung mit $2$ einfach ein, bei $\mathbb{V}(x) = Cov(x,x)$ aber quadratisch.
+
+\uncover<2->{
+Wenn wir also die Wurzel aus der neuen Kovarianzmatrix berechnen, erhalten wir die Koordinatentransformation zurück.
+}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Matrixwurzel}
+Kovarianzmatrizen sind positiv definit und symmetrisch.
+
+\uncover<2->{
+  Zu jeder positiv definiten symmetrischen Matrix $C$\\
+  existiert eine invertierbare Matrix $\Sigma$ mit $\Sigma^2 = C$.
+  }
+  \uncover<3->{
+
+\vspace{1cm}
+    
+Eine quadratische Matrix $C$ heisst \\ symmetrisch, wenn $C=C^T$ und \\ positiv definit, wenn alle Eigenwerte positiv sind.
+
+\vspace{1cm}
+
+Äquivalent: $C$ positiv definit wenn für alle $v \neq 0$ gilt dass $v^TCv > 0$ ist.
+    }
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Zutaten zusammensetzen}
+Wir stellen uns jetzt vor, dass die Daten $X$ aus einer Standardnormalverteilung $Y$ durch eine Koordinatentransformation $A$ hervorgehen.
+
+\begin{itemize}[<+->]
+  \item Können wir aus $X = AY$ etwa $A$ oder $Y$ zurückgewinnen? \\ Was sind die Hauptkomponenten?
+  \item  Die empirische Kovarianzmatrix schätzt die Kovarianzmatrix $C$ ein,\\
+  deren Wurzel $A$ ist, also $A^2 = C$.
+\item Wir berechnen den größten Eigenwert von $A$ und einen zugehörigen Eigenvektor $v$.
+\item Das ist die Richtung der größten Varianz in den Daten! 
+\item Es ist auch ein Eigenvektor zum größten Eigenwert von $A^2$.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Letzter Schritt}
+Wenn die Daten nicht normalverteilt sind (oder nur $A$ unbekannt ist),
+können wir das gleiche machen:
+
+\uncover<2->{
+Einen Eigenvektor zum größten Eigenwert von der empirischen Kovarianzmatrix $C$ bestimmen.
+}
+
+\uncover<3->{
+Schön: Das ist \alert{immer} die Richtung der größten Varianz in den Daten.
+}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Anderer Zugang: Optimierung}
+Die Richtung größter Varianz lässt sich auch finden als die Gerade,
+welche die Summe der quadrierten Abstände der Daten zur Gerade minimiert.
+
+\uncover<2->{
+  Das ist äquivalent zum Minimieren des MSE.
+  Erinnerung: das konstante Modell, welches den MSE minimiert, ist \texttt{mean}.
+
+  Die erste Hauptkomponente ist also das beste lineare Modell aus der MSE-Perspektive.
+}
+
+\uncover<3->{
+\vspace{1cm}
+  
+(im Skript ist eine Animation dazu)
+}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Ab jetzt ins Notebook!}
+\end{frame}
+
+
+\begin{frame}[separator]
+  \frametitle{Vielen Dank für Ihre Aufmerksamkeit!}
+\end{frame}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

@@ -104,12 +104,15 @@ könnte man auch fragen. Hauptsächlich dient uns das Skript als Referenz und Le
 **KI-Werkzeuge**
 Bei den Übungsblättern dürfen Sie KI-Werkzeuge wie Chatbots und Code-Assistenten benutzen, müssen das aber kennzeichnen: Schreiben Sie zur Abgabe dazu, welches Werkzeug Sie wofür eingesetzt haben. In der Klausur und im Midterm sind KI-Werkzeuge nicht erlaubt. Der Grund ist derselbe, aus dem es die Übungsaufgaben überhaupt gibt: Probieren Sie es erst einmal selbst, sonst lernt nur der Chatbot dazu.
 
+**Folien**
+Die Folien zu jeder Sitzung stehen als PDF unter [Vorlesungsfolien](folien.md), jeweils mit dem Kapitel, zu dem sie gehören.
+
 
 ## Lizenz
 
 Dieses Vorlesungsskript steht unter der [Creative Commons Lizenz Namensnennung – Weitergabe unter gleichen Bedingungen 4.0 (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/deed.de). <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de"><img src="https://mirrors.creativecommons.org/presskit/buttons/80x15/png/by-sa.png" height="20"/></a> Jeglicher Code außerdem unter der GPL3.
 
-Davon ausgenommen sind gekennzeichnete Fremdinhalte, die unter ihrer jeweils eigenen Lizenz stehen: die eingebundenen xkcd-Comics (CC BY-NC 2.5), das Venn-Diagramm von Drew Conway (CC BY-NC 3.0) und der Melbourne-Housing-Datensatz von Anthony Pino (CC BY-NC-SA 4.0). Bei jedem dieser Inhalte steht die Quelle an Ort und Stelle.
+Davon ausgenommen sind gekennzeichnete Fremdinhalte, die unter ihrer jeweils eigenen Lizenz stehen: die eingebundenen xkcd-Comics (CC BY-NC 2.5), das Venn-Diagramm von Drew Conway (CC BY-NC 3.0) und der Melbourne-Housing-Datensatz von Anthony Pino (CC BY-NC-SA 4.0). Bei jedem dieser Inhalte steht die Quelle an Ort und Stelle. Die [Vorlesungsfolien](folien.md) enthalten weitere Fremdbilder; sie sind in der README des Folienordners im Repositorium aufgeführt.
 
 ## Inhaltsverzeichnis
 

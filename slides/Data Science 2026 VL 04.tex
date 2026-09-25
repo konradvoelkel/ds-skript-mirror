@@ -1,0 +1,396 @@
+% !Mode:: "TeX:UTF-8"
+\input{Data Science 2026 header}
+
+\title{Data Science, VL 4} % war in 2025 noch VL 3; Einschub zu Python ...
+\date{28.04.2026} %\date{23.04.2026}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\section{Recap}
+
+\begin{frame}
+  \frametitle{Was bisher geschah: Stochastik}
+  \begin{itemize}[<+->]
+  \item Ein \alert{Wahrscheinlichkeitsmaß} auf einer Menge $\Omega$ ist Abbildung $P : \mathcal{E}(\Omega) \to [0,1]$ mit $P(\Omega)=1$ und Summenregel für disjunkte Vereinigungen. Wir nennen $A \in \mathcal{E}(\Omega)$ die \alert{Ereignisse}, für eine endliche Menge $\mathcal{E}(\Omega) := \mathcal{P}(\Omega)$, die Menge aller Teilmengen. Das Paar $(\Omega,P)$ heißt \alert{W-Raum}.
+    \item Auf einer endlichen Menge $\Omega$ ist $P$ durch eine \alert{pmf} $p \colon \Omega \to [0,1]$ gegeben, $P(A) = \sum_{x\in A} p(x)$.
+    \item \alert{Zufallsvariablen} sind messbare Abbildungen $X \colon \Omega' \to \Omega$, die induzierte Verteilung $P_X$ heißt auch \alert{Verteilung von $X$}.
+    \item Sind $\Omega, \Omega'$ endlich, so sind alle Abbildungen $X \colon \Omega' \to \Omega$ messbar.
+    \end{itemize}
+\end{frame}
+
+
+
+\section{Beispiel Daten, Stichprobe, Modell}
+
+\begin{frame}
+  \frametitle{Daten als Verteilung}
+ \uncover<+->{
+   Gegeben Daten $D$ in einer Tabelle:
+   
+   \begin{tabular}{|c|c|}
+     \hline
+       & x \\ \hline
+     0 & blue \\
+     1 & red \\
+     2 & blue \\
+     3 & green \\ \hline
+   \end{tabular}
+ }
+
+ \uncover<+->{
+   können wir einen W-Raum $\Omega = \{\text{blue}, \text{red}, \text{green}\}$ modellieren mit
+   \[P(\{x\}) := \text{relative Frequenz von } x = \dfrac{\text{Anzahl } x \text{ in } D }{|D|}\]
+   Die \alert{Verteilung der Daten} (und $|D|=4$ im Beispiel).
+ }
+ 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Daten als Verteilung}
+   Gegeben Daten $D$ in einer Tabelle:
+   
+   \begin{tabular}{|c|c|}
+     \hline
+       & x \\ \hline
+     0 & blue \\
+     1 & red \\
+     2 & blue \\
+     3 & green \\ \hline
+   \end{tabular}
+
+   ist der Wahrscheinlichkeitsvektor für die Reihenfolge $\Omega = \{\text{blue}, \text{red}, \text{green}\}$
+   \[p = \left(\frac{2}{4}, \frac{1}{4}, \frac{1}{4}\right).\]
+ 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Populationsverteilung}
+  \begin{itemize}[<+->]
+    \item  Wo kommen die Daten her?
+ \item  Beispiel: Stichprobe einer Tüte Süssigkeiten. \\
+  Achtung: größere Stichproben können anders verteilt sein.
+\item Häufige Aufgabe: Gegeben Stichprobe $D$ einer größeren Menge $D'$,
+  schätze Verteilung von $D'$ anhand der Verteilung der Daten $D$.
+\item  Dabei heißt $D'$ die \alert{Population}.
+\item  Häufig zusätzlicher Input: \\
+  Zusatzinformationen über die Verteilung von $D'$ (eine Art von \alert{Prior}).
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Modellverteilung}
+  \begin{itemize}[<+->]
+  \item Wenn z.B. die Modellannahme ist, dass die Farben gleichverteilt sind bis auf eine Farbe, die doppelt so oft vorkommt,
+    dann sind wir geneigt, nicht die Verteilung der Daten als Modell zu wählen, sondern z.B.
+    \[p = \left(\frac{2}{4}, \frac{1}{4}, \frac{1}{4}\right),\]
+    auch wenn die konkreten relativen Häufigkeiten leicht davon abweichen.
+  \item Auch mit dem Modell lässt sich eine ``Stichprobe'' ziehen: \\
+    synthetische Daten, mit Hilfe eines Zufallszahlgenerators.
+  \item Übungsaufgabe: wie genau geht das im Beispiel?
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Modellgüte}
+  Wie gut ist das Modell?
+  
+  Kann vergleichen:\\
+  sehen die Daten $D$ so aus, als wären sie aus dem Modell gesampelt worden?
+  
+  \uncover<2->{``How likely is that?'' $\to$ \alert{Likelihood}.}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Was bisher geschah: Statistik}
+  \begin{itemize}[<+->]
+  \item Wir wählen einen Ausschnitt der Welt, sammeln Daten, putzen, transformieren (d.h. wählen die \alert{Features} aus, die uns interessieren) und bilden Modelle für die Daten: Wahrscheinlichkeitsverteilungen.
+  \item \alert{Maximum Likelihood-Prinzip}: Wir wählen das Modell, zu welchem die beobachteten Daten am ehesten so aussehen, als hätten wir sie aus dem Modell synthetisch erzeugt (\alert{gesampelt}).
+    \end{itemize}
+    \includegraphics[width=12cm]{figures/dsprozess-simplified-2.png}
+\end{frame}
+
+
+
+
+\begin{frame}[separator]
+  \frametitle{Pause?}
+\end{frame}
+
+
+
+\section{Abweichungen und Mittel}
+
+
+\subsection{Herleitung}
+
+\begin{frame}
+  \frametitle{Vergleich von Verteilungen}
+  \begin{itemize}[<+->]
+  \item Wie messen wir den Unterschied der Verteilungen aus den Daten und der Verteilungen aus unseren Modellen?
+  \item Präzise Antwort: mit der relativen Entropie - das kommt später.
+  \item Möglichkeit: Abstand der Daten zu synthetischen Daten im Datenraum messen.
+    \item Damit wir wissen, wie der Datenraum aussieht: Ab jetzt $X$ eine reelle Zufallsvariable bzw. Daten $x$ sind reelle Zahlen.
+    \end{itemize}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Vergleich von Daten}
+    Gegeben $(x,y)$ mit Stichprobengröße $n=4$ in zwei Spalten
+    
+    (Idee: $x$ sind die Daten, $y$ unser Modell, unsere ``Vorhersage'')
+    
+    \begin{tabular}{|c|c|c|}
+     \hline
+       & x & y \\ \hline
+     0 & 178 & 178 \\
+     1 & 160 & 155 \\
+     2 & 155 & 150 \\
+     3 & 174 & 180 \\ \hline
+    \end{tabular}
+    
+    können wir nach dem Abstand von $x$ und $y$ fragen:
+    \[d(x,y) = \Vert x - y \Vert_1 = \sum_{i=0}^{n-1} |x_i-y_i| \]
+  \end{frame}
+
+    \begin{frame}
+    \frametitle{Vergleich von Daten}
+\begin{itemize}[<+->]
+\item    Gegeben Daten $(x,y)$ mit Stichprobengröße $n=4$ können wir nach dem Abstand von $x$ und $y$ fragen:
+  \[d(x,y) = \Vert x - y \Vert_1 = \sum_{i=0}^{3} |x_i-y_i| \]
+  \uncover<1>{Achtung: Das wächst mit zunehmendem $n$}
+\item    Ebenso möglich wäre der \alert{mittlere Fehler}:
+  \[\dfrac{1}{n} \sum_{i=0}^{n-1} (x_i-y_i)\]
+\end{itemize}
+\end{frame}
+
+    \begin{frame}
+    \frametitle{Vergleich von Daten}
+\begin{itemize}[<+->]
+\item    Gegeben Daten $(x,y)$ mit Stichprobengröße $n$ ist der Abstand bzgl. $1$-Norm:
+  \[d_1(x,y) = {\Vert x - y \Vert}_1 = \sum_{i=0}^{n-1} |x_i-y_i| \]
+  Der \alert{mittlere absolute Fehler}
+  $mae(x,y) = \dfrac{d_1(x,y)}{n} $
+\item Der Abstand bzgl. $2$-Norm ist (quadriert)
+  \[d_2(x,y)^2 = {\Vert x - y \Vert}_2^2 = \sum_{i=0}^{n-1} {\left(x_i-y_i\right)}^2 \]
+  Der \alert{mittlere quadratische Fehler}
+ $mse(x,y) = \dfrac{d_2(x,y)^2}{n} $
+\end{itemize}
+\end{frame}
+
+  \begin{frame}
+    \frametitle{Beispielvergleich von Daten}
+    Gegeben $(x,y)$ mit Stichprobengröße $n=4$ in zwei Spalten
+    
+    (Idee: $x$ sind die Daten, $y$ unser Modell, unsere ``Vorhersage'')
+    
+    \begin{tabular}{|c|c|c|c|}
+     \hline
+       & x & y & x - y\\ \hline
+     0 & 178 & 178 & 0 \\
+     1 & 160 & 155 & 5\\
+     2 & 155 & 150 & 5\\
+     3 & 174 & 180 & -6\\ \hline
+    \end{tabular}
+
+    \[d_1(x,y) = 0+5+5+6 = 16,\ d_2(x,y)^2 = 0^2+5^2+5^2+6^2 = 86\]
+    \[mae(x,y) = \dfrac{16}{4} = 4,\ mse(x,y) = \dfrac{86}{4} = 21.5\]
+    Der mittlere Fehler ist $\dfrac{0+5+5-6}{4} = 1$, eine trügerisch geringe Zahl.
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Beispielvergleich von Daten: einfacher Fall}
+    Wir wählen nun ein besonders einfaches Modell:
+
+    ein konstanter Wert (hier $165$) als Vorhersage.
+    
+    \begin{tabular}{|c|c|c|c|}
+     \hline
+       & x & y & x - y\\ \hline
+     0 & 178 & 165 & 13 \\
+     1 & 160 & 165 & -5\\
+     2 & 155 & 165 & -10\\
+     3 & 174 & 165 & 9\\ \hline
+    \end{tabular} \uncover<2->{Für welche Konstante wird der Fehler minimal?}
+
+    \[d_1(x,y) = 13+5+10+9 = 37,\ d_2(x,y)^2 = 13^2+5^2+10^2+9^2 = 375\]
+    \[mae(x,y) = \dfrac{37}{4} = 9.25,\ mse(x,y) = \dfrac{375}{4} = 93.75\]
+    Der mittlere Fehler ist $\dfrac{13-5-10+9}{4} = 7$, eine trügerisch geringe Zahl.
+  \end{frame}
+
+\subsection{Mittelwerte}
+  
+    \begin{frame}
+    \frametitle{Vergleich von Daten mit einer Konstanten}
+\begin{itemize}[<+->]
+\item    Gegeben Daten $x$ mit Stichprobengröße $n$ und einer Konstanten $y$ können wir nach dem Fehler fragen, den wir machen, wenn wir $x$ durch $y$ modellieren.
+\item  Ein $y$, welches den mittleren absoluten Fehler $mae(x,y)$ minimiert, nennt man \alert{Median} von $x$,
+  $median(x) \in argmin_{c \in \mathbb{R}} mae(x,c)$. Manche fordern $c \in x$, dass also der Median ein Datenpunkt sein muss.
+\item Ein $y$, welches den mittleren quadratischen Fehler $mse(x,y)$ minimiert, nennt man \alert{Mittelwert} von $x$, $mean(x) = argmin_{c \in \mathbb{R}} mse(x,c)$
+\item Es ist $mean(x) = \frac{1}{n} \sum_{i=0}^{n-1} x_i$, das arithmetische Mittel.
+  \item Für ungerades $n$ schreiben wir $n=2m+1$. Wenn $i(0),\dots,i(2m)$ Indizes sind sodass $x_{i(j)} \leq x_{i(j+1)}$, dann ist das mittlere $x_{i(m)}$ ein Median von $x$.
+\end{itemize}
+\end{frame}
+
+  \begin{frame}
+    \frametitle{Beispielvergleich von Daten mit konstantem Modell}
+    Wir wählen nun konstante Modelle:
+    Median $167$ und Mittelwert $166.75$.
+    
+    \begin{tabular}{|c|c|c|c|}
+     \hline
+       & x & x - median(x) & x - mean(x)\\ \hline
+     0 & 178 & 11 & 11.25 \\
+     1 & 160 & -7 & -6.75\\
+     2 & 155 & -12 & -11.75\\
+     3 & 174 & 7 & 7.25\\ \hline
+    \end{tabular}
+    \[mae(x,median(x)) = \dfrac{11+7+12+7}{4} = 9.25,\ mse(x,mean(x)) = 90.6875 \approx 9.523^2\]
+    Es gibt keine konstanten Modelle mit kleineren $mae$ bzw. $mse$.
+  \end{frame}
+
+\subsection{Streumaße}
+  
+   \begin{frame}
+    \frametitle{Abweichung vom besten konstanten Modell}
+\begin{itemize}[<+->]
+\item Die Größe $mse(x,mean(x))$ ist ein Maß für die Streuung der Daten.
+\item Da der mittlere quadratische Fehler auf einer anderen Skala liegt als die Daten selbst, ziehen wir die Wurzel:
+  \[\sigma(x) := rmse(x,mean(x)) := \sqrt{mse(x,mean(x))}\]
+  heißt \alert{root mean squared error} oder auch \alert{Stichproben-Standardabweichung}.
+\item Nützliche Formel (wobei $x^2$ komponentenweise zu verstehen ist):
+  \[\sigma(x)^2 = \frac{1}{n} \sum_{i=0}^{n-1} {\left( x_i - mean(x) \right)}^2 = mean(x^2)-mean(x)^2\]
+\end{itemize}
+\end{frame}
+
+  \begin{frame}
+  \frametitle{Zusammenfassung: Abweichungen und Mittel}
+  \begin{itemize}
+    \item \textbf{Ziel:} Unterschied zwischen Daten und Modell quantifizieren.
+    \item \textbf{Abstandsmaße:}
+      \begin{itemize}
+        \item \textbf{Mittlerer absoluter Fehler (MAE):} mittlerer Betrag der Abweichungen
+        \item \textbf{Mittlerer quadratischer Fehler (MSE):} mittleres Quadrat der Abweichungen
+      \end{itemize}
+    \item \textbf{Beste konstante Modelle:}
+      \begin{itemize}
+        \item \textbf{Median} minimiert den MAE
+        \item \textbf{Mittelwert} minimiert den MSE
+      \end{itemize}
+    \item \textbf{Streumaß:}
+      \begin{itemize}
+        \item \textbf{Standardabweichung (RMSE):} Wurzel des MSE beim Mittelwert-Modell
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[separator]
+  \frametitle{Pause?}
+  
+  \vspace{-2.6cm}
+\includegraphics[height=\textheight]{figures/gambling-dogs.png}
+\end{frame}
+
+
+\section{Momente einer Zufallsvariablen}
+
+\subsection{Erwartungswert}
+
+   \begin{frame}
+    \frametitle{Mittelwerterwartung}
+\begin{itemize}[<+->]
+\item Das konstante Modell ist eine Dirac-Verteilung. Für eine interessantere Verteilung können wir Stichproben ziehen (sampeln) und deren Mittelwerte und Standardabweichungen berechnen. Der Vergleich mit Mittelwert und Standardabweichung der Daten gibt Anhaltspunkte für gute Modelle.
+\item Je größer die synthetischen Daten, desto aussagekräftiger.
+\item Es geht noch besser: wir berechnen den Grenzwert des ``synthetischen Mittelwerts'' ohne je eine Stichprobe simulieren zu müssen. Wie?
+\end{itemize}
+\end{frame}
+
+   \begin{frame}
+    \frametitle{Mittelwerterwartung}
+    \begin{itemize}[<+->]
+    \item Wenn $p = \left( \frac{a_1}{N}, ..., \frac{a_k}{N} \right)$ ein Wahrscheinlichkeitsvektor ist (also $k$ mögliche Merkmalsausprägungen $y_1,\dots,y_k \in \mathbb{R}$),
+      so hätte ein ``idealisiertes Sample'' $\tilde{D}$ z.B. die Häufigkeiten $(a_1,\dots,a_k)$.
+      \item Der Mittelwert wäre dann $mean(\tilde{D}) = \frac{1}{N} \sum_{j=1}^k a_j y_j$.
+      \item Allgemein definieren wir für eine reelle Zufallsvariable $X \colon \Omega \to \mathbb{R}$ mit nur endlich vielen oder höchstens abzählbar unendlich vielen Werten
+        \[\mathbb{E}(X) := \sum_{\omega \in \Omega} P(\{\omega\}) X(\omega) = \sum_{x \in \mathbb{R}} p_X(x)x\]
+        ($p_X$ eine pmf für die Verteilung von $X$).
+        Das ist der \alert{Erwartungswert} von $X$.
+\end{itemize}
+\end{frame}
+
+   \begin{frame}
+    \frametitle{Erwartungswert einer Gleichverteilung}
+    \begin{itemize}[<+->]
+    \item Sei $\Omega = \{0,\dots,n-1\}$ mit einer Gleichverteilung gegeben und $X \colon \Omega \to \mathbb{R}$ die Abbildung $\omega \mapsto \omega+1$. Dann hat die Verteilung von $X$ den Erwartungswert
+      \[\mathbb{E}(X) = \sum_{\omega=0}^{n-1} \frac{\omega+1}{n} = \sum_{i=1}^{n} \frac{i}{n}  = \frac{n(n+1)}{2n} = \frac{n+1}{2}\]
+      \item Wenn stattdessen $Y \colon \Omega \to \mathbb{R}$ mit $\omega \mapsto \omega$ eine Gleichverteilung auf $\{0,\dots,n-1\}$ beschreibt, so ist $\mathbb{E}(Y) = \frac{n+1}{2}-1$.
+\end{itemize}
+\end{frame}
+
+\subsection{Varianz}
+
+   \begin{frame}
+    \frametitle{Streuungserwartung}
+\begin{itemize}[<+->]
+\item Das konstante Modell ist eine Dirac-Verteilung, die Streuung ist $0$. Für eine interessantere Verteilung können wir Stichproben ziehen (sampeln) und deren Standardabweichungen berechnen.
+\item Wir berechnen den Grenzwert der ``synthetischen Standardabweichung'' ohne je eine Stichprobe simulieren zu müssen. Wie?
+\item $\mathbb{V}(X) := \mathbb{E}\left({\left(X-\mathbb{E}X\right)}^2\right) = \mathbb{E}(X^2) - {\left(\mathbb{E}X\right)}^2$ heißt \alert{Varianz} von $X$
+  und\\
+  $\sigma(X) := \sqrt{\mathbb{V}X}$ die \alert{Standardabweichung} von $X$.
+\item Tschebyscheff-Ungleichung: für $\lambda > 0$ ist
+  $P\left(|X - \mathbb{E}(X)| \geq \lambda \sigma(X)\right) \leq \frac{1}{\lambda^2}$,
+  die Wahrscheinlichkeit einer absoluten Abweichung um mehr als $\lambda$ Standardabweichungen liegt also unter $\frac{1}{\lambda^2}$.
+\end{itemize}
+\end{frame}
+
+\subsection{Zusammenfassung}
+
+\begin{frame}
+  \frametitle{Zusammenfassung: Momente einer Zufallsvariablen}
+  \begin{itemize}
+    \item \textbf{Erwartungswert:}
+      \begin{itemize}
+        \item Mittelwert einer Zufallsvariablen: \(\mathbb{E}(X) = \sum_x p_X(x)\,x\)
+        \item Der typische Wert, den man im Mittel bei vielen Stichproben erwartet
+      \end{itemize}
+    \item \textbf{Varianz und Standardabweichung:}
+      \begin{itemize}
+        \item Streuung um den Erwartungswert: \(\mathbb{V}(X) = \mathbb{E}(X^2) - \mathbb{E}(X)^2\)
+        \item \(\sigma(X) := \sqrt{\mathbb{V}(X)}\) ist die Standardabweichung
+      \end{itemize}
+    \item \textbf{Interpretation:}
+      \begin{itemize}
+        \item $\mathbb{E}X$ und $\sigma(X)$ geben zentrale Lage und Streuung der Verteilung an
+        \item \textbf{Tschebyscheff-Ungleichung:}\\
+          Abweichungen um mehr als \(\lambda\) Standardabweichungen sind selten
+      \end{itemize}
+  \end{itemize}
+  \vspace{0.5em}
+  Erwartungswert und Varianz sind fundamentale Kennzahlen von Modellen.
+\end{frame}
+
+%    \begin{frame}
+%     \frametitle{Ausblick: Höhere Momente}
+% \begin{itemize}[<+->]
+% \item Für allgemeines $n$ ist $\mu_n(X) := \mathbb{E}\left( X^n \right)$ das \alert{$n$-te Moment},
+%  \item $\tilde{X} := X - \mathbb{E}(X)$ die \alert{zentrierte Zufallsvariable},
+%  \item  $\tilde{\mu}_n(X) := \mu_n(\tilde{X})$ das \alert{$n$-te zentrale Moment}.
+%    \item Es ist $\mu_1(X)=\mathbb{E}X$, $\tilde{\mu}_1(X) = 0$, $\tilde{\mu}_2(X) = \mathbb{V}X$.
+% \end{itemize}
+% \end{frame}
+
+\begin{frame}[separator]
+  \frametitle{Vielen Dank für Ihre Aufmerksamkeit!}
+\end{frame}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

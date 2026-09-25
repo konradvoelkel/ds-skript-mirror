@@ -1,0 +1,327 @@
+% !Mode:: "TeX:UTF-8"
+\input{Data Science 2026 header}
+
+\title{Data Science, VL 7} % war in 2025 noch VL 6; Einschub zu Python kam dazwischen...
+\date{07.05.2026}
+
+\DeclareMathOperator{\supp}{supp}
+\newcommand{\E}{\ensuremath{\mathbb{E}}}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+
+\section{Recap}
+
+\begin{frame}
+  \frametitle{Recap: Diskrete Zufallsvariablen}
+  \begin{itemize}[<+->]
+  \item Eine Abbildung $X \colon \Omega \to \Omega'$ mit endlichem oder abzählbar unendlichem Bild $X(\Omega)$ heißt \alert{diskrete Zufallsvariable}, und es gibt eine pmf $p \colon \Omega' \to [0,1]$.\smallskip
+  \item Wenn $X \colon \Omega \to \mathbb{R}$, so heißt $X$ \alert{reelle Zufallsvariable} und im diskreten Fall ist $\mathbb{E}X = \sum_{x \in \mathbb{R}} x\ p(x)$ der Erwartungswert und $\mathbb{V}X = \mathbb{E}(X^2) - (\mathbb{E}X)^2$ die Varianz.\smallskip
+  \item Im diskreten Fall existieren Erwartungswert und/oder Varianz nicht immer. Wenn $X(\Omega)$ endlich ist, aber schon.\smallskip
+  \item Die Entropie von $X$ ist $H(X) = -\sum_{x \in \mathbb{R}} p(x)\log p(x)$, wobei man für die Funktion $x \mapsto x\log x$, in die hier $p(x)$ eingesetzt wird, stets $0 \mapsto 0$ definiert (den Grenzwert für $x\mapsto 0$), sodass $p(x)\log p(x) = 0$, wenn $p(x)=0$ ist.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Träger einer Zufallsvariable}
+  \vspace{-0.5cm}
+  \begin{definition}
+    Der \alert{Träger} (support) einer Verteilung $P$ auf $\Omega$ ist
+    \[\supp(P) := \bigcap \overline{\{ A \subseteq \Omega : P(A) = 1 \}}\]
+    (die kleinste [abgeschlossene] Menge, für die $P(\supp P) = 1$ gilt). Für diskrete Verteilungen gilt $\supp(P) = \{x\in\Omega: p(x) > 0\}$.
+  \end{definition}
+  \medskip
+  \uncover<2>{Eine Teilmenge $M \subset \mathbb{R}^n$ heißt \alert{abgeschlossen}, wenn zu jeder konvergenten Folge $(a_n)_{n\in\mathbb{N}}$ in $M$ der Grenzwert $\lim_{n\to\infty} a_n \in \mathbb{R}^n$ auch in $M$ liegt.
+  
+  Beispiel: abgeschlossene Intervalle $[x, y]$ für $x, y\in\mathbb{R}$ und $\mathbb{R}$ selbst.}
+\uncover<3->{
+  \vspace{-1.3cm}
+  
+  Beispiel:\\
+    Der Träger der diskreten Gleichverteilung der Zahlen $\{1,\dots,n\} =: \Omega$
+    ist $\Omega$ selbst.
+  }
+  
+\smallskip
+
+  \uncover<4->{Beispiel 2:\\
+    Die diskrete Gleichverteilung der Zahlen $\{1,\dots,n\}$, aufgefasst als Verteilung auf $\mathbb{R}$ hat den Träger $\{1,\dots,n\}$.}
+\end{frame}
+
+\section{Stetige ZV}
+
+\begin{frame}
+  \frametitle{Wahrscheinlichkeitsdichte}
+  \begin{definition}
+    Für ein Wahrscheinlichkeitsmaß $P$ auf $\mathbb{R}$
+    heißt eine Funktion $p \colon \mathbb{R} \to \mathbb{R}$
+    eine \alert{Wahrscheinlichkeitsdichte} (\alert{pdf, probability density function}),
+    wenn für jede messbare Menge $A \subseteq \mathbb{R}$ gilt:
+    \[P(A) = \int_A p(x) dx.\]
+  \end{definition}
+\medskip
+  \uncover<2->{Beispiel: Wenn $A=[a,b] \subset \mathbb{R}$ ist, dann ist $P([a,b]) = \int_a^b p(x) dx$.}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Pdf der stetigen Gleichverteilung}
+  \vspace{-1cm}
+  \begin{block}{Beispiel}
+    Auf dem Intervall $[0,1]$ ist ein Wahrscheinlichkeitsmaß $P$ definiert durch
+    die Funktion $p \colon \mathbb{R} \to \mathbb{R}$ mit
+    \[p(x) := \begin{cases} 1 & 0 \leq x \leq 1 \\ 0 & \text{sonst.} \end{cases}\]
+    D.h. für $A \subseteq [0,1]$ eine messbare Menge ist
+    $P(A) := \int_A p(x) dx$
+    ein Wahrscheinlichkeitsmaß mit pdf $p$.\pause
+
+    Der Träger ist $\supp P = [0,1] \subset \mathbb{R}$.
+  \end{block}
+
+\medskip \pause 
+  
+Beispiel:
+\begin{itemize}
+\item Für $A = [a,b] \subseteq [0,1]$ ist $P(A) = \int_a^b 1 dx = [x]_a^b = b-a$.\smallskip\pause
+\item Auch $[a,b)$ und $(a,b]$ und $(a,b)$ haben Wahrscheinlichkeit $b-a$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Nullmengen}
+  Ein Integral über $p$ hängt nicht von einzelnen Werten von $p$ ab:\pause
+
+\begin{itemize} 
+\item Sei $\tilde{p}$ die Funktion mit $\tilde{p}(x)=p(x)$ für alle $x \neq 0$ und $\tilde{p}(0) = \alpha$ für ein beliebiges festes $\alpha \in \mathbb{R}$. Dann ist $\int \tilde{p}(x) dx = \int p(x) dx$.\smallskip\pause
+\item Für die stetige Gleichverteilung auf $[0,1]$ gilt $P(\{x\}) = 0$ für jedes $x \in [0,1]$ und $P(A) = 0$ für jede endliche Menge $A$, obwohl $p(x) \neq 0$.\smallskip\pause
+\end{itemize}
+
+\bigskip
+
+\begin{block}{Knobelaufgabe}
+Kann es eine Verteilung $P$ auf $[0,1]$ geben mit $P(\{x\}) \neq 0$ für alle $x \in [0,1]$?
+\end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Unendliche Nullmengen}
+  Die Menge $\mathbb{Q}$ hat das Lebesgue-Maß $0$, insb. gilt für die stetige Gleichverteilung $P$
+  
+  \[P(\mathbb{Q} \cap [0,1]) = 0.\]
+
+\bigskip\pause
+
+\begin{itemize}
+\item Intuitiv gilt dies, da $\mathbb{Q}$ abzählbar ist, während $[0, 1] \subset \mathbb{R}$ überabzählbar ist.\smallskip\pause
+\item Man spricht von einer \alert{Nullmenge}.\smallskip\pause
+\item Ein Integral über eine Funktion $f$ ändert sich nicht, wenn man $f$ auf einer Nullmenge verändert.
+\end{itemize}
+\end{frame}
+
+% \begin{frame}
+%   \frametitle{Nicht-messbare Mengen}
+%   \begin{theorem}[Satz von Vitali]
+%     Für je $x,y \in \mathbb{R}$ schreiben wir $x \sim y$ wenn $x-y \in \mathbb{Q}$ liegt.
+%     Diese Relation ist reflexiv, symmetrisch und transitiv, also eine Äquivalenzrelation.
+%     Die Äquivalenzklassen $[x] = \{y \in \mathbb{R} : y \sim x\}$ bilden eine disjunkte Zerlegung von $\mathbb{R}$.
+%     Sei $V \subset \mathbb{R}$ ein Repräsentantensystem, d.h. eine Menge, die zu jeder dieser Klassen genau ein Element enthält.
+%     Dann ist $V$ (die \alert{Vitali-Menge}) nicht Lebesgue-messbar\uncover<2->{, d.h. es lässt sich kein Wert $\lambda(V)$ für die Größe von $V$ festlegen, wenn man für Intervalle $[a,b]$ die Größe $\lambda([a,b]) = b-a \in \mathbb{R}$ festlegt (das nennt man das Lebesgue-Maß $\lambda$).}
+%   \end{theorem}
+% \end{frame}
+
+% \begin{frame}
+%   \frametitle{Nicht-messbare Mengen}
+%   \begin{proof}[Beweis von Vitali]
+%     Sei $\{q_1,\ q_2,\ \dots\} = \mathbb{Q} \cap [-1,1]$ eine Aufzählung und
+%     $V_k := V+q_k$ für $k \in \mathbb{N}$.
+    
+%     \[[0,1] \subseteq \bigcup_k V_k \subseteq [-1,2]\]
+%     somit $1 = \lambda([0,1]) \leq \lambda \left( \bigcup_k V_k \right) \leq \lambda([-1,2]) = 3$.
+
+%     Da die $V_k$ paarweise disjunkt sind,
+%     ist $\lambda \left( \bigcup_k V_k \right) = \sum_{k=1}^\infty \lambda \left(  V_k \right)$,\\
+%     und $\lambda(V_k) = \lambda(V)$ (denn $\lambda$ ist translationsinvariant).
+
+%     Also ist $1 \leq \sum_{k=1}^\infty  \lambda(V)$, d.h. $\lambda(V) > 0$.\\
+%     Außerdem ist $ \sum_{k=1}^\infty  \lambda(V) \leq 3$, d.h. $\lambda(V) = 0$.
+%     Widerspruch!\\
+%     Also ist $\lambda(V)$ nicht definierbar.
+%   \end{proof}
+% \end{frame}
+%
+%\begin{frame}
+%  \frametitle{Messbare Mengen}
+%  Welche Mengen sind (Lebesgue-)messbar (bzw. Borel-messbar)?
+%
+%  Mindestens alle (offenen und halboffenen und geschlossenen) Intervalle und alle endlichen Mengen,
+%  sowie daraus alle endlichen und abzählbar unendlichen Vereinigungen und Schnitte und Komplemente.
+%  
+%  \uncover<2->{
+%    Wenn $f \colon \mathbb{R} \to \mathbb{R}$ stetig ist, dann sind Urbilder von messbaren Mengen wieder messbar.}
+%  
+%  \uncover<3->{Formal:\\ Die Borel-$\sigma$-Algebra ist die kleinste, die alle offenen Mengen enthält (daher stetig$\Rightarrow$messbar), die Lebesgue-$\sigma$-Algebra ist die Vervollständigung davon (um alle Teilmengen von Nullmengen).}
+%\end{frame}
+
+\begin{frame}
+  \frametitle{Integrierbare Funktionen}
+  Nicht jede Funktion ist (Lebesgue-)integrierbar. Welche sind es?
+  
+  \medskip
+
+  \uncover<2->{
+  Insbesondere alle Riemann-integrierbaren Funktionen $f \colon \Omega \subseteq \mathbb{R} \to \mathbb{R}$,
+  also insbesondere alle stückweise stetigen Funktionen.}
+
+\smallskip
+
+  \begin{definition}<3->
+    Jede integrierbare Funktion $f \colon \Omega \to [0, \infty)$ mit $\int_\Omega f(x) dx = 1$ ist \alert{pdf} des Wahrscheinlichkeitsmaßes $P$ auf $\Omega$ mit $P(A) := \int_A f(x)dx$.
+  \end{definition}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Dichte für diskrete Verteilungen}
+  Sei $\Omega = \{1,\dots,n\}$ eine endliche Menge und $X \colon \Omega \to \mathbb{R}$ eine Zufallsvariable.
+  \begin{itemize}
+  \item Dann gibt es eine pmf $p \colon \mathbb{R} \to [0,1]$ \\\pause
+  (die außerhalb von $\supp X = X(\Omega) = \{x_1,\dots,x_n\}$ gleich $0$ ist).\pause
+  \end{itemize}
+  \medskip
+  
+  Gibt es eine pdf $f \colon \mathbb{R} \to [0,\infty)$?\pause
+  \begin{itemize}
+  \item Leider ist $\supp X$ eine endliche Menge, also eine Nullmenge, somit ist $\int_{\supp X} f(x) dx = 0$ für jede Funktion $f$.\smallskip\pause
+  \item Also kann nicht zugleich $\int_{\supp X} f(x) dx = 1$ sein, d.h. $X$ hat keine pdf.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Stetige Zufallsvariablen}
+  \begin{definition}
+    Eine reelle Zufallsvariable $X \colon \Omega \to \mathbb{R}$ heißt \alert{stetige Zufallsvariable},
+    wenn $X$ keine diskrete Zufallsvariable ist (also $X(\Omega)$ überabzählbar unendlich ist) und $X$ eine \alert{Dichtefunktion} hat.
+  \end{definition}
+\end{frame}
+
+
+% \begin{frame}
+%   \frametitle{Allgemeiner wird's schöner}
+%   Man kann nicht nur für das Lebesgue-Maß $\lambda$ den Begriff der pdf definieren,
+%   i.A. spricht man von Verteilungen $P$, die \alert{absolutstetig} bezüglich eines Maßes $\mu$ sind.
+
+%   \uncover<2->{Auch diskrete Verteilungen sind absolutstetig bezüglich eines `Abzählmaßes' $\mu$ auf endlichen Mengen
+%   und in diesem Sinne gibt es einen einheitlichen Formalismus für pmf und pdf.}
+
+%   \uncover<3->{So abstrakt und allgemein brauchen wir es nicht!}
+% \end{frame}
+
+\begin{frame}
+  \frametitle{Beispiel einer stetigen ZV}
+  \vspace{-0.5cm}
+  In der Übung haben wir eine Verteilung auf $[5,8) \subset \mathbb{R}$ simuliert.
+  Diese Verteilung lässt sich als Zufallsvariable modellieren:
+  \[X \colon \{5,6,7\} \times [0,1) \to \mathbb{R},\ (y,z) \mapsto y+z\]
+  wobei wir auf $\{5,6,7\}$ die Verteilung mit Wahrscheinlichkeitsvektor $(\frac{4}{7},\frac{2}{7},\frac{1}{7})$ und auf $[0,1)$ die stetige Gleichverteilung wählen.
+  
+  \smallskip
+
+  \uncover<2->{
+    Diese Verteilung hat eine pdf $p \colon [5,8) \to [0,\infty)$ mit
+    \[p(x) = \begin{cases} \frac{4}{7} & 5 \leq x < 6 \\ \frac{2}{7} & 6 \leq x < 7 \\ \frac{1}{7} & 7 \leq x < 8 \end{cases} \]
+    $P([5,6]) = \int_5^6 p(x)dx = \frac{4}{7} [x]_{x=5}^{x=6} = \frac{4}{7}$
+    und $P([6,6.5]) = \int_6^{6.5} p(x)dx = \frac{2}{7} \cdot \frac{1}{2} = \frac{1}{7}$.
+    }
+\end{frame}
+
+\begin{frame}
+  \frametitle{Momente, allgemein}
+  \vspace{-0.7cm}
+  Man kann für $X \colon \Omega \to \mathbb{R}$ allgemein $\mathbb{E}X$ hinschreiben, was allerdings nicht immer existiert (d.h. eine reelle Zahl ist, also z.B. kann $\mathbb{E}X=\infty$ sein).
+  
+  \smallskip
+  
+  Wenn $X$ eine pdf $p \colon \mathbb{R} \to [0,\infty)$ hat, so ist
+  \[\mathbb{E}X = \int_{-\infty}^\infty x p(x) dx\]
+  das 1-te Moment und weiter
+  \[\mathbb{E}\left(X^n\right) = \int_{-\infty}^\infty x^n p(x) dx,\]
+  das $n$-te Moment von $X$.
+  
+  \medskip\pause
+  
+  Analog ist
+  \[\E((X - \E X)^n)\;,\]
+  das $n$-te zentrale Moment von $X$.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Momente der Gleichverteilung}
+  Die stetige Gleichverteilung $X$ auf $[0,1]$ (mit pdf die Indikatorfunktion $p = \chi_{[0,1]}$) hat Erwartungswert
+  \[\mathbb{E}X = \int_{-\infty}^\infty x p(x) dx\uncover<2->{ = \int_0^1 x dx }\uncover<3->{ = {\left[ \frac{1}{2} x^2 \right]}_0^1} \uncover<4->{ = \frac{1}{2}}\]
+  \uncover<5->{und Varianz}
+  \[\uncover<5->{\mathbb{V}X = \mathbb{E}(X^2) - {\left(\frac{1}{2}\right)}^2} \uncover<6->{ = \int_0^1 x^2 dx - \frac{1}{4}} \uncover<7->{ = {\left[ \frac{1}{3} x^3 \right]}_0^1 - \frac{1}{4}} \uncover<8->{ = \frac{1}{3} - \frac{1}{4} = \frac{1}{12}.}\]
+\end{frame}
+
+\begin{frame}
+  \frametitle{Zum Üben: Gleichverteilung auf Intervall}
+  Seien $a < b \in \mathbb{R}$ und $p \colon \mathbb{R} \to [0,\infty)$ gegeben durch $p := \frac{\chi_{[a,b]}}{b-a}$, also für $a \leq x \leq b$ ist $p(x) = \frac{1}{b-a}$ und $0$ sonst. Sei $X$ eine stetige ZV mit pdf $p$.
+
+  \[\mathbb{E}X = \uncover<2->{ \int_a^b xp(x) dx = \frac{1}{b-a} {\left[ \frac{1}{2} x^2 \right]}_a^b = \frac{b^2-a^2}{2(b-a)} = \frac{a+b}{2}.}\]
+  \[\mathbb{V}X = \uncover<3->{\int_a^b x^2 p(x) dx - \frac{(a+b)^2}{2^2} = \frac{1}{b-a} {\left[ \frac{1}{3} x^3 \right]}_a^b - \frac{(a+b)^2}{4} }\uncover<3>{ = }\]
+  \[\uncover<4->{ = \frac{b^3-a^3}{3(b-a)} - \frac{(a+b)^2}{4} = \frac{4b^2 + 4ab + 4a^2 - 3a^2 - 6ab -3b^2}{12} = \frac{1}{3}{\left(\frac{b-a}{2}\right)}^2}\]
+\end{frame}
+
+\begin{frame}
+  \frametitle{Transformationsformel}
+  \begin{lemma}
+    Sei $X \colon \Omega \to \mathbb{R}$ eine stetige ZV mit pdf $p \colon \mathbb{R} \to [0,\infty)$ und $f \colon \mathbb{R} \to \mathbb{R}$ eine messbare Abbildung.
+    Dann ist
+    \[\mathbb{E}(f(X)) = \int_{-\infty}^{\infty} f(x) p(x) dx.\]
+  \end{lemma}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Kumulativ}
+  \begin{definition}
+  Sei $P$ ein Wahrscheinlichkeitsmaß auf $\mathbb{R}$.
+  Die Funktion $F \colon \mathbb{R} \to \mathbb{R}$,
+  \[c \mapsto P((-\infty, c))\]
+  heißt \alert{kumulative Verteilungsfunktion}, \alert{cdf = cumulative distribution function} von $P$.
+\end{definition}
+\uncover<2->{
+Wenn $P$ eine Dichte $f$ hat, so ist
+\[F(c) = P\left((-\infty ,c)\right) = \int_{-\infty}^c f(x) dx\]}
+\uncover<3->{
+also $F$ eine Stammfunktion von $f$ und $f$ die Ableitung von $F$.}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Kumulativ}
+  \begin{definition}
+  Sei $X$ eine reelle ZV.
+  Die Funktion $F \colon \mathbb{R} \to \mathbb{R}$,
+  \[c \mapsto P(X \leq c)\]
+  heißt \alert{kumulative Verteilungsfunktion}, \alert{cdf = cumulative distribution function} von $X$.
+\end{definition}
+Wenn $X$ eine Dichte $f$ hat, so ist
+\[F(c) = P(X \leq c) = \int_{-\infty}^c f(x) dx\]
+also $F$ eine Stammfunktion von $f$ und $f$ die Ableitung von $F$.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Weiter geht's ...}
+  ... mit den Notebooks ``Normalverteilung'' und ``wichtigste stetige Verteilungen und Scipy.Stats'' im Skript.
+\end{frame}
+
+\begin{frame}[separator]
+  \frametitle{Vielen Dank für Ihre Aufmerksamkeit!}
+\end{frame}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

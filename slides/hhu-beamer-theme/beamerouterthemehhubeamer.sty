@@ -1,0 +1,42 @@
+\RequirePackage{tikz}
+
+\setbeamerfont{footer bar}{size=\scriptsize}
+\setbeamerfont{footer bar small}{size=\scriptsize}
+\setbeamerfont{footer bar tiny}{size=\tiny}
+
+\setbeamerfont{date}{size=\tiny}
+
+\newlength{\shortfooterwidth}
+\setlength{\shortfooterwidth}{8.3mm}
+
+\newlength{\longfooterwidth}
+\setlength{\longfooterwidth}{\paperwidth}
+\addtolength{\longfooterwidth}{-\shortfooterwidth}
+\addtolength{\longfooterwidth}{-0.8mm}
+
+\newlength{\bluefooterheight}
+\setlength{\bluefooterheight}{3.5mm}
+
+\setbeamertemplate{footline}{%
+  \begin{minipage}[b]{\shortfooterwidth}
+    \begin{beamercolorbox}[wd=\shortfooterwidth, ht=\bluefooterheight]{footer bar}
+      \bf\ifnum\thepage>1\relax%
+        \hfill
+        % \insertframenumber\,/\,\insertpresentationendframe\kern1em\vskip2pt%
+        \usebeamerfont{footer bar tiny}\insertframenumber\kern2mm\vskip2.5pt%
+      \fi
+    \end{beamercolorbox}
+  \end{minipage}%
+  \hfill%
+  \begin{minipage}[b]{\longfooterwidth}
+    \begin{beamercolorbox}[wd=\longfooterwidth, ht=\bluefooterheight]{footer bar}
+      \kern1em%
+      {\usebeamerfont{footer bar small}%
+       \insertshortauthor~\textperiodcentered~%
+       \insertshorttitle}
+      \hfill
+      \usebeamerfont{footer bar small}
+      \bf hhu.de\kern8mm\vskip0.9pt%
+    \end{beamercolorbox}
+  \end{minipage}
+}
