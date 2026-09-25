@@ -213,11 +213,11 @@ Die Kovarianz ist symmetrisch: $\operatorname{Cov}(X,Y) = \operatorname{Cov}(Y,X
 
 Die Kovarianz ist bilinear: $\operatorname{Cov}(aX+bY, Z) = a\operatorname{Cov}(X,Z) + b\operatorname{Cov}(Y,Z)$ für $a,b \in \mathbb{R}$.
 
-Die Kovarianz ist positiv (semi)definit: $\operatorname{Cov}(X,X) \geq 0$.
+Die Kovarianz ist positiv (semi)definit: $\operatorname{Cov}(X,X) = \mathbb{V}(X) \geq 0$, und $\operatorname{Cov}(X,X) = 0$ gilt genau dann, wenn $X$ fast sicher konstant ist.
 :::
 
 :::{admonition} Beweis
-Symmetrie und Semidefinitheit liest man direkt an der Definition ab ($\operatorname{Cov}(X,X) = \mathbb{E}((X-\mathbb{E}X)^2) \geq 0$). Für die Bilinearität ist $aX + bY - \mathbb{E}(aX+bY) = a(X - \mathbb{E}X) + b(Y - \mathbb{E}Y)$ nach der Linearität des Erwartungswerts; Ausmultiplizieren mit $(Z - \mathbb{E}Z)$ und nochmals Linearität liefern die Behauptung.
+Symmetrie und Semidefinitheit liest man direkt an der Definition ab ($\operatorname{Cov}(X,X) = \mathbb{E}((X-\mathbb{E}X)^2) \geq 0$). Für die Bilinearität ist $aX + bY - \mathbb{E}(aX+bY) = a(X - \mathbb{E}X) + b(Y - \mathbb{E}Y)$ nach der Linearität des Erwartungswerts; Ausmultiplizieren mit $(Z - \mathbb{E}Z)$ und nochmals Linearität liefern die Behauptung. Für den Gleichheitsfall: $\mathbb{E}((X-\mathbb{E}X)^2) = 0$ bedeutet, dass die nichtnegative Zufallsvariable $(X-\mathbb{E}X)^2$ Erwartungswert $0$ hat, also fast sicher $0$ ist.
 :::
 
 Aus Symmetrie und Bilinearität folgen die Rechenregeln, die man in der Praxis ständig braucht:
@@ -262,9 +262,19 @@ Im stetigen Fall ersetzt man die Summen durch Integrale über die gemeinsame Dic
 Die Umkehrung gilt nicht: Unkorrelierte Zufallsvariablen können abhängig sein. Ein Beispiel ist $X$ gleichverteilt auf $[-1,1]$ und $Y = X^2$: Dann ist $\mathbb{E}(XY) = \mathbb{E}(X^3) = 0 = \mathbb{E}X\,\mathbb{E}Y$, also $\operatorname{Cov}(X,Y) = 0$, aber $Y$ ist eine Funktion von $X$. Die Kovarianz misst nur *lineare* Zusammenhänge. Für gemeinsam normalverteilte $(X,Y)$ gilt die Umkehrung dagegen doch, wie wir im nächsten Kapitel sehen.
 :::
 
-Damit verhält sich die Kovarianz wie ein Skalarprodukt. Man kann das rigoros machen, und die Kovarianz als Skalarprodukt in einem $\mathcal{L}^2$-Raum von Zufallsvariablen auffassen. Der Korrelationskoeffizient spielt dann die Rolle des Kosinus des Winkels zwischen zwei Zufallsvariablen. Im diskreten Fall ist es genau das, weshalb im maschinellen Lernen oft auch 'cosine similarity' als Maß für die Korrelation angegeben wird.
+Damit verhält sich die Kovarianz wie ein Skalarprodukt — allerdings nur „modulo Konstanten“, denn konstante Zufallsvariablen haben Kovarianz $0$ mit allem, auch mit sich selbst. Man kann das rigoros machen, und die Kovarianz als Skalarprodukt in einem $\mathcal{L}^2$-Raum von Zufallsvariablen auffassen, in dem man zwei Zufallsvariablen identifiziert, die sich nur um eine Konstante unterscheiden. Der Korrelationskoeffizient spielt dann die Rolle des Kosinus des Winkels zwischen zwei Zufallsvariablen. Im diskreten Fall ist es genau das, weshalb im maschinellen Lernen oft auch 'cosine similarity' als Maß für die Korrelation angegeben wird.
 
 Man kann etwas üben, in einem Scatterplot zweier Variablen den Korrelationskoeffizienten zu 'sehen',
 etwa mit dem Spiel ['Guess the Correlation' von Omar Wagih](https://www.guessthecorrelation.com).
+
+```{figure} images/normalmarginal.png
+:width: 480px
+:align: center
+:name: bivariate-randhistogramme
+
+Eine Stichprobe aus einer bivariaten Normalverteilung mit den beiden Randhistogrammen.
+```
+
+Das Bild zeigt, warum man die Korrelation nicht an den einzelnen Variablen ablesen kann. Die beiden Randhistogramme sind je eine unauffällige Glockenkurve; sie sähen genauso aus, wenn die Korrelation das umgekehrte Vorzeichen hätte oder wenn sie $0$ wäre, denn die Marginalverteilungen hängen nicht von ihr ab. Sichtbar wird der Zusammenhang allein im gemeinsamen Streudiagramm, an der Schräglage der Punktwolke. Das ist dieselbe Beobachtung wie oben bei der gemeinsamen Verteilung: Aus den Einzelverteilungen lässt sich die gemeinsame nicht rekonstruieren.
 
 Was Kovarianz und Korrelation geometrisch bedeuten, sehen wir im nächsten Kapitel an der multivariaten Normalverteilung: Dort beschreibt die Kovarianzmatrix Form und Lage der Ellipsen, die die Dichte als Höhenlinien hat.

@@ -161,6 +161,14 @@ die Definition einer pmf für $P_X$. Man sagt auch, $p$ ist die pmf von $X$.
 Ein anderer gebräuchlicher Name für die pmf ist *Zähldichte*.
 
 Die pmf der Gleichverteilung auf $\Omega$ ist $p(\omega) = \frac{1}{|\Omega|}$.
+
+Die pmf der Dirac-Verteilung mit Masse an einem festen $\xi \in \Omega$ (siehe [Formalismus der Stochastik](intro-stochastik.md)) ist
+
+$$
+p(\omega) = \begin{cases} 1 & \omega = \xi,\\ 0 & \text{sonst.} \end{cases}
+$$
+
+Beides setzt voraus, dass $\Omega$ höchstens abzählbar ist — für überabzählbares $\Omega$ ist jede einzelne Wahrscheinlichkeit $P(\{\omega\})$ typischerweise $0$, und an die Stelle der pmf tritt die Dichte.
 :::
 
 :::{admonition} Beispiel
@@ -216,11 +224,21 @@ Die Dirac-Verteilung mit Masse an $\xi \in \Omega$ entspricht $p \in \Delta_n$ m
 Geometrisch ist das ein Eckpunkt von $\Delta_n$ (davon gibt es $n$ Stück).
 :::
 
+:::{admonition} Definition
+Der Fall $n = 2$ hat einen eigenen Namen. Auf $\Omega = \{0,1\}$ ist ein Wahrscheinlichkeitsvektor durch eine einzige Zahl festgelegt, denn aus $p_0 + p_1 = 1$ folgt $p_0 = 1 - p_1$. Schreibt man $\pi := p_1$, so heißt die zugehörige Verteilung die **Bernoulli-Verteilung zum Parameter $\pi$**, und man notiert $X \sim \operatorname{Ber}(\pi)$ für eine Zufallsvariable mit dieser Verteilung. (Im Kapitel [Wichtigste diskrete Verteilungen](wichtigste-diskrete-verteilungen.ipynb) und in der Literatur heißt dieser Parameter meist $p$; hier schreiben wir $\pi$, weil $p$ in diesem Abschnitt schon der Wahrscheinlichkeitsvektor ist.)
+:::
+
+:::{admonition} Beispiel
+Ein Münzwurf ist $\operatorname{Ber}(\pi)$ mit $\pi$ der Wahrscheinlichkeit für „Kopf“; jedes Ja/Nein-Merkmal in einem Datensatz („überlebt“, „geklickt“, „Nebenwirkung aufgetreten“) lässt sich so modellieren. Die beiden Sonderfälle von oben tauchen wieder auf: $\pi = \frac12$ ist die Gleichverteilung, $\pi = 0$ und $\pi = 1$ sind die beiden Dirac-Verteilungen.
+:::
+
+Geometrisch ist $\Delta_2$ eine Strecke: die Verbindung der beiden Eckpunkte $(1,0)$ und $(0,1)$, und $\pi$ sagt, wo auf dieser Strecke man sich befindet. Eine Bernoulli-Verteilung zu wählen heißt also, einen Punkt auf einer Strecke zu wählen.
+
 Eine so gegebene Verteilung heißt auch *kategoriale Verteilung*; wir treffen sie im Kapitel
 [Wichtigste diskrete Verteilungen](wichtigste-diskrete-verteilungen.ipynb) wieder, wo wir auch
 ihren Erwartungswert und ihre Varianz ausrechnen.
 
-Es ist also $\Delta_n$ der Raum aller möglichen Wahrscheinlichkeitsverteilungen auf einer $n$-elementigen Menge. Für $n=3$ kann man sich das zweidimensionale gefüllte Dreieck $\Delta_3 \subset \mathbb{R}^3$ noch gut vorstellen.
+Es ist also $\Delta_n$ der Raum aller möglichen Wahrscheinlichkeitsverteilungen auf einer $n$-elementigen Menge. Die niedrigen Fälle kann man sich gut vorstellen: $\Delta_2$ ist eine Strecke, $\Delta_3$ ein gefülltes Dreieck (zweidimensional, aber in $\mathbb{R}^3$ eingebettet), $\Delta_4$ ein gefülltes Tetraeder. Allgemein ist $\Delta_n$ ein $(n-1)$-dimensionales Objekt mit $n$ Ecken, das man einen **Simplex** nennt. Eine Dimension geht dabei immer verloren, weil sich die Einträge zu $1$ addieren müssen — genau das haben wir bei der Bernoulli-Verteilung ausgenutzt, als aus zwei Zahlen eine wurde.
 
 :::{admonition} Bemerkung
 Genau dieser Simplex $\Delta_n$ ist der Bildbereich der *Softmax*-Funktion, mit der neuronale Netze Klassenwahrscheinlichkeiten ausgeben: Aus $n$ beliebigen reellen Zahlen macht sie einen Vektor in $\Delta_n$. Die Vorlesung *Einführung in Deep Learning* baut darauf auf, dass Sie $\Delta_n$ als Raum der Verteilungen auf $n$ Werten kennen.
@@ -278,6 +296,8 @@ Eine mögliche Schätzung wäre $\frac{1}{2}$, ohne die Daten zu betrachten.
 Wenn wir die Stichprobe betrachten, können wir $e := \sum_{i=1}^n x_i$, die Anzahl der Erfolge, berechnen.
 Dann ist $N-e$ die Anzahl der Misserfolge und $\hat{\pi} := \frac{e}{N}$ eine Schätzung für die Erfolgswahrscheinlichkeit $\pi$,
 wenn wir davon ausgehen, dass immer die selbe Münze geworfen wurde.
+
+In der Sprache von oben: Jeder einzelne Wurf ist $\operatorname{Ber}(\pi)$-verteilt, und $\hat{\pi}$ ist eine Schätzung für den Parameter dieser Verteilung — wir suchen also einen Punkt auf der Strecke $\Delta_2$.
 :::
 
 Damit haben wir schon alle Rollen der Statistik besetzt, auch wenn wir die Wörter erst später brauchen: Die Münze, die man beliebig oft werfen könnte, ist die **Population**, die $N$ Würfe sind eine **Stichprobe** daraus, und $\hat{\pi}$ ist eine Aussage über die Population, die man aus der Stichprobe gewonnen hat. Genauso ist eine Tüte Süßigkeiten die Population und eine Handvoll daraus die Stichprobe, aus der man die Farbverteilung in der Tüte schätzt. Was man vor dem Hineingreifen schon weiß oder vermutet (die Münze sieht normal aus, die Tüte ist eine Standardmischung), heißt später **Prior**. Dass der Schluss von der Stichprobe auf die Population nie sicher ist und wie man seine Unsicherheit beziffert, ist Thema der Kapitel [Erwartungswert und Varianz](erwartungswert.md) (Tschebyscheff-Ungleichung) und [Statistische Tests](statistische-tests.md).

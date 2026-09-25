@@ -5,6 +5,8 @@
 
 ## Abweichung quantifizieren
 
+Am Ende des vorigen Kapitels standen zwei Verteilungen nebeneinander: die Verteilung der Daten und die Modellverteilung. Die Frage, die jetzt ansteht, ist, wie man ihren Unterschied in eine Zahl fasst. Die genaue Antwort ist die relative Entropie, und die heben wir uns für ein späteres Kapitel auf. Es gibt aber einen viel direkteren Weg: Statt die Verteilungen zu vergleichen, vergleichen wir die Daten selbst mit dem, was das Modell vorhersagt — also die echten Daten mit synthetischen Daten, im Datenraum, Punkt für Punkt. Das ist der Weg, den dieses Kapitel geht, und weil man dabei Abstände zwischen Zahlen bildet, arbeiten wir ab hier mit reellen Daten.
+
 Gegeben zwei Vektoren $x,y \in \mathbb{R}^n$ (wir stellen uns vor: $x$ sind unsere Daten, $y$ das, was wir erwarten),
 ist die mittlere Abweichung interessant: $\sum \frac{x_i - y_i}{n}$.
 Ein Problem dieser Größe ist, dass sich positive mit negativen Abweichungen herauskürzen.
@@ -269,6 +271,8 @@ Der Erwartungswert einer Gleichverteilung auf $\Omega = \{1,\dots,n\}$ ist $\sum
 
 Für endliches $\Omega$ ist die Summe endlich und existiert immer. Ist $\Omega$ abzählbar unendlich, so ist die Summe eine Reihe, und die muss nicht konvergieren: Es gibt Zufallsvariablen, für die sich kein Erwartungswert bestimmen lässt. Ein Beispiel: Auf $\Omega = \{1, 2, 3, \dots\}$ ist durch $P(\{k\}) := \frac{6}{\pi^2 k^2}$ ein Wahrscheinlichkeitsmaß gegeben (weil $\sum_{k \geq 1} \frac{1}{k^2} = \frac{\pi^2}{6}$), und für $X(k) := k$ wird die Reihe $\sum_{k \geq 1} k \cdot \frac{6}{\pi^2 k^2} = \frac{6}{\pi^2} \sum_{k \geq 1} \frac{1}{k}$ zur harmonischen Reihe, die divergiert. Diese Zufallsvariable hat keinen Erwartungswert.
 
+Festhalten lässt sich: Nimmt $X$ nur endlich viele Werte an, so existieren nicht nur der Erwartungswert, sondern auch alle höheren Momente $\mathbb{E}(X^k)$ — es sind endliche Summen, und die konvergieren immer. Bei abzählbar unendlich vielen Werten muss man dagegen jedes Mal hinsehen. Ein Beispiel, das nicht nur ein mathematisches Kuriosum ist: Beim *St.-Petersburg-Paradoxon* wird so lange eine Münze geworfen, bis zum ersten Mal Kopf fällt, und bei $k$ Würfen $2^k$ Euro ausgezahlt. Die Wahrscheinlichkeit dafür ist $2^{-k}$, der Erwartungswert also $\sum_{k \geq 1} 2^k \cdot 2^{-k} = \sum_{k \geq 1} 1 = \infty$. Ein Spiel mit unendlichem Erwartungswert — und trotzdem würde niemand einen hohen Einsatz dafür zahlen.
+
 Für stetige Zufallsvariablen, die überabzählbar viele Werte annehmen, tritt an die Stelle der Summe ein Integral über eine Dichte $f$: $\mathbb{E}(X) = \int x f(x)\,dx$. Diese Definition geben wir im Kapitel [Stetige Verteilungen](stetige-verteilungen.md), sobald wir Dichten kennen. Alles, was wir in diesem Kapitel über den Erwartungswert festhalten, gilt für stetige Zufallsvariablen genauso, mit Integralen an Stelle von Summen.
 
 ### Exkurs: Erwartungswert allgemein
@@ -509,6 +513,16 @@ H(X) := \mathbb{E}\left( I(X) \right) &= \sum_{\omega' \in \Omega'} -\log_b(P(\{
 $$
 :::
 
+:::{admonition} Bemerkung
+In der Summe für $H(X)$ steht ein Problem: Für $P(\{\omega\}) = 0$ ist $\log_b(0)$ nicht definiert. Man setzt deshalb die Funktion $x \mapsto x\log x$ an der Stelle $0$ durch ihren Grenzwert fort,
+
+$$
+\lim_{x \to 0^+} x \log x = 0
+$$
+
+(mit l'Hospital auf $\frac{\log x}{1/x}$), und vereinbart $0 \log 0 := 0$. Summanden zu unmöglichen Ergebnissen tragen also nichts bei, und die Summe läuft effektiv nur über die $\omega$ mit $P(\{\omega\}) > 0$. Das ist die Konvention, mit der im Kapitel [Relative Entropie](relative-entropie.md) die Summen „über $p_i \neq 0$“ geschrieben werden.
+:::
+
 :::{admonition} Beispiel
 Bei einer Gleichverteilung auf $\Omega = \{1,\dots,n\}$ ist für $x\in\Omega$ stets $P(\{x\}) = \frac{1}{n}$,
 also $I(x) = -\log_2(P(\{x\})) = -\log_2\frac{1}{n} = \log_2(n)$ und somit
@@ -516,15 +530,37 @@ $H(X) = \sum_{i=1}^n \frac{\log_2(n)}{n} = \log_2(n)$.
 Diese Zahl verrät uns, dass wir im Mittel $\log_2(n)$ bits an Information brauchen, um ein Sample der Größe $n$ zu rekonstruieren, wenn wir die Verteilung von $X$ kennen. Es gibt andere Verteilungen, die es erlauben mit im Mittel weniger Information ein Sample zu rekonstruieren. Genau genommen sogar jede, denn die Gleichverteilung hat maximale Entropie unter allen diskreten Verteilungen. Sie korrespondiert dazu, dass wir maximal wenig wissen und daher alle Ergebnisse als gleich wahrscheinlich annehmen.
 :::
 
+:::{admonition} Beispiel
+**Wie viel Information steckt in einem Buchstaben?** Zählt man die Häufigkeiten der Buchstaben in deutschen Texten und setzt sie in die Formel ein, so kommt eine Entropie von etwa $4{,}06$ bit je Zeichen heraus {cite}`fox2008`. Zum Vergleich: Wären alle $26$ Buchstaben gleich wahrscheinlich, wären es $\log_2(26) \approx 4{,}70$ bit. Der Unterschied ist genau das, was die ungleiche Häufigkeit von „e“ und „x“ einspart.
+
+Berücksichtigt man zusätzlich, welche Buchstaben *vorangegangen* sind, sinkt der Wert auf etwa $1{,}5$ bit je Buchstabe — nach „sch“ ist der nächste Buchstabe kaum noch eine Überraschung. Sprache ist also hochgradig redundant, und das ist der Grund, warum sich Text so gut komprimieren lässt und warum man einen Satz auch dann noch versteht, wenn die Hälfte fehlt.
+
+Was das praktisch bedeutet, sieht man am Raten. Eine zufällige Zeichenkette der Länge $10$ über dem Alphabet, etwa `pashglwnmv`, trägt $10 \cdot 4{,}70 \approx 47$ bit — wer sie erraten will, braucht in der Größenordnung von $2^{47}$ Versuchen. Weiß der Ratende dagegen, dass es sich um ein deutsches Wort handelt, etwa `kabelkanal`, so sind es nur noch $10 \cdot 1{,}5 = 15$ bit, also $2^{15} = 32\,768$ Versuche. Das ist der Unterschied zwischen „praktisch unmöglich“ und „in einer Sekunde erledigt“, und er liegt nicht an der Länge der Zeichenkette, sondern an dem, was der Ratende über sie weiß.
+:::
+
+Genau diese Überlegung ist der Kern eines der bekanntesten Comics zum Thema Sicherheit:
+
+```{figure} images/xkcd-password-strength.png
+:width: 480px
+:align: center
+:name: xkcd-password
+
+Randall Munroe, [xkcd 936 „Password Strength“](https://xkcd.com/936/) (CC BY-NC 2.5)
+```
+
+Das Passwort `Tr0ub4dor&3` sieht kompliziert aus, ist aber nach einem Verfahren gebaut, das ein Angreifer kennt (ein Wort, ein paar übliche Ersetzungen, eine Ziffer, ein Sonderzeichen) — es trägt rund $28$ bit. Vier zufällig gewählte Wörter wie `correct horse battery staple` tragen rund $44$ bit, sind also etwa $2^{16} \approx 65\,000$-mal schwerer zu raten, und zusätzlich leichter zu merken.
+
+Die Lehre ist dieselbe wie beim Beispiel davor: Die Entropie hängt nicht am Aussehen des Ergebnisses, sondern am **Verfahren, das es erzeugt hat**. Ein Passwort ist nicht sicher, weil es kryptisch aussieht, sondern weil die Menge der Passwörter, aus denen es hätte stammen können, groß ist. Deshalb ist die Frage „wie stark ist dieses Passwort?“ für ein einzelnes Passwort streng genommen gar nicht zu beantworten — beantworten lässt sich nur, wie stark das Verfahren ist.
+
 Am anderen Ende der Skala steht die Dirac-Verteilung: Ist $P(\{\xi\}) = 1$ für ein einziges $\xi \in \Omega$
 und $P(\{\omega\}) = 0$ für alle anderen, so ist $I(\xi) = -\log_2(1) = 0$ und damit $H(X) = 0$
-(für die Summanden mit $P(\{\omega\}) = 0$ verwenden wir die übliche Konvention $0\log 0 = 0$).
+(für die Summanden mit $P(\{\omega\}) = 0$ greift die Konvention $0\log 0 = 0$ von oben).
 Das ist der kleinstmögliche Wert, denn $H(X)$ ist eine Summe nichtnegativer Terme.
 Auf einer endlichen Menge $\Omega$ gilt also stets $0 \leq H(X) \leq \log_2|\Omega|$,
 wobei das Minimum genau von den Dirac-Verteilungen angenommen wird (davon gibt es $|\Omega|$ Stück, eine je Element)
 und das Maximum ausschließlich von der Gleichverteilung.
 
-Am besten versteht man die Entropie als eine relative Größe, und das werden wir später noch tun.
+Am besten versteht man die Entropie als eine relative Größe, und das werden wir später noch tun. Im weiteren Verlauf des Kurses begegnet sie uns an drei Stellen: beim Zusammenführen von Datensätzen (wie viel Information kommt durch eine weitere Spalte wirklich hinzu?), beim Aufstellen statistischer Modelle — das Maximum-Entropie-Prinzip im Kapitel [Normalverteilung](normalverteilung.ipynb) und das eng verwandte Maximum-Likelihood-Prinzip im Kapitel [Statistische Modelle und Schätzer](statistische-modelle.md) — und schließlich bei der Bewertung der Modellgüte, wo Kreuzentropie und relative Entropie im Kapitel [Relative Entropie](relative-entropie.md) die Werkzeuge sind.
 
 
 ## Unabhängigkeit
@@ -582,6 +618,18 @@ Eine Familie von Zufallsvariablen $(Y_i)_{i \in I}$, $Y_i \colon \Omega \to \Ome
 für beliebige Ereignisse $B_i \subseteq \Omega_i$ die Familie $\left( \{Y_i \in B_i\} \right)_{i \in I}$ unabhängig in $\Omega$ ist.
 :::
 
+:::{admonition} Bemerkung
+Für zwei Zufallsvariablen $X, Y \colon \Omega \to \mathbb{R}$ liest sich das so: $X$ und $Y$ sind genau dann unabhängig, wenn
+
+$$
+P(X \in A,\ Y \in B) = P(X \in A)\,P(Y \in B)
+$$
+
+für alle Ereignisse $A, B$ gilt. Die linke Seite ist dabei eine Abkürzung für $P\left( (X,Y) \in A \times B \right)$ — sie handelt also nicht von $X$ und $Y$ einzeln, sondern von dem Paar $(X,Y)$, aufgefasst als *eine* Zufallsvariable mit Werten in $\mathbb{R}^2$. Deren Verteilung heißt die **gemeinsame Verteilung** von $X$ und $Y$; formal definieren wir sie im Kapitel [Kovarianz und Abhängigkeit](kovarianz.md).
+
+Wichtig ist die Reihenfolge: Die gemeinsame Verteilung ist die eigentliche Information, und die Verteilungen von $X$ und $Y$ einzeln ergeben sich daraus. Umgekehrt geht es *nicht* — aus den Einzelverteilungen allein lässt sich die gemeinsame im Allgemeinen nicht rekonstruieren. Genau das ist der Inhalt der Unabhängigkeit: Sie ist die Zusatzannahme, unter der das Produkt $p(x)q(y)$ der beiden pmf die gemeinsame pmf ist.
+:::
+
 :::{admonition} Beispiel
 Für $I = \{1,\dots,n\}$ und $\Omega_i$ jeweils diskret ist $Y_1,\dots,Y_n$ unabhängig genau dann wenn für alle Ergebnisse $\omega_i \in \Omega_i$ gilt:
 
@@ -605,6 +653,14 @@ die *bedingte Wahrscheinlichkeit* von $A$ bedingt $B$.
 Klar: $A$ und $B$ sind unabhängig voneinander genau dann wenn $P(A | B) = P(A)$.
 Im Bonbon-Beispiel oben ist $P(B \mid A) = \frac{P(A \cap B)}{P(A)} = \frac{1/6}{1/3} = \frac12$, und das ist nicht $P(B) = \frac13$ — so sieht Abhängigkeit in Zahlen aus.
 Bedingte Wahrscheinlichkeiten treten also stets dann auf (bzw. sind besonders interessant), wenn zwei Ereignisse (bzw. Zufallsvariablen) nicht unabhängig sind.
+
+:::{admonition} Ausblick
+Unabhängigkeit ist eine Alles-oder-nichts-Eigenschaft; in echten Daten ist die interessantere Frage, *wie stark* zwei Größen zusammenhängen. Dafür lernen wir zwei Maße kennen, und es lohnt sich, sie von Anfang an auseinanderzuhalten.
+
+Das erste ist die **Kovarianz** und der aus ihr gebildete Korrelationskoeffizient (Kapitel [Kovarianz und Abhängigkeit](kovarianz.md)). Sie misst *lineare* Zusammenhänge. Aus Unabhängigkeit folgt, dass die Kovarianz $0$ ist — aber nicht umgekehrt: Zwei Größen können perfekt voneinander abhängen und trotzdem unkorreliert sein, etwa $X$ und $X^2$ bei symmetrisch verteiltem $X$. „Korreliert“ ist also eine stärkere Aussage als „abhängig“, und „unkorreliert“ eine schwächere als „unabhängig“.
+
+Das zweite Maß erfasst Abhängigkeit beliebiger Form: die **relative Entropie** zwischen der gemeinsamen Verteilung und dem Produkt der Einzelverteilungen, auch *Transinformation* genannt (Kapitel [Relative Entropie](relative-entropie.md)). Sie ist genau dann $0$, wenn die beiden Zufallsvariablen unabhängig sind — sie misst also wirklich Abhängigkeit und nicht nur ihren linearen Anteil. Der Preis dafür: Man braucht die gemeinsame Verteilung, und die zu schätzen ist deutlich aufwendiger, als eine Kovarianz auszurechnen.
+:::
 
 ### Rechenregeln für die Varianz
 

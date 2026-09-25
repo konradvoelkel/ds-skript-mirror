@@ -148,7 +148,7 @@ Ein anderer möglicher Schätzer ist das arithmetische Mittel $\texttt{mean} \co
 :::
 
 :::{admonition} Beispiel
-In den meisten statistischen Modellen können wir die Abbildung $\sigma \colon \Theta \to \mathbb{R}_{\geq 0}$ betrachten, die einem Parameter $\theta$ die Standardabweichung $\sigma(P_\theta)$ der Verteilung $P_\theta$ zuordnet (es geht nur dann nicht, wenn das zweite Moment nicht existiert, also $\mathbb{V}(P_\theta)=\infty$ vorkommt). Dafür kennen wir die beiden Schätzer $\sigma,\ \sigma^\ast \colon \mathcal{X} \to \mathbb{R}_{\geq 0}$.
+In den meisten statistischen Modellen können wir die Abbildung $\sigma \colon \Theta \to \mathbb{R}_{\geq 0}$ betrachten, die einem Parameter $\theta$ die Standardabweichung $\sigma(P_\theta)$ der Verteilung $P_\theta$ zuordnet (es geht nur dann nicht, wenn das zweite Moment nicht existiert, also $\mathbb{V}(P_\theta)=\infty$ vorkommt). Dafür kennen wir die beiden Schätzer $\sigma,\ \sigma^\ast \colon \mathcal{X} \to \mathbb{R}_{\geq 0}$. Die beiden hängen über $\sigma^\ast(x) = \sqrt{\frac{n}{n-1}}\,\sigma(x)$ zusammen, gleichbedeutend $\sigma^\ast(x)^2 = \frac{n}{n-1}\,\sigma(x)^2$; dieser Faktor heißt **Bessel-Korrektur** (vgl. [Deskriptive Statistik](deskriptive-statistik.md)). Welcher der beiden Schätzer der bessere ist, klärt der nächste Abschnitt.
 :::
 
 ### Erwartungstreue
@@ -175,7 +175,7 @@ Im Standardmodell einer $N$-fach wiederholten univariaten Normalverteilung ist d
 :::{admonition} Beispiel
 Für die Varianz ist der Schätzer $\sigma_N^2 = \frac{1}{N} \sum_{i=1}^N (X_i - \texttt{mean}(X_j))^2$ nicht erwartungstreu, denn $\mathbb{E}(\sigma_N^2) = \frac{N-1}{N}\sigma^2(X)$. Der Bias ist also $-\frac{\sigma^2(X)}{N}$, was für $N\to\infty$ verschwindet. Damit ist der Schätzer asymptotisch erwartungstreu.
 
-Der 'korrigierte' Schätzer $\frac{N}{N-1} \sigma_N^2 = \frac{1}{N-1} \sum_{i=1}^N (X_i - \texttt{mean}(X_j))^2$ ist erwartungstreu.
+Der durch die *Bessel-Korrektur* angepasste Schätzer $\frac{N}{N-1} \sigma_N^2 = \frac{1}{N-1} \sum_{i=1}^N (X_i - \texttt{mean}(X_j))^2$ ist erwartungstreu. Wir sagen also: $\sigma_N^2$ ist asymptotisch erwartungstreu, der korrigierte Schätzer sogar erwartungstreu (frei von Bias).
 
 Der Bias entsteht dabei ausschließlich dadurch, dass $\mu$ mitgeschätzt wird. Ist der Erwartungswert $\mu(X)$ bekannt, so ist bereits
 
@@ -247,7 +247,7 @@ Das bedeutet: Schätzt man eine Verteilung so, dass die Wahrscheinlichkeit der B
 :::
 
 :::{admonition} Bemerkung
-Wir sind also für eine Familie von Verteilungen $P_\theta$ mit Dichten $f_\theta$ daran interessiert, die Likelihood $f_\theta(x)$ einer Beobachtung $x$ in $\theta$ zu maximieren. Um Funktionen zu maximieren, betrachten wir gern die Ableitung (dazu sollte $f$ in $\theta$ differenzierbar sein). Schon am Beispiel der univariaten Normalverteilungsdichte $\phi_{\mu,\sigma}$ sehen wir, dass die Ableitung $\frac{d}{d\mu} \phi_{\mu,\sigma}(x) =\frac{(x-\mu)}{\sigma^2} \phi_{\mu,\sigma}(x)$ bei $x=\mu$ verschwindet.
+Wir sind also für eine Familie von Verteilungen $P_\theta$ mit Dichten $f_\theta$ daran interessiert, die Likelihood $f_\theta(x)$ einer Beobachtung $x$ in $\theta$ zu maximieren. Um Funktionen zu maximieren, betrachten wir gern die Ableitung (dazu sollte $f$ in $\theta$ differenzierbar sein). Schon am Beispiel der univariaten Normalverteilungsdichte $\phi_{\mu,\sigma}$ sehen wir, dass die Ableitung $\frac{d}{d\mu} \phi_{\mu,\sigma}(x) =\frac{(x-\mu)}{\sigma^2} \phi_{\mu,\sigma}(x)$ bei $x=\mu$ verschwindet. Damit ist $\hat\mu = x$ der Maximum-Likelihood-Schätzer für $\mu$ bei einer Stichprobe der Größe $1$ — was man auch ohne Rechnung glaubt: Beobachtet man genau einen Wert, so ist die Normalverteilung, unter der dieser Wert am wahrscheinlichsten ist, diejenige mit dem Erwartungswert an genau dieser Stelle. Dass es sich um ein Maximum und nicht um ein Minimum handelt, sieht man daran, dass $\phi_{\mu,\sigma}(x)$ für $\mu \to \pm\infty$ gegen $0$ geht.
 Im Allgemeinen ist die Likelihood allerdings schwerer zu berechnen (man betrachte ein $n$-faches Produktmodell!) und man kann sich mit einem einfachen Trick behelfen:
 :::
 

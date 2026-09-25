@@ -55,10 +55,10 @@ Die beschreibende (deskriptive) Statistik besteht aus den Datenanalysen, die *vo
 * Bei tabellarischen Daten heißen die Spalten auch Variablen, Attribute, Merkmale, Features während die möglichen Werte *Ausprägungen* heißen.
   Ein Datensatz mit $n$ Zeilen und $k$ Spalten hat also $n$ Samples und $k$ Features. Nicht jede Spalte ist aber ein Feature im statistischen Sinn: Eine laufende Nummer, eine Matrikelnummer oder ein Primärschlüssel aus einer Datenbank identifiziert die Zeile nur und trägt keine Information über das, was gemessen wurde — jede Analyse, die eine ID als Merkmal behandelt, findet darin bestenfalls Zufall und schlimmstenfalls die Reihenfolge, in der die Daten erhoben wurden. Ebenso ist die *Zielgröße*, die man vorhersagen will, zwar eine Spalte, zählt aber beim Zählen der Features nicht mit.
   Je nach Art eines Merkmals unterscheidet man verschiedene *Skalenniveaus* (auch Skalenarten genannt); man sagt, ein Merkmal sei nominal-, ordinal- oder kardinalskaliert:
-  * Nominalskala: kategoriell, diskret, keine feste Reihenfolge (z.B. Geschlecht)
-  * Ordinalskala: Werte können geordnet werden, aber ohne Abstandsmaß (z.B. Rangplätze)
-  * Intervallskala (eine Kardinalskala): (diskrete oder stetige) Werte können geordnet und Abstände angegeben werden, ein Nullpunkt ist festgelegt (z.B. Temperatur, Jahresangaben)
-  * Verhältnisskala: Kardinalskala mit natürlichem Nullpunkt, sodass das Verhältnis zwischen zwei Werten eine sinnvolle Größe ist (z.B. Alter, Einkommen).
+  * Nominalskala: kategoriell, diskret, keine feste Reihenfolge (z.B. Geschlecht, Postleitzahl, Religionszugehörigkeit). Achtung: Mittelwert und Median ergeben hier keinen Sinn, Häufigkeiten schon. Die Postleitzahl ist der Klassiker für „sieht aus wie eine Zahl, ist aber nominal“ — ein `mean()` über eine PLZ-Spalte liefert eine Zahl, die nichts bedeutet.
+  * Ordinalskala: Werte können geordnet werden, aber ohne Abstandsmaß (z.B. Rangplätze im Sport, Dienstgrade, die Mohs-Härte von Mineralen). Achtung: Auch hier ergeben Mittelwerte keinen Sinn — die Mohs-Härte 5 liegt nicht „in der Mitte“ zwischen 4 und 6, sie ist nur härter als 4 und weicher als 6.
+  * Intervallskala (eine Kardinalskala): (diskrete oder stetige) Werte können geordnet und Abstände angegeben werden, der Nullpunkt ist aber willkürlich festgelegt (z.B. Temperatur in Grad Celsius, Datumsangaben, der Pegelstand des Rheins, Likert-Skalen wie „trifft gar nicht zu … trifft voll zu“). Differenzen sind sinnvoll, Verhältnisse nicht: $20\,^\circ\text{C}$ ist nicht „doppelt so warm“ wie $10\,^\circ\text{C}$.
+  * Verhältnisskala: Kardinalskala mit natürlichem Nullpunkt, sodass das Verhältnis zwischen zwei Werten eine sinnvolle Größe ist (z.B. Alter, Einkommen, Temperatur in Kelvin, Geschwindigkeit in km/h, Anzahl der Personen eines Haushalts). Hier darf man zu drei Werten $a,b,c$ die Verhältnisse $a:b$ und $a:c$ miteinander vergleichen.
 
   Welche Maßzahlen und Rechenoperationen für ein Merkmal sinnvoll sind, hängt an seinem Skalenniveau — eine Zusammenfassung steht unten im Abschnitt [Skalenniveau und zulässige Maßzahlen](#skalenniveau-und-zulaessige-masszahlen).
 * Univariate Beschreibungen
@@ -74,6 +74,10 @@ Die beschreibende (deskriptive) Statistik besteht aus den Datenanalysen, die *vo
       
     * Die Bereichsmitte (Mid-range) ist das arithmetische Mittel aus dem Maximum und dem Minimum.
     
+    * Das geometrische Mittel
+    
+      ist $\sqrt[n]{x_1 \cdots x_n}$, also die $n$-te Wurzel aus dem Produkt der Werte (in Numpy `np.exp(np.mean(np.log(x)))`, in Scipy direkt `scipy.stats.gmean`). Es ist das passende Mittel, wenn sich die Werte multiplikativ zusammensetzen — bei Wachstumsraten etwa ist das geometrische Mittel der jährlichen Faktoren derjenige konstante Faktor, der nach $n$ Jahren zum selben Ergebnis führt. Es setzt eine Verhältnisskala voraus, denn es braucht einen natürlichen Nullpunkt: Das geometrische Mittel von $10\,^\circ\text{C}$ und $20\,^\circ\text{C}$ ist $\sqrt{200} \approx 14{,}14\,^\circ\text{C}$, rechnet man dieselben Temperaturen dagegen in Kelvin, kommt $\sqrt{283{,}15 \cdot 293{,}15} \approx 288{,}11\,\text{K} \approx 14{,}96\,^\circ\text{C}$ heraus — zwei verschiedene Antworten auf dieselbe Frage. Bei negativen Werten ist es gar nicht definiert.
+    
     * Der Modus
     
       ist definiert als häufigster Wert. Der Begriff selbst ist wenig nützlich, wird aber häufig in dem Sinne verwendet, dass eine Verteilung unimodal oder bimodal ist. Unimodal bedeutet, dass es einen klar erkennbaren Modus gibt, der die Verteilung gut beschreibt. Bimodal bedeutet, dass die Verteilung eine gemischte Verteilung ist, deren zwei Komponenten verschiedene Moden haben. Das erkennt man dann an zwei Hochpunkten. Im Allgemeinen ist nicht klar, ob man einen Datensatz als unimodal oder bimodal (oder multimodal) verteilt ansehen sollte.
@@ -88,13 +92,17 @@ Die beschreibende (deskriptive) Statistik besteht aus den Datenanalysen, die *vo
     
     * Spannweite: maximaler Wert minus minimaler Wert
     * Variationsverhältnis (auch *nicht-Modus-Anteil*): Anteil der Stichprobe, dessen Wert nicht der Modus ist
-    * Quartile: analog zum Median ist das untere Quartil $Q1$ der Wert, sodass genau ein Viertel der Daten einen geringeren Wert hat. Das obere Quartil $Q3$ ist entsprechend der Wert, sodass genau ein Viertel der Daten einen höheren Wert hat. Der Median entspricht $Q2$. Analog definiert man Perzentile.
+    * Quartile: analog zum Median ist das untere Quartil $Q1$ der Wert, sodass genau ein Viertel der Daten einen geringeren Wert hat. Das obere Quartil $Q3$ ist entsprechend der Wert, sodass genau ein Viertel der Daten einen höheren Wert hat. Der Median entspricht $Q2$. Analog definiert man Perzentile. Die Differenz $Q3 - Q1$ heißt **Interquartilsabstand** (interquartile range, IQR); sie ist das Streuungsmaß, das zum Median gehört, und im Gegensatz zur Spannweite unempfindlich gegen Ausreißer — genau deshalb zeichnet ein Boxplot den Kasten von $Q1$ bis $Q3$.
     * Stichprobenvarianz: mittlere quadratische Abweichung vom Mittelwert
     * Stichprobenstandardabweichung
     
       Wenn wir mit Einheiten rechnen, sehen wir ein Problem mit der Varianz: ist eine Zufallsvariable $X$ oder ein Vektor $x$ (etwa eine Spalte einer Tabelle) in der Einheit Meter (eine Verhältnisskala), so wird beim Berechnen der Varianz eine Summe bzw. ein Integral über Quadrate gebildet, somit ist die Varianz in der Einheit Quadratmeter. Man sieht daran auch, dass die Varianz generell skalenabhängig ist, d.h. beim Vergleich zweier Variablen, die eine in Meter, die andere in Zentimeter, ist die Varianz kein guter Vergleich. Daraus die Wurzel zu ziehen korrigiert den ersten Fehler, und liefert mit der Standardabweichung ein Maß in der gleichen Einheit wie den Erwartungswert.
       
       Achtung: es gibt zwei Formeln mit dem Namen "Stichprobenstandardabweichung", einmal mit $n$ im Nenner, einmal mit $n-1$. Diesen Umstand nennt man auch *Bessel-Korrektur* und wir befassen uns im Rahmen der Schätztheorie noch damit. In diesem Skript ist ohne weiteren Hinweis die $n$-Version gemeint (so rechnet auch `numpy.std`); pandas (`DataFrame.std`) und `scipy.stats` teilen dagegen standardmäßig durch $n-1$ (`ddof=1`).
+      
+    * Variationskoeffizient
+    
+      Die Standardabweichung hat dieselbe Einheit wie die Daten, hilft beim Vergleich zweier verschiedener Merkmale aber noch nicht: Ist eine Streuung von $3$ Stunden viel? Der **Variationskoeffizient** $\frac{\sigma}{\mu}$ ist einheitenlos und beantwortet die Frage als Anteil des Mittelwerts (in Numpy `np.std(x)/np.mean(x)`, in Scipy `scipy.stats.variation`). Er ist nur auf einer Verhältnisskala sinnvoll, denn er hängt vom Nullpunkt ab: In Celsius gerechnet kann er negativ oder unendlich werden, in Kelvin nicht. Sein Kehrwert $\frac{\mu}{\sigma}$ heißt **Signal-to-Noise-Ratio** und wird in den Ingenieurwissenschaften genauso benutzt — je größer, desto deutlicher hebt sich das Signal vom Rauschen ab.
       
     * dispersion precedes location: Zu jedem Streuungsmaß gehört ein Lagemaß, nämlich der Wert, der dieses Streuungsmaß minimiert — je nachdem, mit welcher Norm man den Fehler misst:
       
@@ -127,8 +135,9 @@ Die Maßzahlen oben sind nicht für jedes Merkmal sinnvoll. Ein Mittelwert über
 | Skalenniveau | Beispiel | sinnvolle Vergleiche | Lagemaß | Streuungsmaß |
 |---|---|---|---|---|
 | nominal | Studiengang, Farbe, Postleitzahl | gleich / ungleich | Modus | Variationsverhältnis (nicht-Modus-Anteil) |
-| ordinal | Schulnote, Zufriedenheit „niedrig / mittel / hoch“, Rangplatz | zusätzlich: kleiner / größer | Median, Quartile | Spannweite, Interquartilsabstand |
-| kardinal (Intervall- und Verhältnisskala) | Temperatur, Alter, Preis, Lernzeit in Stunden | zusätzlich: Differenzen (Verhältnisskala: auch Quotienten) | arithmetisches Mittel | Varianz, Standardabweichung |
+| ordinal | Schulnote, Mohs-Härte, Rangplatz | zusätzlich: kleiner / größer | Median, Quartile | Spannweite, Interquartilsabstand |
+| Intervallskala | Temperatur in °C, Datum, Likert-Skala | zusätzlich: Differenzen | arithmetisches Mittel, Bereichsmitte | Varianz, Standardabweichung |
+| Verhältnisskala | Alter, Preis, Temperatur in K | zusätzlich: Quotienten | zusätzlich: geometrisches Mittel | zusätzlich: Variationskoeffizient |
 
 Jedes Skalenniveau erlaubt zusätzlich alle Maßzahlen der Zeilen darüber: Für ein kardinales Merkmal darf man auch Median und Modus angeben, für ein ordinales auch den Modus. Umgekehrt geht es nicht — Mittelwert und Varianz einer nominalen Variablen sind bedeutungslos, auch wenn die Ausprägungen als Zahlen gespeichert sind. Eine Spalte mit dem Datentyp `int` ist also noch lange nicht kardinalskaliert: Eine ID ist nominal, eine Schulnote ordinal.
 
@@ -153,6 +162,7 @@ Nehmen wir die $n = 8$ Werte $x = (7,\ 2,\ 9,\ 4,\ 4,\ 12,\ 5,\ 3)$, etwa: Anzah
 * **Mittelwert**: $\texttt{mean}(x) = \frac{7+2+9+4+4+12+5+3}{8} = \frac{46}{8} = 5{,}75$.
 * **Varianz** ($n$-Version): Die Abweichungen vom Mittelwert sind $(1{,}25,\ -3{,}75,\ 3{,}25,\ -1{,}75,\ -1{,}75,\ 6{,}25,\ -0{,}75,\ -2{,}75)$, ihre Quadrate $(1{,}5625,\ 14{,}0625,\ 10{,}5625,\ 3{,}0625,\ 3{,}0625,\ 39{,}0625,\ 0{,}5625,\ 7{,}5625)$ summieren sich zu $79{,}5$, also $\sigma^2 = 79{,}5 / 8 = 9{,}9375$.
 * **Standardabweichung**: $\sigma = \sqrt{9{,}9375} \approx 3{,}15$. Mit Bessel-Korrektur: $\sqrt{79{,}5 / 7} \approx 3{,}37$.
+* **Variationskoeffizient**: $\sigma / \texttt{mean}(x) = 3{,}15 / 5{,}75 \approx 0{,}55$ — die Streuung beträgt gut die Hälfte des Mittelwerts, die Tage sind also sehr ungleich. **Geometrisches Mittel**: $\sqrt[8]{7 \cdot 2 \cdot 9 \cdot 4 \cdot 4 \cdot 12 \cdot 5 \cdot 3} \approx 4{,}95$, kleiner als das arithmetische Mittel $5{,}75$ (das ist kein Zufall: das geometrische Mittel ist nie größer als das arithmetische).
 * Probe: $|\texttt{median}(x) - \texttt{mean}(x)| = 1{,}25 \leq \sigma$. Der Mittelwert liegt über dem Median, weil der Ausreißer $12$ ihn nach oben zieht: die Verteilung ist rechtsschief.
 
 Dasselbe in Numpy (die Quartile mit der linearen Interpolation von `numpy.percentile`):
@@ -165,6 +175,8 @@ print(np.percentile(x, [25, 75]))  # [3.75 7.5 ]
 print(np.mean(x), np.var(x))   # 5.75 9.9375
 print(np.std(x))               # 3.1524... (n-Version)
 print(np.std(x, ddof=1))       # 3.3701... (Bessel-Korrektur, n-1)
+print(np.std(x) / np.mean(x))  # 0.5482... Variationskoeffizient
+print(np.exp(np.mean(np.log(x))))  # 4.9542... geometrisches Mittel
 ```
 
 ## Das Simpson-Paradoxon
