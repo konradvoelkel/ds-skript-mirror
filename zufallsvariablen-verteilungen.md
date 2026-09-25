@@ -115,11 +115,33 @@ $$P_X\left(\{b,r\}\right) = P_\Omega\left(X^{-1} \left(\{b,r\}\right) \right) = 
 wobei wir implizit angenommen haben, dass wir die Kinder alle gleich behandeln,
 also gleichverteilt ein Kind herausgreifen, dessen Pullifarbe wir betrachten,
 wenn wir ein Ergebnis von $X$ betrachten.
+:::
+
+:::{admonition} Beispiel
+**Verketten liefert neue Zufallsvariablen.** Sei $X$ der Wurf eines fairen Würfels, also $\Omega = \{1,\dots,6\}$ mit der Gleichverteilung und $X$ die Identität.
+
+*(a)* Sei $g \colon \{1,\dots,6\} \to \{\text{gerade}, \text{ungerade}\}$ die Abbildung, die einer Augenzahl ihre Parität zuordnet. Dann ist
+
+$$
+P_g(\{\text{gerade}\}) = P_\Omega\left( g^{-1}(\{\text{gerade}\}) \right) = P_\Omega(\{2,4,6\}) = \dfrac{3}{6} = \dfrac{1}{2}.
+$$
+
+Dabei ist $g \circ X$ selbst wieder eine Zufallsvariable — die Verkettung einer Zufallsvariable mit einer Abbildung ist immer eine —, und ihre Verteilung ist $P_{g(X)} = P_g$. Man schreibt dafür kurz $g(X)$ und sagt „die Zufallsvariable *Parität des Wurfs*“.
+
+*(b)* Sei $f$ die Abbildung, die angibt, ob die Augenzahl mindestens $5$ beträgt. Für die Antwort „nein“ zerlegen wir das Urbild in Elementarereignisse und benutzen die $\sigma$-Additivität:
+
+$$
+P_f(\{\text{nein}\}) = P_\Omega\left( \{1,2,3,4\} \right) = \sum_{i=1}^4 P_\Omega\left( \{i\} \right) = 4 \cdot \dfrac{1}{6} = \dfrac{2}{3}.
+$$
+
+Das ist der Normalfall beim Rechnen mit induzierten Maßen: Man sucht das Urbild, zerlegt es in disjunkte Stücke und addiert.
+
+*(c)* Verkettet man mit $x \mapsto 2x$, so erhält man die Zufallsvariable $2X$ mit Werten in $\{2,4,6,8,10,12\}$, jeder mit Wahrscheinlichkeit $\frac16$. Mit Zufallsvariablen lässt sich also rechnen wie mit Zahlen — man darf sie verdoppeln, addieren, quadrieren —, und die Verteilung ändert sich dabei mit. Wie sich dabei Erwartungswert und Varianz verhalten, klärt das Kapitel [Erwartungswert und Varianz](erwartungswert.md) (Linearität des Erwartungswerts).
+:::
 
 Wenn uns nur die Verteilung $P_X$ interessiert, können wir $\Omega$ ignorieren,
 denn die selbe Verteilung lässt sich auch mit anderen Mengen $\Omega$ erreichen,
 auch mit Verteilungen, die keine Gleichverteilung sind.
-:::
 
 ## Wahrscheinlichkeitsmassefunktion
 

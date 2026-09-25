@@ -7,12 +7,51 @@ Man kann Stochastik als Oberbegriff für Wahrscheinlichkeitstheorie und Statisti
 Wie immer in der Informatik ist ein wesentliches Ziel, mit einem Modell einen Ausschnitt der Realität zu modellieren, d.h. von diesem Ausschnitt zu abstrahieren und mit dem Modell ein Stück der Realität vorherzusagen und das Modell an der Realität zu prüfen.
 
 Wir kennen bereits logische Modelle der Realität: Wenn es regnet, wird der Rasen nass. Wenn ich hungrig bin, und dann viel esse, bin ich danach nicht mehr hungrig.
+
+In der Notation der Aussagenlogik schreibt sich das erste Modell als Implikation. Mit $N$ für „der Rasen ist nass“, $R$ für „es hat geregnet“ und $G$ für „jemand hat gegossen“ lautet es
+
+$$
+N \Rightarrow R \vee G,
+$$
+
+oder, wie man es in einer Programmiersprache hinschreiben würde, `(!N) || R || G`. Das Modell ist nützlich, aber es beantwortet die Frage nicht, die uns beim Blick auf den nassen Rasen tatsächlich umtreibt: Welche der beiden Möglichkeiten war es? Regnet es hier oft? Hat überhaupt schon einmal jemand diesen Rasen gegossen? Die Aussagenlogik kann darauf nur mit „mindestens eine von beiden“ antworten.
+
 Statistische Modelle erweitern diese Alles-oder-nichts-Logik nun um verschiedene Grade von Plausibilität: wenn der Rasen nass ist, ist es plausible, anzunehmen, dass es vor kurzem regnete. Es ist ebenso plausibel, anzunehmen, dass jemand den Rasen gewässert hat mit einem Gartenschlauch. Was wir plausibler finden, hängt davon ab, was wir sonst über die Realität wissen. Durch längere Beobachtung des Rasens können wir feststellen, welche Gründe wie oft zu einem nassen Rasen führen, und daran unser Modell schärfen.
 
 Um mit Plausibilität genau so rechnen zu können wie mit Boolescher Logik, und schließlich auch im Computer zu implementieren, müssen wir die Plausibilitätswerte mit Zahlen versehen. Eine geeignete Abstraktion sind reelle Zahlen, denn reelle Zahlen sind der einzige archimedisch angeordnete vollständige Körper, der die rationalen Zahlen enthält (und die darin enthaltene Unteralgebra der berechenbaren reellen Zahlen hat uns schon viele gute Dienste geleistet).
 
+:::{admonition} Beispiel
+Ein erster, naiver Anlauf: Wir zählen einfach mit. Im letzten Monat hat es an $20$ Tagen geregnet, und an $5$ Tagen hat jemand gegossen. Wir setzen also $plausi(R) = 20$ und $plausi(G) = 5$.
+
+Wie plausibel ist dann „es hat geregnet oder jemand hat gegossen“? Die naheliegende Antwort $25$ ist falsch, sobald es auch nur einen Tag gab, an dem beides passiert ist — dieser Tag wäre doppelt gezählt. Die richtige Antwort lautet
+
+$$
+plausi(R \vee G) = plausi(R) + plausi(G) - plausi(R \wedge G),
+$$
+
+und um sie auszurechnen, müssen wir wissen, ob auch schon einmal in den Regen hinein gegossen wurde.
+:::
+
+An diesem Beispiel sieht man zweierlei. Erstens rechnet man mit Plausibilitäten nicht so naiv, wie man zunächst denkt; es braucht Regeln. Zweitens sind die Zahlen $20$ und $5$ unhandlich, weil sie vom Beobachtungszeitraum abhängen: Bei zwei Monaten Beobachtung stünde dort $40$ und $10$, ohne dass sich an der Sache etwas geändert hätte.
+
 Wir wünschen uns außerdem, dass Plausibilitätslogik mit der klassischen Logik kompatibel ist, d.h. logisch äquivalente Aussagen sollten gleich plausibel sein und verschiedene Wege, um die Plausibilität einer Aussage zu bestimmen, sollten zum gleichen Ergebnis kommen (Konsistenz).
 Um das in Mathematik zu formulieren, nennen wir nun eine endliche Menge von Aussagen, deren Plausibilität wir bewerten wollen, $\mathcal{A}$ und die Zuordnung der Plausibilität ist eine Abbildung $p \colon \mathcal{A} \to \mathbb{R}$.
+
+Zwei Regeln wollen wir auf jeden Fall haben. Die erste ist die Formel aus dem Beispiel, die sogenannte *Inklusion–Exklusion*: Wer zwei Möglichkeiten addiert, zählt ihre Überschneidung doppelt und muss sie einmal abziehen,
+
+$$
+plausi(A \vee B) = plausi(A) + plausi(B) - plausi(A \wedge B).
+$$
+
+Die zweite behebt das Problem mit dem Beobachtungszeitraum. Wir normieren so, dass sich die Plausibilität einer Aussage und die ihres Gegenteils zu $1$ ergänzen,
+
+$$
+plausi(A) + plausi(\neg A) = 1,
+$$
+
+denn genau eines von beiden trifft zu. Damit liegt jede Plausibilität zwischen $0$ und $1$, und die absolute Länge des Beobachtungszeitraums fällt heraus: Aus $20$ Regentagen von $30$ wird $\frac{2}{3}$, ob man nun einen Monat oder ein Jahr lang zählt.
+
+Reicht das schon, um zu diesen Zahlen „Wahrscheinlichkeit“ zu sagen? Nicht ganz — aber fast.
 
 Wenn man diese Forderungen präzisiert, kann man das [Cox-Jaynes-Theorem](https://en.wikipedia.org/wiki/Cox%27s_theorem) beweisen, dass besagt, dass es eine mathematische Abbildung $cj$ von den reellen Zahlen in das geschlossene Intervall $[0,1]$ gibt, die Plausibilitäten auf "Wahrscheinlichkeiten" abbildet, sodass (fast) alle Regeln der klassischen Wahrscheinlichkeitstheorie erfüllt sind. So erfüllt $P := cj \circ p \colon X \to [0,1]$ die Regeln
 1. $P(WAHR) = 1$ und $P(FALSCH) = 0$.
@@ -105,6 +144,28 @@ Das Tripel $(\Omega, \mathcal{F}, P)$ heißt *Wahrscheinlichkeitsraum*.
 :::
 
 Vergleichen Sie dazu im Skript "Mathematik für Informatik" Definition 12.2.5 sowie Bemerkung 12.2.8, in der als Spezialfall $\mathcal{F} = \mathcal{P}(\Omega)$ und $\Omega$ endlich angenommen werden.
+
+:::{admonition} Beispiel
+Bleiben wir beim nassen Rasen. Wir setzen $\Omega = \{R, G, T\}$ für die drei Erklärungen „es hat geregnet“, „jemand hat gegossen“, „es war Tau“, und als $\sigma$-Algebra nehmen wir die Potenzmenge $\mathcal{F} = \mathcal{P}(\Omega)$. Die einelementigen Ereignisse $\{R\}, \{G\}, \{T\}$ heißen **Elementarereignisse**; auf einer endlichen Menge legen ihre Wahrscheinlichkeiten bereits das ganze Maß fest, denn jedes andere Ereignis ist eine disjunkte Vereinigung von ihnen.
+
+Ein erster Versuch: $P(\{R\}) = \frac23$, $P(\{G\}) = \frac16$, $P(\{T\}) = \frac13$. Das ist kein Wahrscheinlichkeitsmaß. Aus der $\sigma$-Additivität folgt nämlich
+
+$$
+P(\Omega) = P(\{R\}) + P(\{G\}) + P(\{T\}) = \dfrac{2}{3} + \dfrac{1}{6} + \dfrac{1}{3} = \dfrac{7}{6} > 1,
+$$
+
+im Widerspruch zur Normierung $P(\Omega) = 1$. Mit $P(\{R\}) = \frac12$ statt $\frac23$ geht die Rechnung auf, und wir haben ein Wahrscheinlichkeitsmaß.
+
+Ein zweiter Einwand wiegt schwerer und betrifft nicht die Zahlen, sondern das Modell. Ein Wahrscheinlichkeitsmaß auf $\{R, G, T\}$ behauptet implizit, dass sich die drei Erklärungen gegenseitig ausschließen — dass es also nicht regnen *und* jemand gießen kann. Das ist offensichtlich falsch. Wer beides zulassen will, muss die Ergebnisse feiner wählen, etwa
+
+$$
+\Omega' = \{ R\,G,\ R\,\overline{G},\ \overline{R}\,G,\ \overline{R}\,\overline{G} \},
+$$
+
+also alle vier Kombinationen aus „geregnet ja/nein“ und „gegossen ja/nein“. Das Ereignis „es hat geregnet“ ist dann nicht mehr ein Elementarereignis, sondern die zweielementige Menge $\{R\,G,\ R\,\overline{G}\}$.
+
+Daran sieht man, was bei der Modellierung die eigentliche Arbeit ist: nicht das Verteilen der Zahlen, sondern die Wahl von $\Omega$. Die Ergebnisse müssen sich paarweise ausschließen und zusammen alles abdecken, was passieren kann.
+:::
 
 :::{admonition} Beispiel
 Auf einer endlichen Menge $\Omega$ von Kardinalität $N := |\Omega|$ (also Anzahl der Elemente $N$) ist mit $\mathcal{F} := \mathcal{P}(\Omega)$ und $P(A) := |A| / N$ ein Wahrscheinlichkeitsmaß definiert, dass wir *Gleichverteilung* nennen.

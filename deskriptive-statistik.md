@@ -96,12 +96,14 @@ Die beschreibende (deskriptive) Statistik besteht aus den Datenanalysen, die *vo
       
       Achtung: es gibt zwei Formeln mit dem Namen "Stichprobenstandardabweichung", einmal mit $n$ im Nenner, einmal mit $n-1$. Diesen Umstand nennt man auch *Bessel-Korrektur* und wir befassen uns im Rahmen der Schätztheorie noch damit. In diesem Skript ist ohne weiteren Hinweis die $n$-Version gemeint (so rechnet auch `numpy.std`); pandas (`DataFrame.std`) und `scipy.stats` teilen dagegen standardmäßig durch $n-1$ (`ddof=1`).
       
-    * dispersion precedes location:
+    * dispersion precedes location: Zu jedem Streuungsmaß gehört ein Lagemaß, nämlich der Wert, der dieses Streuungsmaß minimiert — je nachdem, mit welcher Norm man den Fehler misst:
       
-      * Der Modus ist das Minimum des Variationsverhältnisses ($L_0$-Norm)
-      * Der Median ist das Minimum der mittleren absoluten Abweichung ($L_1$-Norm)
-      * Der Mittelwert ist das Minimum der Standardabweichung ($L_2$-Norm)
-      * Die Bereichsmitte ist das Minimum der absoluten Abweichung ($L_\infty$-Norm)
+      * Der Modus minimiert das Variationsverhältnis ($L_0$)
+      * Der Median minimiert die mittlere absolute Abweichung ($L_1$)
+      * Der Mittelwert minimiert die mittlere quadratische Abweichung ($L_2$)
+      * Die Bereichsmitte minimiert die maximale absolute Abweichung ($L_\infty$)
+      
+      Die beiden mittleren Aussagen sind im Kapitel [Erwartungswert und Varianz](erwartungswert.md), Abschnitt „Abweichung quantifizieren“, bewiesen.
       
   
   * Form (Shape)
@@ -367,3 +369,16 @@ Eine Farbpalette, die auch bei eingeschränkter Farbwahrnehmung gut funktioniert
 ![Gute Palette](images/gute-palette.png)
 
 Die Forschung über gut geeignete Farbpaletten ist nicht beendet - so gab es etwa auf der SciPy Konferenz 2022 den Vortrag [Development of Accessible, Aesthetically-Pleasing Color Sequences von Matthew Petroff](https://www.youtube.com/watch?v=Gapv8wR5DYU), dessen [Ergebnisse im Dezember 2024 in Matplotlib Version 3.10.0 eingeflossen sind](https://matplotlib.org/stable/users/prev_whats_new/whats_new_3.10.0.html#new-more-accessible-color-cycle).
+
+
+## Explorative Datenanalyse als Prozess
+
+Die Werkzeuge dieses Kapitels — Skalenniveaus, Lage- und Streuungsmaße, Visualisierung — sind Mittel zum Zweck. Der Zweck heißt *explorative Datenanalyse* (EDA): sich einen Datensatz Schritt für Schritt zu erschließen und am Ende etwas darüber sagen zu können. „Schritt für Schritt“ ist dabei wörtlich zu nehmen, und vor allem: im Kreis. Man durchläuft die folgenden fünf Schritte nicht einmal, sondern immer wieder, weil jeder Durchgang neue Fragen aufwirft.
+
+1. **Forschungsfragen formulieren.** Was will man eigentlich wissen? Welche Skalenniveaus haben die Merkmale, welche Verteilungen erwartet man, welche Zusammenhänge hält man für plausibel? Ohne diesen Schritt produziert man Diagramme statt Erkenntnisse. Im Kapitel [Explorative Analyse: Beispiele](explorative-analyse-beispiele.ipynb) steht dieser Schritt ausdrücklich am Anfang.
+2. **Daten visualisieren.** Der schnellste Weg, eine Verteilung, einen Ausreißer oder einen Zusammenhang zu sehen, ist ein Bild — das ist der Inhalt des vorigen Abschnitts, und der Datasaurus hat gezeigt, warum zusammenfassende Zahlen allein nicht reichen.
+3. **Daten putzen.** Ausreißer prüfen und gegebenenfalls entfernen, fehlende Werte imputieren oder interpolieren, Fehler in der Codierung beheben. Im Kapitel [Titanic EDA](explorative-analyse-mit-numpy.ipynb) werden fehlende Altersangaben durch den Median ersetzt; das Kapitel [Daten putzen](data-cleaning.ipynb) macht daraus ein eigenes Programm.
+4. **Daten transformieren.** Teilmengen auswählen, Merkmale umskalieren, neue Merkmale bilden — etwa Altersgruppen aus dem Alter (*Binning*) oder eine Fläche aus Länge und Breite. Solche neuen Merkmale heißen **Features**, und sie zu finden ist oft der eigentliche Erkenntnisgewinn.
+5. **Daten modellieren.** Ein statistisches Modell wählen und an die Daten anpassen, etwa eine Normalverteilung oder eine Regressionsgerade. Damit beschäftigen sich die folgenden Kapitel.
+
+Die fünf Schritte sind die feinere Auflösung dessen, was {numref}`ds-process` am Kapitelanfang als Gesamtbild zeigt. Und weil sie im Kreis laufen, ist auch klar, warum EDA nicht automatisierbar ist: Schritt 1 braucht jemanden mit einer Frage und Schritt 3 jemanden, der weiß, welche Werte in diesem Anwendungsgebiet unplausibel sind. Das üben wir in den folgenden Kapiteln an mehreren Datensätzen.

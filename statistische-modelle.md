@@ -176,6 +176,14 @@ Im Standardmodell einer $N$-fach wiederholten univariaten Normalverteilung ist d
 Für die Varianz ist der Schätzer $\sigma_N^2 = \frac{1}{N} \sum_{i=1}^N (X_i - \texttt{mean}(X_j))^2$ nicht erwartungstreu, denn $\mathbb{E}(\sigma_N^2) = \frac{N-1}{N}\sigma^2(X)$. Der Bias ist also $-\frac{\sigma^2(X)}{N}$, was für $N\to\infty$ verschwindet. Damit ist der Schätzer asymptotisch erwartungstreu.
 
 Der 'korrigierte' Schätzer $\frac{N}{N-1} \sigma_N^2 = \frac{1}{N-1} \sum_{i=1}^N (X_i - \texttt{mean}(X_j))^2$ ist erwartungstreu.
+
+Der Bias entsteht dabei ausschließlich dadurch, dass $\mu$ mitgeschätzt wird. Ist der Erwartungswert $\mu(X)$ bekannt, so ist bereits
+
+$$
+\dfrac{1}{N} \sum_{i=1}^N {\left(X_i - \mu(X)\right)}^2
+$$
+
+erwartungstreu, denn $\mathbb{E}\left((X_i-\mu(X))^2\right) = \sigma^2(X)$ gilt für jedes einzelne $i$, und der Erwartungswert ist linear. Erst das Einsetzen von $\texttt{mean}(x)$ an Stelle von $\mu(X)$ kostet den Freiheitsgrad, von dem in der Einleitung dieses Kapitels die Rede war — und genau diesen einen Freiheitsgrad holt der Faktor $\frac{N}{N-1}$ zurück.
 :::
 
 :::{admonition} Definition
@@ -197,6 +205,8 @@ $$
 
 wobei $I(\theta)$ die *Fisher-Information* ist. Ein erwartungstreuer Schätzer, der diese Schranke annimmt, ist also gleichmäßig bester Schätzer. Für Verteilungen aus einer sogenannten *Exponentialfamilie* (in gewissem Sinne eine gemeinsame Verallgemeinerung der Normalverteilung, Binomialverteilung, Gamma-Verteilung, etc.) lassen sich die gleichmäßig besten Schätzer damit direkt beschreiben.
 
+Für viele praktisch wichtige Modelle gibt es aber gar keine geschlossene Formel für einen guten Schätzer — die [kontaminierte Normalverteilung](wichtigste-stetige-verteilungen.ipynb) ist das Beispiel, das uns im Kurs noch begegnet. Dann braucht man ein Prinzip, das statt einer Formel ein Optimierungsproblem liefert, dessen Lösung sich numerisch annähern lässt. Genau das leistet das Maximum-Likelihood-Prinzip, und das zugehörige Iterationsverfahren ist der [EM-Algorithmus](expectation-maximization.ipynb).
+
 
 ### Maximum Likelihood
 
@@ -207,7 +217,17 @@ Gegeben ein statistisches Standardmodell $(\mathcal{X}, P_\theta : \theta \in \T
 Wenn wir also Daten $x$ gegeben haben, drückt die Likelihood-Funktion zu $x$ für jeden Parameter $\theta$ aus, wie die Wahrscheinlichkeitsdichte an der Stelle $x$ von $P_\theta$ ausfällt. Ist die Dichte groß, so ist $x$ eine Beobachtung, die unter dem Parameter $\theta$ wahrscheinlich ist. Ist die Dichte klein, so ist $x$ unter $\theta$ unwahrscheinlich. Zur Erinnerung: Wenn wir die Hypothese $H = ( \theta$ ist der wahre Parameter $)$ haben, und $D=x$ (für Daten) schreiben, so ist $P(D|H) = L_x(\theta) = f_\theta(x)$ die Likelihood (vgl. Abschnitt über den Satz von Bayes).
 
 :::{admonition} Definition
-Ein Schätzer $T \colon \mathcal{X} \to \Theta$ für den Parameter $\theta$ heißt **Maximum-Likelihood-Schätzer** (maximum likelihood estimator, MLE), wenn für alle $x \in \mathcal{X}$ gilt: $\rho(x, T(x)) = \max_{\theta \in \Theta} \rho(x, \theta)$, also wenn $T(x)$ die Likelihood von $x$ maximiert, für alle $x$. Man schreibt auch $T(x) = argmax L_x$.
+Ein Schätzer $T \colon \mathcal{X} \to \Theta$ für den Parameter $\theta$ heißt **Maximum-Likelihood-Schätzer** (maximum likelihood estimator, MLE), wenn für alle $x \in \mathcal{X}$ gilt:
+
+$$
+L_x(T(x)) = \max_{\theta \in \Theta} L_x(\theta),
+$$
+
+wenn also $T(x)$ die Likelihood von $x$ maximiert, und zwar für jedes $x$. Dafür schreibt man auch
+
+$$
+T(x) = \operatorname*{argmax}_{\theta \in \Theta} L_x(\theta).
+$$
 :::
 
 Ein erstes Beispiel dafür haben wir bereits gerechnet, ohne den Namen zu benutzen: Im Kapitel

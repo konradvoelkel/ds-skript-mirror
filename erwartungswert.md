@@ -22,7 +22,39 @@ Für eine Zahl $c \in \mathbb{R}$ schreiben wir auch $\texttt{mae}(v,c):=\texttt
 Wenn $v = (1,2,3,4)$ und $c=2$, so ist $\texttt{mae}(v,c) = \sum_{i=1}^4 \dfrac{|i-2|}{4} = \dfrac{4}{4} = 1$.
 :::
 
+Die Summe ohne den Faktor $\frac1n$ ist die $1$-Norm der Differenz,
+
+$$
+d_1(v,w) := \sum_{i=1}^n \left| v_i - w_i \right| = \left\| v - w \right\|_1 = n \cdot \texttt{mae}(v,w),
+$$
+
+und der Faktor $\frac1n$ in der Definition ist genau das, was $\texttt{mae}$ von der Länge des Vektors unabhängig macht: $d_1$ wächst mit $n$, auch wenn das Modell gleich gut bleibt, $\texttt{mae}$ nicht. Vergleichen will man fast immer, also nimmt man fast immer den Mittelwert. (Zur Rolle der verschiedenen Normen siehe auch die Bemerkung zu $L_0$, $L_1$ und $L_2$ im Kapitel [Deskriptive Statistik](deskriptive-statistik.md) sowie die L1- und L2-Regularisierung im Kapitel [Regressionsanalyse](lineare-regression.ipynb).)
+
+:::{admonition} Beispiel
+Bis hierher war $w$ konstant. Es muss aber nicht konstant sein: Seien $v$ vier gemessene Körpergrößen in Zentimetern und $w$ das, was ein Modell für dieselben vier Personen vorhergesagt hat.
+
+| $i$ | 1 | 2 | 3 | 4 |
+|---|---|---|---|---|
+| $v_i$ (gemessen) | 178 | 160 | 155 | 174 |
+| $w_i$ (vorhergesagt) | 178 | 155 | 150 | 180 |
+| $v_i - w_i$ | 0 | 5 | 5 | −6 |
+
+Es ist $d_1(v,w) = 0 + 5 + 5 + 6 = 16$ und damit $\texttt{mae}(v,w) = \frac{16}{4} = 4$: Im Mittel liegt das Modell um vier Zentimeter daneben.
+
+Die mittlere Abweichung *ohne* Betrag, mit der wir diesen Abschnitt begonnen haben, ergibt dagegen $\frac{0 + 5 + 5 - 6}{4} = 1$ — trügerisch gering, weil sich die Fehler bei Person 4 gegen die bei den Personen 2 und 3 wegkürzen. Genau deshalb steht der Betrag da.
+:::
+
 Es ist natürlich sofort für einen Vektor $v$ interessant, welcher Vektor $w$ die geringste mittlere absolute Abweichung hat. Wenn man an $w$ jedoch keine weiteren Bedingungen stellt, ist mit $w=v$ das Minimum schnell gefunden. Wir werden dieser Frage später wieder begegnen und begnügen uns jetzt damit, zu fragen, welches $c \in \mathbb{R}$ den Ausdruck $\texttt{mae}(v,c)$ minimiert. Graphisch können wir uns vorstellen, als $x$-Achse die Zahlen von $1$ bis $n$ zu verwenden, und dort jeweils die Werte $v_i$ aufzutragen. Dann entspricht die Wahl eines $c \in \mathbb{R}$ einer horizontalen Gerade, und wir fragen uns, welche solche Gerade den geringsten gemeinsamen Abstand zu allen Punkten hat.
+
+:::{admonition} Beispiel
+Nehmen wir für die Körpergrößen $v = (178, 160, 155, 174)$ das konstante Modell $c = 165$, also die Behauptung „alle sind 165 cm groß“. Die Abweichungen sind $v_i - c = (13, -5, -10, 9)$, also
+
+$$
+d_1(v,165) = 13 + 5 + 10 + 9 = 37, \qquad \texttt{mae}(v,165) = \dfrac{37}{4} = 9{,}25.
+$$
+
+Ist $165$ die beste Wahl? Das ist genau die Frage nach dem Minimum, und sie hat, wie wir gleich sehen, eine überraschend einfache Antwort.
+:::
 
 :::{admonition} Definition
 $\texttt{median}(v) := \arg\min_{c \in \mathbb{R}} \texttt{mae}(v,c)$ ist \`\`der'' *Median* von $v$.
@@ -72,6 +104,14 @@ $$
 und für $c \in \mathbb{R}$ schreiben wir $\texttt{mse}(v,c) := \texttt{mse}(v, (c)_{i=1}^n)$.
 :::
 
+Wie bei der absoluten Abweichung ist die Summe ohne $\frac1n$ eine Norm, diesmal die quadrierte $2$-Norm:
+
+$$
+d_2(v,w)^2 := \sum_{i=1}^n {\left( v_i - w_i \right)}^2 = \left\| v - w \right\|_2^2 = n \cdot \texttt{mse}(v,w).
+$$
+
+Der $\texttt{mse}$ hat gegenüber dem $\texttt{mae}$ die Einheit zum Quadrat — bei Körpergrößen in Zentimetern also Quadratzentimeter, was sich schlecht interpretieren lässt. Deshalb zieht man am Ende meist die Wurzel; das ist die Sample-Standardabweichung im nächsten Unterabschnitt.
+
 :::{admonition} Proposition
 Für einen Vektor $v \in \mathbb{R}^n$ minimiert der (arithmetische) *Mittelwert* von $v$ die mittlere quadratische Abweichung:
 
@@ -93,6 +133,24 @@ $$
 $$
 
 und dieser Ausdruck wird nur für $\delta=0$ minimal, weil $\delta^2 \geq 0$.
+:::
+
+:::{admonition} Beispiel
+Dieselben vier Körpergrößen, jetzt quadratisch gemessen. Für die Modellvorhersagen $w = (178, 155, 150, 180)$ ist
+
+$$
+d_2(v,w)^2 = 0^2 + 5^2 + 5^2 + (-6)^2 = 86, \qquad \texttt{mse}(v,w) = \dfrac{86}{4} = 21{,}5.
+$$
+
+Interessanter ist der Vergleich der konstanten Modelle. Der Mittelwert ist $\texttt{mean}(v) = \frac{667}{4} = 166{,}75$. Sortiert lautet der Vektor $(155, 160, 174, 178)$, und nach der Überlegung oben ist jede Zahl zwischen $160$ und $174$ ein Median; die übliche Konvention wählt die Mitte, also $\texttt{median}(v) = 167$. Die beiden Fehlermaße küren tatsächlich verschiedene Sieger:
+
+| $c$ | $\texttt{mae}(v,c)$ | $\texttt{mse}(v,c)$ |
+|---|---|---|
+| $165$ | $9{,}25$ | $93{,}75$ |
+| $\texttt{median}(v) = 167$ | $9{,}25$ | $90{,}75$ |
+| $\texttt{mean}(v) = 166{,}75$ | $9{,}25$ | $\mathbf{90{,}6875}$ |
+
+In der mittleren Spalte steht dreimal dasselbe: Jede Zahl zwischen $160$ und $174$ minimiert den $\texttt{mae}$, auch die $165$ — der Median ist eben nicht eindeutig. In der rechten Spalte gewinnt dagegen genau eine Zahl, und das ist der Mittelwert. Ein Fehlermaß auszuwählen heißt also, sich ein bestes Modell auszusuchen.
 :::
 
 
@@ -488,6 +546,36 @@ $$
 
 Dabei macht es im Allgemeinen einen echten Unterschied, ob eine Familie unabhängig oder nur paarweise unabhängig ist, daher ist die Definition mit Familien wichtig.
 
+:::{admonition} Beispiel
+**Unabhängig: zwei Würfel.** Wir werfen zwei faire sechsseitige Würfel. Als Wahrscheinlichkeitsraum nehmen wir $\Omega = \{1,\dots,6\}^2$ mit der Gleichverteilung, also $36$ gleich wahrscheinliche Ergebnisse $(i,j)$. Sei $A$ das Ereignis „der erste Würfel zeigt eine gerade Zahl“ und $B$ das Ereignis „der zweite Würfel zeigt eine Sechs“. Dann ist
+
+$$
+P(A) = \dfrac{18}{36} = \dfrac{1}{2}, \qquad P(B) = \dfrac{6}{36} = \dfrac{1}{6}.
+$$
+
+Für den Schnitt zählen wir aus, statt eine Formel zu benutzen: $A \cap B = \{(2,6),(4,6),(6,6)\}$, also $P(A \cap B) = \frac{3}{36} = \frac{1}{12}$. Und tatsächlich ist $\frac12 \cdot \frac16 = \frac{1}{12}$, die beiden Ereignisse sind also unabhängig.
+
+Dass wir ausgezählt haben, ist wichtig: Hätten wir $P(A\cap B)$ gleich als Produkt berechnet, hätten wir die Unabhängigkeit vorausgesetzt statt sie zu prüfen. Inhaltlich ist sie hier klar, weil sich $A$ und $B$ auf verschiedene Würfel beziehen.
+:::
+
+:::{admonition} Beispiel
+**Abhängig: Bonbons ohne Zurücklegen.** In einer Tüte liegen drei Bonbons: ein rotes, ein grünes, ein blaues. Wir ziehen zwei davon nacheinander heraus, ohne das erste zurückzulegen. Der Wahrscheinlichkeitsraum ist die Menge der $6$ geordneten Paare verschiedener Farben,
+
+$$
+\Omega = \{(r,g),(r,b),(g,r),(g,b),(b,r),(b,g)\},
+$$
+
+wieder mit der Gleichverteilung. Sei $A$ das Ereignis „das erste Bonbon ist rot“ und $B$ das Ereignis „das zweite Bonbon ist grün“. Dann ist $A = \{(r,g),(r,b)\}$ mit $P(A) = \frac{2}{6} = \frac13$ und $B = \{(r,g),(b,g)\}$ mit $P(B) = \frac{2}{6} = \frac13$. Der Schnitt enthält nur ein einziges Ergebnis, $A \cap B = \{(r,g)\}$, also
+
+$$
+P(A \cap B) = \dfrac{1}{6} \neq \dfrac{1}{9} = P(A)\,P(B).
+$$
+
+Die beiden Ereignisse sind also *nicht* unabhängig. Das ist auch inhaltlich richtig: Wenn zuerst das rote Bonbon gezogen wurde, bleiben nur noch grün und blau übrig, und grün ist im zweiten Zug auf einmal wahrscheinlicher geworden — von $\frac13$ auf $\frac12$. Genau diese Zahl bekommt weiter unten einen Namen, sie ist die bedingte Wahrscheinlichkeit $P(B \mid A)$.
+
+Ziehen ohne Zurücklegen ist in Python `random.sample`, Ziehen mit Zurücklegen `random.choices` (siehe [Stochastik programmieren](stochastik-programmieren.ipynb)) — der Unterschied zwischen den beiden Funktionen ist genau der Unterschied zwischen abhängig und unabhängig.
+:::
+
 :::{admonition} Definition
 Sei $\Omega$ ein Wahrscheinlichkeitsraum.
 Eine Familie von Zufallsvariablen $(Y_i)_{i \in I}$, $Y_i \colon \Omega \to \Omega_i$ heißt *unabhängig*, wenn
@@ -515,6 +603,7 @@ die *bedingte Wahrscheinlichkeit* von $A$ bedingt $B$.
 :::
 
 Klar: $A$ und $B$ sind unabhängig voneinander genau dann wenn $P(A | B) = P(A)$.
+Im Bonbon-Beispiel oben ist $P(B \mid A) = \frac{P(A \cap B)}{P(A)} = \frac{1/6}{1/3} = \frac12$, und das ist nicht $P(B) = \frac13$ — so sieht Abhängigkeit in Zahlen aus.
 Bedingte Wahrscheinlichkeiten treten also stets dann auf (bzw. sind besonders interessant), wenn zwei Ereignisse (bzw. Zufallsvariablen) nicht unabhängig sind.
 
 ### Rechenregeln für die Varianz
