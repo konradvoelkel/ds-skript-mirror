@@ -16,6 +16,28 @@ $$
 $$
 :::
 
+In der Formel steckt ein Querstrich: $\overline{M}$ ist der *Abschluss* von $M$, die kleinste abgeschlossene Menge, die $M$ enthält. Er steht da, damit der Träger nicht an Randpunkten hängen bleibt, die einzeln keine Wahrscheinlichkeit tragen.
+
+:::{admonition} Definition
+Eine Menge $M \subseteq \mathbb{R}^n$ heißt *abgeschlossen*, wenn sie die Grenzwerte ihrer eigenen konvergenten Folgen enthält: Liegt eine Folge $(x_k)$ ganz in $M$ und konvergiert gegen $x$, so ist auch $x \in M$.
+:::
+
+Abgeschlossen sind zum Beispiel jedes Intervall der Form $[a,b]$, ganz $\mathbb{R}$ und jede endliche Menge. Nicht abgeschlossen ist dagegen $(0,1]$: Die Folge $\frac1k$ liegt darin, ihr Grenzwert $0$ nicht. Der Abschluss von $(0,1]$ ist $[0,1]$.
+
+Für eine diskrete Verteilung mit pmf $p$ vereinfacht sich der Träger zu
+
+$$
+\operatorname{supp}(P) = \{\, x \ \mid\ p(x) > 0 \,\},
+$$
+
+also zu der Menge der Werte, die überhaupt vorkommen können.
+
+:::{admonition} Beispiel
+Die Gleichverteilung auf $\Omega = \{1,\dots,n\}$ hat als Verteilung *auf $\Omega$* den Träger $\Omega$ selbst — dort ist jedes Element möglich.
+
+Dieselbe Verteilung lässt sich aber auch als Verteilung auf $\mathbb{R}$ auffassen, indem man alle übrigen reellen Zahlen mit Wahrscheinlichkeit $0$ versieht. Dann ist der Träger $\{1,\dots,n\} \subset \mathbb{R}$, eine endliche und damit abgeschlossene Teilmenge der reellen Zahlen. Der Träger hängt also nicht nur von der Verteilung ab, sondern auch davon, als Verteilung *worauf* man sie liest.
+:::
+
 Der Träger ist auch für diskrete reelle Zufallsvariablen definiert - der offensichtliche Unterschied ist, dass per definitionem diskrete Zufallsvariablen einen diskreten Träger haben (d.h. eine Menge reeller Zahlen, die keinen Häufungspunkt hat, insbesondere kein Intervall enthält).
 
 ## Dichtefunktionen

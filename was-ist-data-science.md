@@ -69,7 +69,9 @@ starting to work on the “real” problem
 
 Patil beschreibt also, woran man gute Data Scientists erkennt: an fachlicher Tiefe in irgendeiner Disziplin und vor allem an der Neugier, ein Problem so lange zu zerlegen, bis daraus überprüfbare Hypothesen werden.
 
-Ein signifikanter Teil der Arbeit eines Data Scientist besteht in der Aufbereitung von Daten, dem sogenannten "Daten schrubben". Dabei kommen viele klassische Programmiertechniken zum Einsatz, etwa reguläre Ausdrücke und Kenntnis über Industriestandards bei Datentypen (GIS, Datumsangaben, Unicode und andere Encodings, CSV) und die Abweichung von Standards, die in der Praxis auftauchen. Das Handwerk dazu hat in diesem Buch ein eigenes Kapitel, [Daten putzen](data-cleaning.ipynb).
+Ein signifikanter Teil der Arbeit eines Data Scientist besteht in der Aufbereitung von Daten, dem sogenannten "Daten schrubben". Dabei kommen viele klassische Programmiertechniken zum Einsatz, etwa reguläre Ausdrücke und Kenntnis über Industriestandards bei Datentypen und die Abweichungen von Standards, die in der Praxis auftauchen. Die Liste ist erstaunlich konkret: Zeit- und Datumsformate samt Zeitzonen und Sommerzeitumstellung, GIS-Datenformate für alles Räumliche, Ländercodes (von denen es mehrere konkurrierende Systeme gibt), Unicode und die Encodings, die es ersetzen sollte, und die gängigen Abweichungen vom CSV-Standard — Trennzeichen, Anführungszeichen, Zeilenumbrüche mitten im Feld. Das Handwerk dazu hat in diesem Buch ein eigenes Kapitel, [Daten putzen](data-cleaning.ipynb).
+
+Drei Punkte dieser Liste lernt man allerdings in keiner Vorlesung: Geduld, Übung und Fachkenntnisse über das Anwendungsgebiet. Ob ein Blutdruckwert von $400$ ein Messfehler ist oder ein Alter von $0$ ein fehlender Wert, steht in keinem Datenformat — das weiß nur, wer das Gebiet kennt oder jemanden fragt, der es kennt.
 Auch im maschinellen Lernen, etwa beim Deep Learning, kann man durch Pflegen der Trainingsdaten erheblich bessere Ergebnisse erzielen.
 
 

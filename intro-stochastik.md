@@ -4,6 +4,16 @@ Sie haben bereits in Mathematik für Informatik 3 die Grundlagen der (diskreten)
 
 Man kann Stochastik als Oberbegriff für Wahrscheinlichkeitstheorie und Statistik auffassen. Die Statistik beschäftigt sich mit stochastischen Modellen, die anhand von Beobachtungen entwickelt werden, und macht Schlussfolgerungen. Die Wahrscheinlichkeitstheorie beschäftigt sich mit der Untersuchung von Modellen und der Theorie dahinter.
 
+```{figure} images/stochastik-statistik-wtheorie.png
+:width: 480px
+:align: center
+:name: stochastik-uebersicht
+
+Stochastik als Oberbegriff: Die Statistik arbeitet an einem Ausschnitt der Realität, die Wahrscheinlichkeitstheorie an den Modellen.
+```
+
+Die beiden Pfeile in der Mitte sind die eigentliche Aussage des Bildes, und sie laufen in entgegengesetzte Richtungen. Vom Ausschnitt der Realität zu den Modellen führt die **Modellbildung**: Man beobachtet, sammelt Daten und stellt ein Modell auf, das dazu passt. Von den Modellen zurück zur Realität führt die **Vorhersage**: Man rechnet im Modell und behauptet etwas über die Welt, das sich prüfen lässt. Beide Richtungen braucht man, und dieses Buch geht sie mehrfach ab.
+
 Wie immer in der Informatik ist ein wesentliches Ziel, mit einem Modell einen Ausschnitt der Realität zu modellieren, d.h. von diesem Ausschnitt zu abstrahieren und mit dem Modell ein Stück der Realität vorherzusagen und das Modell an der Realität zu prüfen.
 
 Wir kennen bereits logische Modelle der Realität: Wenn es regnet, wird der Rasen nass. Wenn ich hungrig bin, und dann viel esse, bin ich danach nicht mehr hungrig.
@@ -169,6 +179,8 @@ Daran sieht man, was bei der Modellierung die eigentliche Arbeit ist: nicht das 
 
 :::{admonition} Beispiel
 Auf einer endlichen Menge $\Omega$ von Kardinalität $N := |\Omega|$ (also Anzahl der Elemente $N$) ist mit $\mathcal{F} := \mathcal{P}(\Omega)$ und $P(A) := |A| / N$ ein Wahrscheinlichkeitsmaß definiert, dass wir *Gleichverteilung* nennen.
+
+Der faire Würfel ist der Fall $\Omega = \{1,\dots,6\}$: Das Ereignis „gerade Augenzahl“ ist $\{2,4,6\}$ und hat die Wahrscheinlichkeit $P(\{2,4,6\}) = \frac{3}{6} = \frac12$. Nachrechnen lässt sich das auch im Code, siehe [Stochastik programmieren](stochastik-programmieren.ipynb).
 :::
 
 :::{admonition} Beispiel
@@ -177,6 +189,8 @@ Für einen beliebigen Ereignisraum $(\Omega,\mathcal{F})$ und ein festes Element
 $\delta_\xi := A \mapsto \begin{cases} 1 & \xi \in A,\\ 0 & \text{sonst} \end{cases}$
 
 ein Wahrscheinlichkeitsmaß definiert, das *Dirac-Maß* mit Einheitsmasse am Punkt $\xi$.
+
+Das ist der maximal unfaire Würfel: Ein Würfel, der immer eine Sechs zeigt, hat die Verteilung $\delta_6$. Für ihn ist $P(\{2,4,6\}) = 1$ und $P(\{1,2,3\}) = 0$ — das Ereignis „gerade Augenzahl“ tritt sicher ein, das Ereignis „höchstens drei“ nie. Zwischen diesen beiden Extremen, Gleichverteilung und Dirac-Maß, liegen alle übrigen Würfel.
 :::
 
 :::{admonition} Proposition

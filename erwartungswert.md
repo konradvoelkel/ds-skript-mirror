@@ -200,6 +200,25 @@ Für $v'$ sei $s := \texttt{rmse}(v)$, und $s > 0$ wegen $v \neq 0$. Dann ist $\
 $\texttt{rmse}(v')^2 = \texttt{mse}(v', 0) = \frac{1}{n} \sum_{i=1}^n \frac{v_i^2}{s^2} = \frac{\texttt{rmse}(v)^2}{s^2} = 1$.
 :::
 
+:::{admonition} Bemerkung
+Das Zentrieren lohnt eine eigene Schreibweise. Für $v \in \mathbb{R}^n$ setzt man
+
+$$
+\tilde{v} := v - \left( \texttt{mean}(v) \right)_{i=1}^n, \qquad \text{also } \tilde{v}_i = v_i - \texttt{mean}(v),
+$$
+
+und nennt $\tilde{v}$ das *zentrierte* $v$. Mit dem Verschiebungssatz von oben lassen sich Sample-Standardabweichung und Varianz dann ohne Summenzeichen hinschreiben:
+
+$$
+\sigma(v) = \texttt{rmse}(v) = \dfrac{1}{\sqrt{n}} \left\| \tilde{v} \right\|, \qquad
+\sigma(v)^2 = \dfrac{1}{n}\, \tilde{v} \cdot \tilde{v} = \dfrac{1}{n}\, \tilde{v}^\top \tilde{v}.
+$$
+
+In der Sprache der linearen Algebra ist die Sample-Standardabweichung also nichts anderes als die euklidische Länge des zentrierten Vektors, geteilt durch $\sqrt{n}$, und die Varianz das Skalarprodukt dieses Vektors mit sich selbst, geteilt durch $n$.
+:::
+
+Diese Sichtweise trägt weiter, als sie zunächst aussieht. Im Kapitel [Kovarianz und Abhängigkeit](kovarianz.md) stellt sich heraus, dass die Kovarianz zweier Zufallsvariablen sich genau wie ein Skalarprodukt verhält — die Varianz ist dann der Spezialfall „Vektor mit sich selbst“, und der Korrelationskoeffizient wird zum Kosinus des Winkels zwischen zwei zentrierten Vektoren.
+
 ### Informationsgehalt
 
 Ob ein Vektor $v \in \mathbb{R}^n$ für uns Informationen enthält, hängt davon ab, wie viel wir über $v$ bereits wissen.
@@ -493,6 +512,62 @@ In Numpy heißen die drei Funktionen `np.log` (natürlich, *nicht* dekadisch —
 ## Entropie
 
 [Vorlesungsaufzeichnung Entropie](https://media.hhu.de/channel/video/data-science-vl-5-entropie-2024/8f216336cc82cdd8015ddb7a6c59c252/167)
+
+::::{note}
+**Ausblick (nicht klausurrelevant): Woher das Wort kommt.** Der Begriff Entropie stammt aus der Thermodynamik, und die physikalische Anschauung erklärt gut, warum die Formel unten so aussieht, wie sie aussieht. Für den Kurs braucht man diesen Abschnitt nicht.
+
+Denken Sie sich zwei baugleiche Behälter mit derselben Anzahl Gasteilchen darin. Im ersten sind die Teilchen gleichmäßig verteilt, im zweiten hocken sie alle in einer Ecke.
+
+```{figure} images/entropie-gas-hoch.png
+:width: 360px
+:align: center
+:name: entropie-gas-hoch
+
+Gleichmäßig verteilte Teilchen: hohe Entropie.
+```
+
+```{figure} images/entropie-gas-niedrig.png
+:width: 360px
+:align: center
+:name: entropie-gas-niedrig
+
+Alle Teilchen in einer Ecke: niedrige Entropie.
+```
+
+Der zweite Zustand überrascht uns, der erste nicht. Und wir wissen auch, in welche Richtung die Geschichte weitergeht: Der zweite Behälter wird nach kurzer Zeit aussehen wie der erste, der erste dagegen nie wie der zweite. Das ist der **zweite Hauptsatz der Thermodynamik**: In einem abgeschlossenen System kann die Entropie nicht abnehmen. Ein Spiegelei lässt sich nicht in ein rohes Ei zurückverwandeln.
+
+Naheliegend, aber irreführend ist die Übersetzung „Entropie = Unordnung“. Genauer ist die Unterscheidung zwischen *Makrozustand* und *Mikrozustand*. Der Makrozustand ist das, was man messen kann — Temperatur, Druck, „alle Teilchen links“ —, der Mikrozustand die vollständige Angabe, wo jedes einzelne Teilchen sitzt. Zu einem Makrozustand gehören meist ungeheuer viele Mikrozustände, und genau deren Anzahl ist das Maß: Zum Makrozustand „gleichmäßig verteilt“ gehören unvorstellbar viel mehr Anordnungen als zum Makrozustand „alle in der linken oberen Ecke“. Ludwig Boltzmann hat das in die Formel
+
+$$
+S = k_B \ln W
+$$
+
+gegossen, wobei $W$ die Anzahl der Mikrozustände zum gegebenen Makrozustand ist und $k_B$ eine Naturkonstante, die nur die Einheit richtig stellt. Zieht man in beide Behälter eine Trennwand ein, wird der Unterschied handgreiflich:
+
+```{figure} images/entropie-gas-hoch-geteilt.png
+:width: 360px
+:align: center
+:name: entropie-gas-hoch-geteilt
+
+Mit Trennwand: Links und rechts ist ungefähr gleich viel Gas — dieser Makrozustand lässt sich auf sehr viele Arten herstellen.
+```
+
+```{figure} images/entropie-gas-niedrig-geteilt.png
+:width: 360px
+:align: center
+:name: entropie-gas-niedrig-geteilt
+
+Mit Trennwand: Alles Gas ist links — dieser Makrozustand lässt nur wenige Anordnungen zu.
+```
+
+:::{admonition} Merke
+Entropie ist immer *relativ zu einem Makrozustand* definiert. Wir zählen die Möglichkeiten, die mit unserem Wissen verträglich sind, und nehmen dann den Logarithmus.
+:::
+
+Diesen Satz können Sie unverändert mitnehmen, wenn Sie gleich die Definition für Zufallsvariablen lesen: Der Makrozustand ist dort die Verteilung, die wir kennen, und gezählt (genauer: gewichtet) wird über die Ergebnisse, die sie zulässt. Der Logarithmus bleibt.
+::::
+
+Von der Physik in die Nachrichtentechnik gebracht hat den Begriff Claude Shannon (1916–2001) in seiner Arbeit *A Mathematical Theory of Communication* {cite}`shannon1948`, mit der 1948 die Informationstheorie als eigenes Gebiet begann. Shannon fragte, wie viele Bits man mindestens braucht, um eine Nachricht zu übertragen, und fand dieselbe Größe wieder, die Boltzmann für Gasteilchen aufgeschrieben hatte. Sie heißt ihm zu Ehren auch *Shannon-Entropie*.
 
 :::{admonition} Definition
 Bei einem diskreten Wahrscheinlichkeitsraum $\Omega$ nennen wir für $x \in \Omega$ die *Information* (auch *Selbstinformation*) von $x$

@@ -41,12 +41,15 @@ Studierende sollen nach Absolvierung der Lehrveranstaltungen grundlegende Konzep
 
 Dazu sind Sie damit vertraut, wie sich diese Aufgaben mit Python lösen lassen.
 
+**Weitergehende Ziele.** Hinter dieser Liste steht ein einfacheres Bild davon, was Sie am Ende können sollen: einen Datensatz in die Hand nehmen und dazu sofort Fragestellungen formulieren *und* beantworten können. Teil der explorativen Datenanalyse ist genau dieses Generieren von Forschungsfragen. Dazu kommt, Fachartikel und Berichte lesen zu können, in denen statistisch argumentiert wird — und zu erkennen, wenn darin etwas nicht stimmt.
+
+Beruflich öffnet das mehrere Türen. Die naheliegende ist eine Bewerbung als „Junior Data Scientist“ oder „Junior Data Analyst“; die zweite ist der Master [Artificial Intelligence and Data Science](https://www.heicad.hhu.de/lehre/masters-programme-ai-and-data-science), auf den dieser Kurs vorbereitet. Die dritte wird oft übersehen: Data-Science-Techniken sind auch dort nützlich, wo niemand diese Stellenbezeichnung trägt — in der Produktentwicklung (*data-driven design*), bei der Optimierung laufender Systeme anhand von Logfiles, bei Performancevergleichen als Grundlage für Entscheidungen (*data-driven decision making*), in der Qualitätskontrolle und überall dort, wo eine Komponente mit maschinellem Lernen in ein größeres System eingebaut werden soll.
+
 **Was diese Vorlesung nicht ist**
 Diese Vorlesung behandelt keine Data Science auf verteilten Systemen, das ist Thema von Data Science 2. Sie ist keine Einführung in Deep Learning, dafür gibt es die Vorlesung „Einführung in Deep Learning“. Sie führt nicht in R/RStudio oder andere Werkzeuge ein. Sie reduziert Data Science nicht auf den Aufruf von `model.fit()`: Wir programmieren Schätzer und Algorithmen selbst nach, um zu verstehen, was dabei passiert. Und sie ist kein Programmierkurs, Python-Vorkenntnisse werden aber nicht vorausgesetzt; was wir brauchen, steht im Kapitel [Einführung in Python](intro-python.ipynb).
 
 Bei der Auswahl und Verarbeitung von Daten sowie der Bewertung von Modellen stellen sich auch ethische Fragen. Dieses Skript behandelt davon den rechtlichen Rahmen des Datenschutzes in einem eigenen Kapitel, als Glossar der wichtigsten Begriffe; die weitergehende ethische Diskussion ist nicht Teil des Skripts.
 
-Teil der explorativen Datenanalyse ist das Generieren von Forschungsfragen.
 
 ## Aufbau der Vorlesung
 

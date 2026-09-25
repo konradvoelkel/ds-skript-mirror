@@ -37,8 +37,8 @@ Maschinelles Lernen ist ein Teilgebiet der künstlichen Intelligenz, Statistik e
 
 Die rechte Spalte ist das Vokabular des Kurses „Einführung in Deep Learning“, der durchgehend damit arbeitet; wer die linke Spalte kennt, findet sich dort schnell zurecht.
 
-Die *explorative Datenanalyse* ist das Berechnen summarischer Statistik und Visualsierung (also deskriptiver Statistik), um eine bessere Einschätzung über die Informationen in einem Datensatz zu erlangen.
-Beim *Data Mining* geht es darum, diesen Arbeitsschritt in einem Data Science Projekt zu automatisieren, also die automatische Entdeckung von Mustern und Zusammenhängen.
+Die *explorative Datenanalyse* ist das Berechnen summarischer Statistik und Visualisierung (also deskriptiver Statistik), um eine bessere Einschätzung über die Informationen in einem Datensatz zu erlangen. Sie ist ein menschengesteuerter, iterativer Prozess und braucht Wissen über das Anwendungsgebiet — ohne eine Vorstellung davon, welche Werte plausibel sind und welche Fragen sich lohnen, produziert man Diagramme statt Erkenntnisse.
+Beim *Data Mining* geht es darum, diesen Arbeitsschritt in einem Data Science Projekt zu automatisieren, also die automatische Entdeckung von Mustern und Zusammenhängen, oft nach einem vorher festgelegten Schema.
 
 Man kann die verschiedenen Kulturen des Modellierens noch etwas feiner aufschlüsseln, wie es C. Molnar in dem Buch ``Modeling Mindsets: The Many Cultures Of Learning From Data'' getan hat {cite}`molnarmindsets`; dazu ist es aber hilfreich, bereits den Maximum-Likelihood-Ansatz und den Satz von Bayes zu kennen.
 
@@ -48,7 +48,7 @@ Man kann die verschiedenen Kulturen des Modellierens noch etwas feiner aufschlü
 
 Die beschreibende (deskriptive) Statistik besteht aus den Datenanalysen, die *vor* der schließenden (inferentiellen) Statistik gemacht werden. Das besteht vor allem in der Beschreibung der Daten durch verschiedene Maßzahlen.
 
-* Stichprobe = Sample, hat einen Umfang = Länge = Anzahl der Elemente / Zeilen / Instanzen / Ergebnisse
+* Stichprobe = Sample, hat einen Umfang = Länge = Anzahl der Elemente / Zeilen / Instanzen / Ergebnisse (in Numpy ist das die Länge von Achse 0, siehe [Numpy](numpy.ipynb))
   
   Abzugrenzen von der Stichprobe ist die *Population*, das ist die Grundgesamtheit aller möglichen Ergebnisse, mit einer gewissen Verteilung.
   
@@ -256,6 +256,8 @@ The Datasaurus Dozen, inspiriert von Anscombe's Quartett.
     Um die Häufigkeitsverteilung kardinal skalierter Merkmale zu visualisieren, kann man das Merkmal auf der x-Achse auftragen und nebeneinander liegende Rechtecke, deren Flächeninhalt der Häufigkeit einer Klasse darstellen, die durch Aufsummieren der Häufigkeit über das zugrunde liegende Intervall auf der x-Achse zustande kommen. Die Intervalllänge heißt Eimergröße (bucket size), binsize oder Klassengröße. Die Wahl der richtigen binsize ist eine Wissenschaft für sich und es gibt verschiedene Algorithmen zur Berechnung einer "guten" binsize.
     
     Histogramme sind also spezielle Bar charts / Column charts. Für nominal skalierte Merkmale lässt sich direkt der entsprechende Bar chart betrachten, der gleich breite Rechtecke mit Höhe entsprechend der Häufigkeit einer Ausprägung enthält. Dazu muss noch eine willkürliche Anordnung der Ausprägungen gewählt werden.
+
+    Willkürlich ist die Anordnung allerdings nur bei *nominalen* Merkmalen; bei einem ordinalen Merkmal sollte die $x$-Achse der Ordnung folgen, sonst verschenkt man die Information, die in ihr steckt. Will man mehrere Gruppen im selben Diagramm zeigen, stapelt man die Balken übereinander (`plt.bar(..., bottom=...)`) — ein *stacked bar chart*. Das ist genau dann sinnvoll, wenn die Summe der Gruppen selbst eine Bedeutung hat; sonst sind nebeneinandergestellte Balken leichter zu vergleichen, weil sie alle auf derselben Grundlinie stehen. Ein einfaches Beispiel mit `plt.bar` steht im Kapitel [Titanic EDA](explorative-analyse-mit-numpy.ipynb).
     
     Ein Histogramm besteht also eigentlich aus einer statistischen Transformation von stetigen (kardinal skalierten) Daten in diskrete Daten, die dann gebarchartet werden.
     
@@ -265,6 +267,16 @@ The Datasaurus Dozen, inspiriert von Anscombe's Quartett.
   
     Eine Menge von Vektoren in $\mathbb{R}^2$ lässt sich darstellen indem an den Koordinaten ein Symbol dargestellt wird, etwa ein gefüllter Kreis.
     Typischerweise werden bei tabellarischen Daten zwei Variablen ausgewählt, je eine für x- und y-Achse.
+
+    In Matplotlib ist das eine Zeile, und wenn die Daten schon als $(N,2)$-Array vorliegen, sind es die beiden Spalten:
+
+    ```python
+    plt.scatter(x, y, marker="o")
+    plt.scatter(daten[:, 0], daten[:, 1])                  # dasselbe für ein (N,2)-Array
+    plt.scatter(daten[:, 0], daten[:, 1], c=daten[:, 2])   # dritte Spalte als Farbe
+    ```
+
+    Die dritte Zeile ist der Trick, mit dem ein Scatterplot eine dritte Variable unterbringt: `c=` färbt jeden Punkt nach seinem Wert, und `cmap=` bestimmt, welche Farbskala dafür benutzt wird. Für ein kategoriales Merkmal mit wenigen Ausprägungen ergibt das Gruppen in verschiedenen Farben — so eingefärbt ist der Iris-Scatterplot im Kapitel [Iris](iris.ipynb) (dort mit `cmap=plt.cm.cividis_r`), und im Kapitel [Explorative Analyse: Beispiele](explorative-analyse-beispiele.ipynb) trägt die Farbe im Wein-Datensatz die Rebsorte.
     
   * Boxplot, auch Box-and-Whiskers-plot
   
@@ -273,6 +285,16 @@ The Datasaurus Dozen, inspiriert von Anscombe's Quartett.
   * Linienplot
   
     Wenn man eine oder mehrere Funktionsgraphen plottet (so wie wir es mit den PDF getan haben), sind das Lininenplots. Man kann ebenso Daten auf Kardinalskalen mit einem Linienplot darstellen, aber das Verbinden von Punkten suggeriert eine Datenfülle, die nicht unbedingt vorliegt.
+
+    Umgekehrt ist der Linienplot genau das richtige Werkzeug, wenn die Daten tatsächlich von einer Kurve stammen: Man sampelt Punkte entlang der Kurve und verbindet sie. Ein Kreis etwa entsteht so:
+
+    ```python
+    winkel = np.linspace(0, 2 * np.pi, 360)
+    plt.plot(np.cos(winkel), np.sin(winkel), linewidth=2)
+    plt.axis("equal")    # sonst wird aus dem Kreis eine Ellipse
+    ```
+
+    Dasselbe Prinzip steckt hinter jedem Dichteplot in diesem Buch: Die Dichtefunktion wird an einigen hundert Stellen ausgewertet und die Werte werden verbunden.
     
   * Tortendiagramm
   
@@ -365,7 +387,11 @@ The Datasaurus Dozen, inspiriert von Anscombe's Quartett.
     
   * Farben
   
-    Bei der Wahl von Farbskalen muss man auf die Unterscheidbarkeit achten, aber auch auf die späteren Betrachter\*innen der Plots:
+    Bei der Wahl von Farbskalen muss man auf die Unterscheidbarkeit achten, aber auch auf die späteren Betrachter\*innen der Plots. Zwei Gründe, Farbe nie als einziges Unterscheidungsmerkmal einzusetzen:
+
+    Erstens die Umstände. Ein Plot wird im Sonnenlicht auf einem Laptop angesehen, über einen schlecht kalibrierten Beamer projiziert oder ausgedruckt — früher regelmäßig in Graustufen. Was bleibt, ist die Helligkeit. Eine Farbskala sollte also auch dann noch funktionieren, wenn man ihr die Farbe wegnimmt, und Kurven unterscheidet man zusätzlich über den Linienstil (`linestyle="--"`, gepunktet, verschiedene Strichstärken) oder über Marker (`marker="x"`, Kreise, Dreiecke).
+
+    Zweitens die Betrachter\*innen selbst: Etwa jeder zwölfte Mann und jede zweihundertste Frau nimmt Farben anders wahr als die Mehrheit, am häufigsten Rot und Grün. In einer Vorlesung mit zweihundert Zuhörenden sitzen also typischerweise mehrere Menschen, für die eine Rot-Grün-Skala keine Skala ist. Das ist häufig genug, um es zur Gewohnheit zu machen und nicht zur Ausnahme:
     
     
 ```{figure} images/color-blind-friendly-palette-13.jpg
