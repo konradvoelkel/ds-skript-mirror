@@ -78,5 +78,5 @@ site:
     logo: images/logo-wide.svg
     favicon: images/favicon.ico
     folders: true
-    style: _site/custom-style.css   # Markenfarbe des Skripts, siehe BRANDING.md
+    style: _site/custom-style.css
   template: book-theme
