@@ -18,6 +18,21 @@
 \lstdefinelanguage{null}{}
 \lstset{basicstyle=\ttfamily\small, breaklines=true, columns=fullflexible, keepspaces=true,
         showstringspaces=false}
+% MyST renders an admonition as a `framed` box and still emits \begin{figure}[!htbp]
+% for a figure inside it -- but a float cannot live inside a box, so xelatex reports
+% "Not in outer par mode" and the figure is lost. Turning every figure into a non-floating
+% [H] box fixes it; this is the same trick nbconvert's own LaTeX template uses. The book
+% places its figures where it wants them anyway, so nothing is given up.
+\usepackage{float}
+\let\origfigure\figure
+\let\endorigfigure\endfigure
+\renewenvironment{figure}[1][2]{\expandafter\origfigure\expandafter[H]}{\endorigfigure}
+% MyST emits \begin{enumerate}[resume] when a numbered list is interrupted by a formula
+% and continues afterwards. article has no such option and does not error on it either:
+% it typesets "[resume]" as literal text, the resumed item loses its number, and the items
+% after it run into the same paragraph unnumbered. Silent, so a non-forced build would not
+% catch it. The rules of calculation in erwartungswert.md are the one affected list.
+\usepackage{enumitem}
 % A4 with moderate margins: the article default is US letter with a ~11.5 cm text block,
 % which makes every 12x4 inch matplotlib figure at 0.7\linewidth tiny.
 \usepackage[a4paper, margin=2.5cm]{geometry}
