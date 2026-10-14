@@ -1,4 +1,8 @@
-# Herleitung des mathematischen Formalismus der Stochastik
+---
+title: "Herleitung des mathematischen Formalismus der Stochastik"
+short_title: "Formalismus der Stochastik"
+description: "Warum Wahrscheinlichkeitsräume so aussehen, wie sie aussehen: vom Maßproblem über σ-Algebren zum Tripel aus Ergebnisraum, Ereignissen und Wahrscheinlichkeitsmaß."
+---
 
 [Vorlesungsaufzeichnung Wahrscheinlichkeitsmaß (VL 2, erster Teil)](https://media.hhu.de/channel/video/data-science-vl-2-wahrscheinlichkeitsmass-zufallsvariable-pmf-2025/d5149a6bce20e827dc30685847505f16/167)
 

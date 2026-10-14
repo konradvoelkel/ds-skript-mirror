@@ -1,4 +1,7 @@
-# Zufallsvariablen und Verteilungen
+---
+title: "Zufallsvariablen und Verteilungen"
+description: "Zufallsvariablen als Schnittstelle zu Verteilungen: induziertes Wahrscheinlichkeitsmaß, Wahrscheinlichkeitsmassefunktion, Wahrscheinlichkeitsvektor, und der Weg von Daten zu Modellen."
+---
 
 [Vorlesungsaufzeichnung Zufallsvariablen und Verteilungen](https://media.hhu.de/channel/video/data-science-vl-2-wahrscheinlichkeitsmass-zufallsvariable-pmf-2025/d5149a6bce20e827dc30685847505f16/167)
 

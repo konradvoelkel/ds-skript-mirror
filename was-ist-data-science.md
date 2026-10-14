@@ -1,4 +1,7 @@
-# Was ist Data Science?
+---
+title: "Was ist Data Science?"
+description: "Was Data Science ist und was nicht, eingeleitet am Fall Reinhart–Rogoff, dessen Tabellenfehler die europäische Sparpolitik mit begründete. Daten, beteiligte Disziplinen, Berufsbild."
+---
 
 [Vorlesungsaufzeichnung Überblick (VL 0)](https://media.hhu.de/channel/video/data-science-vl-0-ueberblick-2025/95a1f14466cb299f6063e931d38e733a/167)
 

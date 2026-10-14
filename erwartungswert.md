@@ -1,4 +1,7 @@
-# Erwartungswert und Varianz
+---
+title: "Erwartungswert und Varianz"
+description: "Abweichung quantifizieren: absolute und quadratische Abweichung, Sample-Standardabweichung, Momente, Erwartungswert diskret und stetig. Mit Exkurs zur Entropie aus der Physik."
+---
 
 [Vorlesungsaufzeichnung Erwartungswert und Varianz](https://media.hhu.de/channel/video/data-science-vl-3-erwartungswert-varianz-2025/a9c845841d79aa3c9d893280bbf7b5a7/167)
 [Vorlesungsaufzeichnung Unabhängigkeit und Gesetz der großen Zahlen](https://media.hhu.de/channel/video/data-science-vl-4-grosse-zahlen-2025/83a373228e9c6999642f74ab85762b27/167) 

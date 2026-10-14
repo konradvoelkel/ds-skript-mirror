@@ -7,6 +7,9 @@ variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
   BASE_URL: "/$CI_PROJECT_NAME"
   HOST: "127.0.0.1"
+  # Origin der veroeffentlichten Seite. BASE_URL setzt nur den *Pfad*; MyST 1.10 hat keine
+  # Einstellung fuer die Origin, deshalb steht sie hier und wird im pages-Job nachgetragen.
+  SITE_ORIGIN: "https://voelkel.pages.cs.uni-duesseldorf.de"
 
 cache:
   paths:
@@ -74,6 +77,32 @@ pages:
   script:
     - mv _build/html public
     - cp exports/ds-skript.pdf public/ || echo "no PDF in this run"
+    # --- Absolute URLs nachtragen -------------------------------------------------------
+    # MyST holt robots.txt und sitemap.xml beim statischen Bau vom eigenen Dev-Server und
+    # schreibt dessen Origin hinein: ohne diesen Schritt enthaelt die deployte sitemap.xml
+    # 31 mal "http://localhost:3000", und robots.txt nennt die Sitemap genau dort. Fuer
+    # Crawler ist die Seite damit ohne Sitemap. Es gibt keine Konfiguration dafuer (MyST
+    # 1.10 kennt kein SITE_URL), also hier.
+    - SITE="$SITE_ORIGIN$BASE_URL"
+    - sed -i "s|http://localhost:3000|$SITE|g" public/sitemap.xml public/robots.txt
+    # Der Wurzeleintrag der Sitemap hat keinen Schraegstrich, die Seite verlinkt ihre Wurzel
+    # aber als "$BASE_URL/". Angleichen, damit Sitemap und Canonical nicht auseinanderlaufen.
+    - sed -i "s|<loc>$SITE</loc>|<loc>$SITE/</loc>|" public/sitemap.xml
+    # og:image ist wurzelrelativ ("/ds-skript/build/<hash>.png"). OpenGraph verlangt eine
+    # absolute URL, sonst bleibt die Vorschaukarte in Slack, LinkedIn und Mastodon leer.
+    - find public -name '*.html' -exec sed -i "s|content=\"$BASE_URL/build/|content=\"$SITE/build/|g" {} +
+    # Canonical: MyST emittiert keinen. Je Seite einen setzen, damit PDF-Kopien und ein
+    # spaeterer Umzug nicht als Dubletten gewertet werden.
+    - |
+      for f in $(find public -name 'index.html'); do
+        rel=$(dirname "${f#public/}")
+        # Ohne Schraegstrich, denn so verlinkt die Seite ihre Unterseiten selbst
+        # ("href=/ds-skript/numpy") und so stehen sie in der Sitemap.
+        if [ "$rel" = "." ]; then url="$SITE/"; else url="$SITE/$rel"; fi
+        grep -q 'rel="canonical"' "$f" || sed -i "s|</head>|<link rel=\"canonical\" href=\"$url\"/></head>|" "$f"
+      done
+    # Kontrolle: bricht den Job ab, falls doch eine localhost-URL ueberlebt hat.
+    - if grep -rq "localhost:3000" public/sitemap.xml public/robots.txt; then echo "FEHLER: localhost in sitemap/robots"; exit 1; fi
   artifacts:
     paths:
       - public

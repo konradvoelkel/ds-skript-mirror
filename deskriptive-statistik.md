@@ -1,4 +1,7 @@
-# Deskriptive Statistik und Visualisierung
+---
+title: "Deskriptive Statistik und Visualisierung"
+description: "Skalenniveaus und welche Maßzahlen sie zulassen, ein durchgerechnetes Beispiel, das Simpson-Paradoxon und die Visualisierung: explorative Datenanalyse als Prozess."
+---
 
 [Vorlesungsaufzeichnung Deskriptive Statistik (VL 9, ab Minute 54)](https://media.hhu.de/channel/video/data-science-vl-9-stetige-verteilungen-2025/39016f5414ef3b8edd0dff941f802314/167?t=3244)
 [Vorlesungsaufzeichnung Skalenniveaus und Plots (VL 10, ab Minute 49)](https://media.hhu.de/channel/video/data-science-vl-10-skalenniveaus-2025/9b824315922a75d933e081f31c1da388/167?t=2940)

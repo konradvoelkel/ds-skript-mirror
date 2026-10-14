@@ -1,4 +1,8 @@
-# Multivariate Statistik: Kovarianz und Abhängigkeit
+---
+title: "Multivariate Statistik: Kovarianz und Abhängigkeit"
+short_title: "Kovarianz und Abhängigkeit"
+description: "Gemeinsame Verteilung, Marginalverteilung und der Satz von Bayes, dann die Kovarianz: wie sie sich wie ein Skalarprodukt verhält und warum der Korrelationskoeffizient ein Kosinus ist."
+---
 
 [Vorlesungsaufzeichnung Kovarianz und Korrelation (VL 11)](https://media.hhu.de/channel/video/data-science-vl-11-kovarianz-korrelation-2025/92283e63495a6413e5e1b55a17ed31fb/167)
 

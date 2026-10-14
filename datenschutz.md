@@ -1,4 +1,8 @@
-# Datenschutz
+---
+title: "Datenschutz und DSGVO: ein Glossar"
+short_title: "Datenschutz"
+description: "Die Begriffe des Datenschutzrechts, die bei der Arbeit mit Daten wirklich vorkommen: personenbezogene Daten, die Grundprinzipien nach Art. 5, Rechtsgrundlagen, Privacy by Design."
+---
 
 [Vorlesungsaufzeichnung Datenschutz](https://media.hhu.de/channel/video/data-science-vl-15-datenschutz-2025/4912a23e7ad45d8389135220db07bc47/167)
 

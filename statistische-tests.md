@@ -1,4 +1,8 @@
-# Statistische Tests
+---
+title: "Statistische Tests: z-Test, t-Test und der p-Wert"
+short_title: "Statistische Tests"
+description: "Prognose- und Konfidenzintervalle, der Schluss von der Stichprobe auf die Population, die Konstruktion von Tests, z-Test und Student-t-Test, mit Exkursen bis zur ANOVA."
+---
 
 [Vorlesungsaufzeichnung Tests und Signifikanz (VL 21, ab Minute 34)](https://media.hhu.de/channel/video/data-science-vl-21-kernel-trick-und-signifikanz-bei-tests-2025/742bea567f5ae6e6a2d2a1b1fb8115c7/167?t=2040)
 

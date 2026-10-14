@@ -55,6 +55,21 @@
 
 \begin{document}
 \maketitle
+% Lizenzhinweis. Er steht hier und nicht im Buchtext, weil MyST den ersten TOC-Eintrag als
+% Index-Seite behandelt und beim PDF-Export weglaesst: der Lizenzabschnitt der Landingpage
+% erscheint im PDF also nicht. Ohne diesen Block wird das PDF ohne Lizenzangabe verteilt,
+% was CC BY-SA nicht zulaesst -- die Angabe muss mit dem Werk mitlaufen.
+\begin{center}
+\small
+Dieses Skript steht unter der Lizenz
+\href{https://creativecommons.org/licenses/by-sa/4.0/deed.de}{Creative Commons
+Namensnennung -- Weitergabe unter gleichen Bedingungen 4.0 (CC BY-SA 4.0)};
+jeglicher Code darin außerdem unter der GPL3.\\
+Davon ausgenommen sind gekennzeichnete Fremdinhalte unter ihrer jeweils eigenen Lizenz:
+die xkcd-Comics (CC BY-NC 2.5), das Venn-Diagramm von Drew Conway (CC BY-NC 3.0) und der
+Melbourne-Housing-Datensatz von Anthony Pino (CC BY-NC-SA 4.0). Bei jedem dieser Inhalte
+steht die Quelle an Ort und Stelle.
+\end{center}
 [# if parts.abstract #]\begin{abstract}[-parts.abstract-]\end{abstract}[# endif #]
 
 [# if options.link #]

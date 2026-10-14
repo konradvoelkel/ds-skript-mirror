@@ -4,7 +4,7 @@ project:
   short_title: DS
   title: Data Science Vorlesungsskript
   subtitle: im Bachelor Informatik
-  description: Skript zur Vorlesung an der HHU
+  description: "Vorlesungsskript Data Science: Stochastik, Statistik und Python von den Grundlagen bis zum maschinellen Lernen, mit selbst programmierten Lernverfahren."
   authors:
     - name: Dr. Konrad Völkel
       affiliations:
@@ -73,6 +73,7 @@ project:
         - file: model-selection.ipynb
         - file: expectation-maximization.ipynb
     - file: folien.md
+    - file: orga.md
 site:
   options:
     logo: images/logo-wide.svg

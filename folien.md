@@ -1,8 +1,7 @@
 ---
-title: Vorlesungsfolien
+title: "Vorlesungsfolien"
+description: "Die Folien zu jeder Sitzung als PDF, jeweils mit dem Kapitel, zu dem sie gehören. Die LaTeX-Quellen liegen im Repositorium."
 ---
-
-# Vorlesungsfolien
 
 Zu jeder Sitzung der Vorlesung gibt es Folien, hier als PDF (Stand Sommersemester 2026). Das Buch
 ist ausführlicher als die Folien; die Folien stützen den Vortrag und sind zum Wiederholen gedacht,

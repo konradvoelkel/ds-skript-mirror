@@ -1,4 +1,8 @@
-# Relative Entropie
+---
+title: "Relative Entropie und Kullback-Leibler-Divergenz"
+short_title: "Relative Entropie"
+description: "Warum in der Informationstheorie der Logarithmus auftaucht, Definition und Eigenschaften der relativen Entropie, dazu Verbundentropie und stetige Entropie."
+---
 
 [Vorlesungsaufzeichnung Relative und stetige Entropie](https://media.hhu.de/channel/video/data-science-vl-22-relative-und-stetige-entropie/5dcf4a4c1f44569d78493f65d76a735f/167)
 

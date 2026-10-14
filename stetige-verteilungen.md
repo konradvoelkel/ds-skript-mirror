@@ -1,4 +1,8 @@
-# Stetige Verteilungen
+---
+title: "Stetige Verteilungen und Dichtefunktionen"
+short_title: "Stetige Verteilungen"
+description: "Von der Wahrscheinlichkeitsmassefunktion zur Dichte: warum einzelne Punkte Nullmengen sind, was eine Dichtefunktion leistet und wie sie mit der Verteilungsfunktion zusammenhängt."
+---
 
 [Vorlesungsaufzeichnung Stetige Verteilungen](https://media.hhu.de/channel/video/data-science-vl-7-stetige-verteilungen-2024/1c1abcd6741c7c428fb6aa67827a06a3/167)
 

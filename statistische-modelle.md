@@ -1,4 +1,8 @@
-# Statistische Modelle und Schätzer
+---
+title: "Statistische Modelle, Schätzer und Maximum Likelihood"
+short_title: "Statistische Modelle und Schätzer"
+description: "Was ein statistisches Modell behauptet, was ein Schätzer ist, was Erwartungstreue bedeutet, und wie das Maximum-Likelihood-Prinzip Schätzer liefert."
+---
 
 [Vorlesungsaufzeichnung Statistische Modelle und Maximum Likelihood (VL 17)](https://media.hhu.de/channel/video/data-science-vl-17-maximum-likelihood-2025/edefe4fe4cf095537fbe80bf1a401b21/167)
 
