@@ -99,8 +99,11 @@ pages:
     # 1.10 kennt kein SITE_URL), also hier.
     - SITE="$SITE_ORIGIN$BASE_URL"
     - sed -i "s|http://localhost:3000|$SITE|g" public/sitemap.xml public/robots.txt
-    # Der Wurzeleintrag der Sitemap hat keinen Schraegstrich, die Seite verlinkt ihre Wurzel
-    # aber als "$BASE_URL/". Angleichen, damit Sitemap und Canonical nicht auseinanderlaufen.
+    # Jede <loc> auf die URL bringen, die wirklich 200 liefert. GitLab Pages leitet
+    # "/ds-skript/numpy" per 302 auf "/ds-skript/numpy/" um; MyST schreibt aber die Form ohne
+    # Schraegstrich in die Sitemap. Eine Sitemap voller Weiterleitungen (und ein Canonical, der
+    # auf eine Weiterleitung zeigt) ist unnoetig unklar, also hier den Schraegstrich ergaenzen.
+    - sed -i "s|<loc>\\($SITE[^<]*[^/]\\)</loc>|<loc>\\1/</loc>|g" public/sitemap.xml
     - sed -i "s|<loc>$SITE</loc>|<loc>$SITE/</loc>|" public/sitemap.xml
     # og:image ist wurzelrelativ ("/ds-skript/build/<hash>.png"). OpenGraph verlangt eine
     # absolute URL, sonst bleibt die Vorschaukarte in Slack, LinkedIn und Mastodon leer.
@@ -110,9 +113,10 @@ pages:
     - |
       for f in $(find public -name 'index.html'); do
         rel=$(dirname "${f#public/}")
-        # Ohne Schraegstrich, denn so verlinkt die Seite ihre Unterseiten selbst
-        # ("href=/ds-skript/numpy") und so stehen sie in der Sitemap.
-        if [ "$rel" = "." ]; then url="$SITE/"; else url="$SITE/$rel"; fi
+        # MIT Schraegstrich: das ist die URL, die 200 liefert. Die Seite verlinkt ihre
+        # Unterseiten zwar als "/ds-skript/numpy", aber darauf antwortet GitLab Pages mit 302
+        # auf "/ds-skript/numpy/". Ein Canonical darf nicht auf eine Weiterleitung zeigen.
+        if [ "$rel" = "." ]; then url="$SITE/"; else url="$SITE/$rel/"; fi
         grep -q 'rel="canonical"' "$f" || sed -i "s|</head>|<link rel=\"canonical\" href=\"$url\"/></head>|" "$f"
       done
     # Kontrolle: bricht den Job ab, falls doch eine localhost-URL ueberlebt hat.
