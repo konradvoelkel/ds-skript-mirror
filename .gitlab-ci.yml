@@ -116,7 +116,14 @@ pages:
         grep -q 'rel="canonical"' "$f" || sed -i "s|</head>|<link rel=\"canonical\" href=\"$url\"/></head>|" "$f"
       done
     # Kontrolle: bricht den Job ab, falls doch eine localhost-URL ueberlebt hat.
-    - if grep -rq "localhost:3000" public/sitemap.xml public/robots.txt; then echo "FEHLER: localhost in sitemap/robots"; exit 1; fi
+    # Als Block-Skalar, nicht als einzeilige Sequenz: eine unquotierte Zeile mit ": " darin
+    # liest GitLab als Mapping statt als Kommando und lehnt die ganze Datei ab ("script config
+    # should be a string or a nested array of strings"). Dann laeuft *kein einziger* Job.
+    - |
+      if grep -rq "localhost:3000" public/sitemap.xml public/robots.txt; then
+        echo "FEHLER: localhost-URL in sitemap.xml oder robots.txt ueberlebt"
+        exit 1
+      fi
   artifacts:
     paths:
       - public
