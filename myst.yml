@@ -27,6 +27,81 @@ project:
     - format: pdf
       template: ./templates/tex/ds-skript
       output: exports/ds-skript.pdf
+      articles:
+        - title: 'Einführung'
+          level: 1
+        - file: was-ist-data-science.md
+          level: 2
+        - file: intro-stochastik.md
+          level: 2
+        - file: intro-python.ipynb
+          level: 2
+        - title: 'Diskrete Stochastik und Numpy'
+          level: 1
+        - file: stochastik-programmieren.ipynb
+          level: 2
+        - file: zufallsvariablen-verteilungen.md
+          level: 2
+        - file: erwartungswert.md
+          level: 2
+        - file: numpy.ipynb
+          level: 2
+        - file: wichtigste-diskrete-verteilungen.ipynb
+          level: 2
+        - file: explorative-analyse-mit-numpy.ipynb
+          level: 2
+        - title: 'Stetige Stochastik und Scipy'
+          level: 1
+        - file: stetige-verteilungen.md
+          level: 2
+        - file: normalverteilung.ipynb
+          level: 2
+        - file: wichtigste-stetige-verteilungen.ipynb
+          level: 2
+        - title: 'Explorative Datenanalyse'
+          level: 1
+        - file: deskriptive-statistik.md
+          level: 2
+        - file: explorative-analyse-beispiele.ipynb
+          level: 2
+        - file: iris.ipynb
+          level: 2
+        - file: pandas.ipynb
+          level: 2
+        - file: data-cleaning.ipynb
+          level: 2
+        - title: 'Multivariate Stochastik'
+          level: 1
+        - file: kovarianz.md
+          level: 2
+        - file: multivariate-normalverteilung.ipynb
+          level: 2
+        - file: relative-entropie.md
+          level: 2
+        - title: 'Datenschutz'
+          level: 1
+        - file: datenschutz.md
+          level: 2
+        - title: 'Maschinelles Lernen'
+          level: 1
+        - file: kmeans.ipynb
+          level: 2
+        - file: statistische-modelle.md
+          level: 2
+        - file: dimensionsreduktion.ipynb
+          level: 2
+        - file: lineare-regression.ipynb
+          level: 2
+        - file: kernel-methoden.ipynb
+          level: 2
+        - file: statistische-tests.md
+          level: 2
+        - file: model-selection.ipynb
+          level: 2
+        - file: expectation-maximization.ipynb
+          level: 2
+        - file: folien.md
+          level: 1
   toc:
     - file: landing-page.md
     - title: Einführung

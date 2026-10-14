@@ -50,6 +50,20 @@ build-image:
     - when: manual
       allow_failure: true
 
+# Die Buchstruktur steht in myst.yml zweimal: als project.toc (Web) und als
+# exports[].articles (PDF). Die Dopplung ist noetig, weil MyST keine Moeglichkeit hat, eine
+# einzelne Seite vom PDF auszunehmen -- und orga.md soll nicht ins gedruckte Buch. Dieser
+# Vergleich bricht ab, wenn beide auseinanderlaufen; sonst verschwaende ein neues Kapitel
+# stillschweigend aus dem PDF. Eigener Job und *kein* allow_failure, denn build-pdf darf
+# fehlschlagen, diese Pruefung nicht: sie ist deterministisch und braucht kein TeX.
+check-structure:
+  stage: build
+  image: $CI_REGISTRY_IMAGE:latest
+  script:
+    # --with pyyaml: nur fuer diesen Lauf, damit das Buch keine Abhaengigkeit fuer ein
+    # Pruefskript bekommt.
+    - uv run --with pyyaml python tools/check_pdf_articles.py
+
 build-web:
   stage: build
   image: $CI_REGISTRY_IMAGE:latest

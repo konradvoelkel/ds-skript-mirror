@@ -1,6 +1,5 @@
 \documentclass{article}
 \usepackage{hyperref}
-\usepackage{datetime}
 \usepackage{graphicx}
 \usepackage{natbib}
 \bibliographystyle{abbrvnat}
@@ -9,6 +8,10 @@
 \usepackage{amssymb}
 % German hyphenation and typographic conventions (texlive-lang-german is in the CI image)
 \usepackage[ngerman]{babel}
+% datetime belongs AFTER babel: it fixes its month and weekday names at load time, so loading it
+% before babel (as the MyST plain_latex template does) left the title page of this German book
+% reading "Wednesday 14. October, 2026".
+\usepackage{datetime}
 % listings is loaded here (before the MyST imports, which load it again harmlessly) so
 % that the two dummy languages below can be defined. MyST 1.10 emits
 % \begin{lstlisting}[language=undefined] for code-cell *outputs* and language=null for
