@@ -2,6 +2,11 @@
 title: "Data Science: von der Stochastik zum Machine Learning mit Python"
 short_title: "Vorlesungsskript"
 description: "Ein vollständiges Vorlesungsskript zur Data Science: Wahrscheinlichkeitsräume, Verteilungen, Schätzer und Tests, dazu Numpy, Pandas und Scikit-learn — und die Lernverfahren selbst programmiert statt aufgerufen."
+# Nötig *zusätzlich* zum project.thumbnail in myst.yml: das Projekt-Thumbnail greift nur,
+# wo eine Seite gar kein Bild hat. Diese Seite hat eines — den CC-Knopf im Lizenzabschnitt
+# —, und ohne diese Zeile wäre ausgerechnet die Startseite die einzige, die weiter den
+# 267x50-Knopf als Vorschaukarte anbietet (am gebauten HTML geprüft).
+thumbnail: images/social-card.png
 ---
 
 Dieses Skript ist eine Einführung in die Data Science, die bei der Stochastik anfängt und beim
@@ -124,6 +129,11 @@ diesem Skript enthalten (oder in den Eingangsvoraussetzungen der Vorlesung).
 Sie lesen die Web-Ausgabe. Dasselbe Buch gibt es auch als
 [PDF zum Herunterladen](https://voelkel.pages.cs.uni-duesseldorf.de/ds-skript/ds-skript.pdf).
 
+Dieses Skript gibt es außerdem auf Englisch: [Data Science — lecture notes from stochastics to
+machine learning with Python](https://datascience.konradvoelkel.com/). Die englische Ausgabe ist
+eine Übersetzung dieses Originals und folgt ihm; wo beide auseinanderlaufen, gilt die deutsche
+Fassung.
+
 Zum Betrieb der Vorlesung an der HHU — Aufzeichnungen, Folien, Übungsbetrieb und die Regeln für
 KI-Werkzeuge — gibt es die Seite [Organisatorisches](orga.md).
 
@@ -138,7 +148,7 @@ oder aus einer anderen Perspektive zu betrachten. In der ersten Vorlesung haben 
 
 ## Lizenz
 
-Dieses Vorlesungsskript steht unter der [Creative Commons Lizenz Namensnennung – Weitergabe unter gleichen Bedingungen 4.0 (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/deed.de). <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de"><img src="https://mirrors.creativecommons.org/presskit/buttons/80x15/png/by-sa.png" height="20"/></a> Jeglicher Code außerdem unter der GPL3.
+Dieses Vorlesungsskript steht unter der [Creative Commons Lizenz Namensnennung – Weitergabe unter gleichen Bedingungen 4.0 (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/deed.de). <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de"><img src="https://mirrors.creativecommons.org/presskit/buttons/80x15/png/by-sa.png" height="20" alt="Lizenzknopf Creative Commons Namensnennung – Weitergabe unter gleichen Bedingungen 4.0"/></a> Jeglicher Code außerdem unter der GPL3.
 
 Davon ausgenommen sind gekennzeichnete Fremdinhalte, die unter ihrer jeweils eigenen Lizenz stehen: die eingebundenen xkcd-Comics (CC BY-NC 2.5), das Venn-Diagramm von Drew Conway (CC BY-NC 3.0) und der Melbourne-Housing-Datensatz von Anthony Pino (CC BY-NC-SA 4.0). Bei jedem dieser Inhalte steht die Quelle an Ort und Stelle. Die [Vorlesungsfolien](folien.md) enthalten weitere Fremdbilder; sie sind in der README des Folienordners im Repositorium aufgeführt.
 

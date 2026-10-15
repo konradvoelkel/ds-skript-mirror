@@ -5,6 +5,12 @@ project:
   title: Data Science Vorlesungsskript
   subtitle: im Bachelor Informatik
   description: "Vorlesungsskript Data Science: Stochastik, Statistik und Python von den Grundlagen bis zum maschinellen Lernen, mit selbst programmierten Lernverfahren."
+  # Vorschaukarte für alle Seiten ohne eigene Abbildung. Ohne diese Zeile greift MyST auf
+  # das erste Bild des Projekts zurück — den CC-BY-SA-Knopf aus dem Lizenzabschnitt der
+  # Landingpage, 267x50. Das liegt unter den 200x200, die Facebook und LinkedIn fordern,
+  # also blieb die Vorschaukarte auf 18 von 32 Seiten ganz aus. Neu erzeugen mit
+  # tools/social_card.py.
+  thumbnail: images/social-card.png
   authors:
     - name: Dr. Konrad Völkel
       affiliations:
@@ -152,6 +158,7 @@ project:
 site:
   options:
     logo: images/logo-wide.svg
+    logo_alt: "Data Science: Vorlesungsskript"
     favicon: images/favicon.ico
     folders: true
     style: _site/custom-style.css
