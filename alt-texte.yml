@@ -243,7 +243,7 @@ kernel-methoden.ipynb:
   "0c6b638d-c5aa-4820-9ab6-750e31463938":
     - "Streudiagramm der Übungsdaten: eine dichte runde Punktwolke in der Mitte, umgeben von einem breiten Ring aus Punkten in etwa 8 bis 10 Einheiten Abstand. Alle Punkte haben dieselbe Farbe — die beiden Gruppen sind durch keine Gerade zu trennen."
   "dd3329bf-67b3-4f89-a8db-c6a6d514fa24":
-    - "Drei leere dreidimensionale Koordinatensysteme nebeneinander, die dieselbe in die dritte Dimension gehobene Punktwolke aus drei Blickwinkeln zeigen sollen. Die Punkte sind mit alpha 0,02 so durchsichtig gezeichnet, dass im Bild nichts von ihnen zu sehen ist; sichtbar sind nur die Achsengitter mit Bereichen von etwa minus 10 bis 10 in der Grundfläche und 0 bis 100 in der Höhe."
+    - "Drei dreidimensionale Ansichten derselben Punktwolke aus unterschiedlichen Blickwinkeln, nachdem die Daten über die Feature-Abbildung in die Höhe gehoben wurden — die Höhe ist der quadrierte Abstand vom Ursprung. Der innere Klumpen liegt blau und flach am Boden bei Höhe nahe null, der Ring bildet grün eine weit darüber schwebende Schale zwischen 70 und 110. In der dritten Ansicht, fast senkrecht von oben, erscheinen beide wieder als konzentrische Kreise. In dieser Höhe lassen sich die beiden Gruppen durch eine waagerechte Ebene trennen, in der Ebene darunter nicht."
   "8ed447f8-e321-4e9a-a7ad-58d1bd193cee":
     - "Dieselben Daten wie zuvor, jetzt nach den Labels von k-Means eingefärbt: der innere Klumpen grün, der äußere Ring blau. Nach dem Anheben in die dritte Dimension trennt k-Means die beiden Gruppen also sauber, obwohl sie in der Ebene ineinander verschachtelt liegen."
   "145f626b-a860-4509-80f7-c0d881974647":
