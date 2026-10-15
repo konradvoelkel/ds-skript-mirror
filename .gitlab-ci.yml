@@ -10,6 +10,9 @@ variables:
   # Origin der veroeffentlichten Seite. BASE_URL setzt nur den *Pfad*; MyST 1.10 hat keine
   # Einstellung fuer die Origin, deshalb steht sie hier und wird im pages-Job nachgetragen.
   SITE_ORIGIN: "https://voelkel.pages.cs.uni-duesseldorf.de"
+  # Die englische Ausgabe. Zieht sie um, wandern beide Haelften des Sprachpaars zusammen:
+  # hier diese Zeile, drueben DE_SITE in .github/workflows/pages.yml.
+  EN_SITE_ORIGIN: "https://datascience.konradvoelkel.com"
 
 cache:
   paths:
@@ -66,6 +69,28 @@ check-structure:
   # Holt pyyaml von PyPI, haengt also an derselben flatternden Strecke wie build-web.
   retry: 2
 
+# Holt die Zuordnung deutscher auf englische Kapitel aus ds-en. Sie ist dort die eine Quelle
+# der Wahrheit (die Staleness-Werkzeuge laufen auf derselben Datei), also wird sie geholt und
+# nicht abgeschrieben -- eine zweite Kopie hier wuerde irgendwann leise auseinanderlaufen.
+#
+# **allow_failure: true, und das ist hier die Pointe.** Scheitert der Abruf, fehlt das Artefakt,
+# und der pages-Job liefert dann *gar kein* hreflang aus statt eines falschen: eine kaputte
+# Haelfte des Sprachpaars waere schlechter als eine fehlende. Sichtbar bleibt es trotzdem --
+# dieser Job steht dann orange in der Pipeline, und pages schreibt eine laute Zeile ins Log.
+# retry: 2, weil die Strecke nach draussen flattert (siehe notify-ds-en).
+hreflang-map:
+  stage: build
+  image: python:3.13-alpine
+  script:
+    - python3 tools/hreflang.py --fetch hreflang/filemap.json
+  artifacts:
+    paths:
+      - hreflang/filemap.json
+  allow_failure: true
+  retry: 2
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
 build-web:
   stage: build
   image: $CI_REGISTRY_IMAGE:latest
@@ -94,7 +119,9 @@ build-pdf:
 
 pages:
   stage: deploy
-  image: busybox:latest
+  # Frueher busybox:latest. Jetzt Alpine mit Python, weil der hreflang-Schritt JSON lesen muss;
+  # die Shell-Werkzeuge darunter sind dieselbe Busybox, die sed/find-Kette bleibt unveraendert.
+  image: python:3.13-alpine
   script:
     - mv _build/html public
     - cp exports/ds-skript.pdf public/ || echo "no PDF in this run"
@@ -126,6 +153,12 @@ pages:
         if [ "$rel" = "." ]; then url="$SITE/"; else url="$SITE/$rel/"; fi
         grep -q 'rel="canonical"' "$f" || sed -i "s|</head>|<link rel=\"canonical\" href=\"$url\"/></head>|" "$f"
       done
+    # hreflang: die deutsche Haelfte des Sprachpaars. Muss *nach* dem Canonical laufen -- der
+    # Selbstverweis muss exakt die URL sein, die die Seite canonical nennt, sonst erklaert sich
+    # die Seite nicht zum Mitglied ihres eigenen Clusters. Das Skript prueft genau das und
+    # bricht ab, wenn die beiden auseinanderlaufen. Fehlt das Artefakt aus hreflang-map, laesst
+    # es alles unberuehrt und sagt es laut.
+    - python3 tools/hreflang.py public hreflang/filemap.json "$SITE" "$EN_SITE_ORIGIN"
     # Kontrolle: bricht den Job ab, falls doch eine localhost-URL ueberlebt hat.
     # Als Block-Skalar, nicht als einzeilige Sequenz: eine unquotierte Zeile mit ": " darin
     # liest GitLab als Mapping statt als Kommando und lehnt die ganze Datei ab ("script config
