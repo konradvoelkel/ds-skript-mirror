@@ -63,6 +63,8 @@ check-structure:
     # --with pyyaml: nur fuer diesen Lauf, damit das Buch keine Abhaengigkeit fuer ein
     # Pruefskript bekommt.
     - uv run --with pyyaml python tools/check_pdf_articles.py
+  # Holt pyyaml von PyPI, haengt also an derselben flatternden Strecke wie build-web.
+  retry: 2
 
 build-web:
   stage: build
@@ -70,6 +72,10 @@ build-web:
   script:
     - uv sync
     - uv run myst build --html
+  # Am 2026-10-15 nach 149 s in einen Connect-Timeout gegen PyPI gelaufen und damit die ganze
+  # deploy-Stage uebersprungen (pages und notify-ds-en: skipped). Dieselbe flatternde Strecke
+  # wie bei notify-ds-en, derselbe Griff.
+  retry: 2
   artifacts:
     paths:
       - _build/html
@@ -81,6 +87,7 @@ build-pdf:
     - uv sync
     - uv run myst build --pdf
   allow_failure: true
+  retry: 2
   artifacts:
     paths:
       - exports/ds-skript.pdf
@@ -135,57 +142,49 @@ pages:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
 # Sagt der englischen Ausgabe (github.com/konradvoelkel/ds-en) Bescheid, dass hier gepusht
-# wurde. Die Richtung ist umgedreht, weil sie andersherum nicht funktioniert: GitHubs Runner
-# erreichen gitlab.cs.uni-duesseldorf.de nicht (seit 2026-10-14 jeder Versuch Connect-Timeout
-# nach rund 134 s), also kann ds-en seinen Staleness-Check nicht mehr nach Zeitplan fahren.
-# Hinausrufen geht, abholen lassen nicht. Der event_type "ds-skript-push" ist vereinbart und
-# steht so in ds-ens .github/workflows/upstream.yml — nicht umbenennen.
+# wurde, damit sie ihren Staleness-Check fahren kann. Der event_type "ds-skript-push" ist
+# vereinbart und steht so in ds-ens .github/workflows/upstream.yml — nicht umbenennen.
+#
+# Warum dieser Weg und nicht ein Zeitplan drüben: ein Push ist ein Zeitpunkt, an dem beide
+# Seiten gerade nachweislich erreichbar sind. Das ist hier die ganze Begründung — die
+# ursprüngliche ("GitHubs Runner erreichen die HHU-GitLab nicht, hinausrufen geht dagegen")
+# hat sich am 2026-10-15 als falsch erwiesen: siehe retry unten.
 #
 # **Kein allow_failure, mit Absicht.** Ein abgelaufenes Token sähe auf der GitHub-Seite genau
 # so aus wie "am Original hat sich nichts geändert"; diese Stille ist die eigentliche Gefahr.
 # Hier ist ein roter Job das Signal. Die API antwortet mit 204 ohne Inhalt, -f lässt curl bei
 # allem anderen scheitern — auch bei einem leeren $GH_DISPATCH_TOKEN (dann 401).
 #
+# **Warum trotzdem retry** — und warum das dem Satz darüber nicht widerspricht: Die Strecke
+# zwischen HHU und der Außenwelt flattert, in beide Richtungen. Am 2026-10-15 brauchte dieser
+# Job drei Anläufe auf demselben Runner (12 s Ablehnung, 133 s Connect-Timeout, dann 25 s
+# Erfolg), im selben Fenster lief ein build-web nach 149 s in denselben Timeout gegen PyPI,
+# und umgekehrt klonte ein GitHub-Runner die HHU-GitLab anstandslos. Ein Netzaussetzer darf
+# deshalb nicht wie ein kaputtes Token aussehen. Ein kaputtes Token sieht nach wie vor rot
+# aus: ein 401 bleibt ein 401, auch beim dritten Versuch.
+#
 # GH_DISPATCH_TOKEN ist eine maskierte, geschützte CI-Variable. "Geschützt" heißt: sie wird
-# nur an Jobs auf einem geschützten Branch ausgegeben. Ist main nicht geschützt, ist die
-# Variable leer und der Job rot.
+# nur an Jobs auf einem geschützten Branch ausgegeben. main ist seit dem 2026-10-15 geschützt
+# (push_access_level 40, Maintainers); wird der Schutz je aufgehoben, ist die Variable leer,
+# GitHub antwortet 401 und der Job ist rot — ohne dass irgendwo "Variable fehlt" stünde.
 notify-ds-en:
   stage: deploy
   image: curlimages/curl:latest
   script:
-    # --- VORUEBERGEHEND, 2026-10-15: Diagnose. Fliegt raus, sobald klar ist, warum
-    # api.github.com von diesem Runner aus nicht erreichbar ist. Der erste Lauf (Job 668522)
-    # brach mit "curl: (28) Failed to connect to api.github.com:443 after 133525 ms" ab, und
-    # 133 s ist die Zeit, nach der ein TCP-Connect aufgibt. Drei Erklaerungen passen darauf:
-    # totes IPv6, eine gezielte Sperre, oder nur api.github.com (nicht github.com). Der Block
-    # unten unterscheidet sie, statt zu raten. -4/-6 erzwingen die Protokollfamilie; pypi.org
-    # ist die Kontrolle (dort kommt build-web nachweislich hin).
+    # --connect-timeout 20 statt der voreingestellten 300: ein toter Connect laeuft sonst erst
+    # nach 133 s in den Kernel-Timeout, und ein Job, der zweieinhalb Minuten haengt und dann
+    # wortlos rot wird, ist das schlechteste aller Signale. --retry faengt den Aussetzer
+    # innerhalb desselben Jobs ab, damit im Log *eine* Geschichte steht statt dreier Jobs.
     - |
-      echo "=== Vorflug: wen erreichen wir von hier aus? ==="
-      for t in https://api.github.com/ https://github.com/ https://pypi.org/simple/; do
-        for fam in auto 4 6; do
-          case "$fam" in auto) f="" ;; *) f="-$fam" ;; esac
-          printf '%-26s %-4s ' "$t" "$fam"
-          curl -sS $f -o /dev/null --connect-timeout 8 --max-time 15 \
-            -w 'HTTP %{http_code}  %{time_total}s  ip=%{remote_ip}\n' "$t" \
-            || echo "  <- curl-Exit $?"
-        done
-      done
-      echo "=== DNS ==="
-      nslookup api.github.com 2>&1 | sed 's/^/  /' || echo "  (kein nslookup)"
-      echo "=== Proxy-Variablen im Job? ==="
-      env | grep -iE '^(https?_proxy|no_proxy)=' || echo "  keine gesetzt"
-      echo "=== Token da? (nur Laenge, nie der Wert) ==="
-      echo "  GH_DISPATCH_TOKEN: ${#GH_DISPATCH_TOKEN} Zeichen"
-    # Der eigentliche Ruf. --connect-timeout/--max-time, damit ein unerreichbares GitHub in
-    # 20 s rot wird statt in 134 s: ein Job, der zweieinhalb Minuten haengt und dann wortlos
-    # abbricht, ist das schlechteste aller Signale.
-    - |
-      curl -fsS -X POST --connect-timeout 20 --max-time 60 \
+      curl -fsS -X POST \
+        --connect-timeout 20 --max-time 90 \
+        --retry 3 --retry-delay 5 --retry-all-errors \
         -H "Accept: application/vnd.github+json" \
         -H "Authorization: Bearer $GH_DISPATCH_TOKEN" \
         -H "X-GitHub-Api-Version: 2022-11-28" \
         https://api.github.com/repos/konradvoelkel/ds-en/dispatches \
         -d "{\"event_type\":\"ds-skript-push\",\"client_payload\":{\"sha\":\"$CI_COMMIT_SHA\"}}"
+  # Zweite Ebene: faengt ab, was curl nicht sieht — ein fehlgeschlagener Image-Pull etwa.
+  retry: 2
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
