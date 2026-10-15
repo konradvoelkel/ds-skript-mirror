@@ -66,6 +66,13 @@ check-structure:
     # --with pyyaml: nur fuer diesen Lauf, damit das Buch keine Abhaengigkeit fuer ein
     # Pruefskript bekommt.
     - uv run --with pyyaml python tools/check_pdf_articles.py
+    # Das Uebersichtsdiagramm der Landingpage ist ein erzeugtes SVG (tools/course_diagram.py),
+    # kein Mermaid-Block mehr. Damit steht die Teil-Gliederung des Buchs an *noch* einer Stelle,
+    # und das ist dieselbe Driftfalle wie toc gegen articles: eine umbenannte Teil-Ueberschrift
+    # liesse sonst stillschweigend ein Diagramm stehen, das etwas anderes behauptet als das
+    # Inhaltsverzeichnis daneben. --check vergleicht beides und prueft zugleich, dass das
+    # eingecheckte SVG zum Skript passt. Erzeugt wird es nicht hier, sondern von Hand.
+    - uv run --with pyyaml python tools/course_diagram.py --check
   # Holt pyyaml von PyPI, haengt also an derselben flatternden Strecke wie build-web.
   retry: 2
 

@@ -34,37 +34,11 @@ aufruft.
 Die Kapitel des Skripts folgen dieser Reihenfolge; das Inhaltsverzeichnis unten listet sie einzeln
 auf. Als zweite Sicht zeigt das folgende Diagramm, wie die Teile aufeinander aufbauen.
 
-```{mermaid}
-flowchart TB
-  subgraph E["Einführung"]
-    direction LR
-    E1["Was ist Data Science?"] --> E2["Stochastik"] --> E3["Python"]
-  end
-  subgraph D["Diskrete Stochastik und Numpy"]
-    direction LR
-    D1["Zufallsvariablen, Verteilungen,<br/>Erwartungswert"] --> D2["Numpy"] --> D3["Diskrete Verteilungen,<br/>erste Exploration"]
-  end
-  subgraph S["Stetige Stochastik und Scipy"]
-    direction LR
-    S1["Stetige Verteilungen,<br/>Normalverteilung, Scipy"]
-  end
-  subgraph X["Explorative Datenanalyse"]
-    direction LR
-    X1["Deskriptive Statistik,<br/>Beispiele, Iris"] --> X2["Pandas, Daten putzen"]
-  end
-  subgraph M["Multivariate Stochastik"]
-    direction LR
-    M1["Kovarianz, multivariate<br/>Normalverteilung, relative Entropie"]
-  end
-  subgraph P["Datenschutz"]
-    direction LR
-    P1["Datenschutz-Glossar"]
-  end
-  subgraph L["Maschinelles Lernen"]
-    direction LR
-    L1["Clustering,<br/>Dimensionsreduktion"] --> L2["Statistische Modelle,<br/>Regression, Kernel"] --> L3["Tests, Modellwahl,<br/>Expectation Maximization"]
-  end
-  E --> D --> S --> X --> M --> P --> L
+```{figure} images/course-structure.svg
+:alt: Sieben Teile nacheinander, jeder führt zum nächsten: Einführung (Was ist Data Science?, Stochastik, Python); Diskrete Stochastik und Numpy (Zufallsvariablen, Verteilungen, Erwartungswert; Numpy; Diskrete Verteilungen, erste Exploration); Stetige Stochastik und Scipy (Stetige Verteilungen, Normalverteilung, Scipy); Explorative Datenanalyse (Deskriptive Statistik, Beispiele, Iris; Pandas, Daten putzen); Multivariate Stochastik (Kovarianz, multivariate Normalverteilung, relative Entropie); Datenschutz (Datenschutz-Glossar); Maschinelles Lernen (Clustering, Dimensionsreduktion; Statistische Modelle, Regression, Kernel; Tests, Modellwahl, Expectation Maximization).
+:width: 100%
+
+Wie die Teile der Vorlesung aufeinander aufbauen.
 ```
 
 ## Was Sie danach können
