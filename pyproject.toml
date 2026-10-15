@@ -6,7 +6,7 @@ authors = [{ name = "Konrad Völkel", email = "konrad.voelkel@hhu.de" }]
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "mystmd>=1.10.1",
+    "mystmd>=1.11.0",
     "numpy>=2.4.6",
     "pandas>=3.0.2",
     "matplotlib>=3.11.0",

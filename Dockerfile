@@ -16,8 +16,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     texlive-lang-german \
     && rm -rf /var/lib/apt/lists/*
 
-# Install mystmd globally
-RUN npm install -g mystmd
+# Kein "npm install -g mystmd" mehr (entfernt 2026-10-15). Es war ungepinnt und wurde nie
+# benutzt: die CI baut mit `uv run myst`, und das loest auf .venv/bin/myst auf -- den
+# Python-Wrapper, den uv.lock festnagelt. Das globale npm-Paket war also eine zweite,
+# treibende Kopie derselben Software, die bei einer Aenderung der PATH-Reihenfolge lautlos
+# uebernommen haette. Node bleibt im Basis-Image, der Wrapper braucht es.
 
 # Copy requirements and install Python dependencies
 COPY requirements.txt /tmp/
