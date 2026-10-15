@@ -153,8 +153,35 @@ notify-ds-en:
   stage: deploy
   image: curlimages/curl:latest
   script:
+    # --- VORUEBERGEHEND, 2026-10-15: Diagnose. Fliegt raus, sobald klar ist, warum
+    # api.github.com von diesem Runner aus nicht erreichbar ist. Der erste Lauf (Job 668522)
+    # brach mit "curl: (28) Failed to connect to api.github.com:443 after 133525 ms" ab, und
+    # 133 s ist die Zeit, nach der ein TCP-Connect aufgibt. Drei Erklaerungen passen darauf:
+    # totes IPv6, eine gezielte Sperre, oder nur api.github.com (nicht github.com). Der Block
+    # unten unterscheidet sie, statt zu raten. -4/-6 erzwingen die Protokollfamilie; pypi.org
+    # ist die Kontrolle (dort kommt build-web nachweislich hin).
     - |
-      curl -fsS -X POST \
+      echo "=== Vorflug: wen erreichen wir von hier aus? ==="
+      for t in https://api.github.com/ https://github.com/ https://pypi.org/simple/; do
+        for fam in auto 4 6; do
+          case "$fam" in auto) f="" ;; *) f="-$fam" ;; esac
+          printf '%-26s %-4s ' "$t" "$fam"
+          curl -sS $f -o /dev/null --connect-timeout 8 --max-time 15 \
+            -w 'HTTP %{http_code}  %{time_total}s  ip=%{remote_ip}\n' "$t" \
+            || echo "  <- curl-Exit $?"
+        done
+      done
+      echo "=== DNS ==="
+      nslookup api.github.com 2>&1 | sed 's/^/  /' || echo "  (kein nslookup)"
+      echo "=== Proxy-Variablen im Job? ==="
+      env | grep -iE '^(https?_proxy|no_proxy)=' || echo "  keine gesetzt"
+      echo "=== Token da? (nur Laenge, nie der Wert) ==="
+      echo "  GH_DISPATCH_TOKEN: ${#GH_DISPATCH_TOKEN} Zeichen"
+    # Der eigentliche Ruf. --connect-timeout/--max-time, damit ein unerreichbares GitHub in
+    # 20 s rot wird statt in 134 s: ein Job, der zweieinhalb Minuten haengt und dann wortlos
+    # abbricht, ist das schlechteste aller Signale.
+    - |
+      curl -fsS -X POST --connect-timeout 20 --max-time 60 \
         -H "Accept: application/vnd.github+json" \
         -H "Authorization: Bearer $GH_DISPATCH_TOKEN" \
         -H "X-GitHub-Api-Version: 2022-11-28" \
