@@ -1,0 +1,315 @@
+# Alternativtexte für die Abbildungen, die Notebooks als Ausgabe erzeugen.
+#
+# Warum hier und nicht im Notebook: MyST nimmt als `alt` eines Ausgabebildes dessen
+# `text/plain`-Darstellung, und Matplotlib legt dort "<Figure size 640x480 with 1 Axes>"
+# ab. Zell-Metadaten werden in dieser MyST-Version ignoriert (alle Varianten durchprobiert,
+# siehe tools/alt_texts.py). Also ist diese Datei die Quelle der Wahrheit, und
+# `tools/alt_texts.py --apply` schreibt sie in die Notebooks.
+#
+# **Nach jedem Neuausführen eines Notebooks --apply laufen lassen** — das Ausführen setzt
+# text/plain auf das Matplotlib-Repl zurück. Der CI-Job check-structure prüft das mit
+# --check.
+#
+# Geschlüsselt nach Zell-ID (nbformat 4.5), nicht nach Position. Mehrere Bilder in einer
+# Zelle: mehrere Einträge in der Reihenfolge ihrer Ausgabe.
+
+wichtigste-diskrete-verteilungen.ipynb:
+  "bcc5de61":
+    - "Zwei Diagramme nebeneinander zur diskreten Gleichverteilung auf 1 bis 6. Links die Wahrscheinlichkeitsfunktion: sechs gleich hohe Stäbe der Höhe etwa 0,167. Rechts die Verteilungsfunktion: eine Treppe, die in sechs gleich großen Stufen von 0 auf 1 steigt."
+  "311967c1":
+    - "Dieselbe Gegenüberstellung für eine kategoriale Verteilung mit den Wahrscheinlichkeiten 0,1, 0,5, 0,3 und 0,1. Links vier unterschiedlich hohe Stäbe, der zweite mit Abstand am höchsten. Rechts die zugehörige Treppenfunktion mit entsprechend unterschiedlich hohen Stufen."
+  "baafd42c":
+    - "Zwei Diagramme zur Entropie einer Münze. Links die Entropie über der Erfolgswahrscheinlichkeit p: eine symmetrische Kuppel, die bei p gleich 0,5 ihr mit einem roten Punkt markiertes Maximum von 1 Bit erreicht und zu beiden Rändern auf null fällt. Rechts ihre Ableitung, das Negative des Logits: eine fallende S-Kurve, die bei p gleich 0,5 die Null kreuzt und an beiden Rändern gegen plus beziehungsweise minus unendlich läuft."
+  "7898ad7b":
+    - "Binomialverteilung mit n gleich 10 und p gleich 0,3. Links die Wahrscheinlichkeitsfunktion: Stäbe über k gleich 0 bis 10 mit dem höchsten bei k gleich 3 und einem schiefen Auslaufen nach rechts. Rechts die Verteilungsfunktion als Treppe, die bis k gleich 6 fast den Wert 1 erreicht."
+  "af7b1fff":
+    - "Kurve der Wahrscheinlichkeit, bei n gleich 10 genau k gleich 3 Erfolge zu beobachten, aufgetragen über der unbekannten Erfolgswahrscheinlichkeit p. Sie steigt von null, erreicht ihr Maximum von etwa 0,27 genau bei dem rot gestrichelt eingezeichneten Wert p gleich k durch n gleich 0,3 und fällt danach wieder ab. Zwei graue Punkte bei p gleich 0,2 und p gleich 0,5 zeigen, wie viel unwahrscheinlicher die Beobachtung dort wäre."
+  "dff92e25":
+    - "Wahrscheinlichkeitsfunktion einer Poisson-Binomialverteilung aus fünf Versuchen mit den verschiedenen Erfolgswahrscheinlichkeiten 0,9, 0,5, 0,4, 0,1 und 0,05. Die Stäbe über k gleich 0 bis 5 sind unsymmetrisch: der höchste liegt bei k gleich 2, nach rechts fällt die Verteilung rasch ab."
+  "05273301":
+    - "Diagramm „Annäherung an die Poissonverteilung, Lambda gleich 2,0“. Vier Kurven über k gleich 0 bis 10: drei gestrichelte Binomialverteilungen mit n gleich 5, 10 und 50 bei jeweils Lambda durch n als Erfolgswahrscheinlichkeit, dazu die durchgezogene schwarze Poissonverteilung. Mit wachsendem n legen sich die Binomialkurven immer enger an die Poissonkurve; bei n gleich 50 sind sie praktisch deckungsgleich, bei n gleich 5 weichen sie bei k gleich 0 und k gleich 2 noch sichtbar ab."
+  "4ab63b7a":
+    - "Poissonverteilung mit Lambda gleich 2,5. Links die Wahrscheinlichkeitsfunktion: Stäbe über k gleich 0 bis 11 mit dem höchsten bei k gleich 2 und langem Auslaufen nach rechts. Rechts die Verteilungsfunktion als Treppe, die bei k gleich 7 nahezu 1 erreicht."
+  "d9e04649":
+    - "Geometrische Verteilung mit p gleich ein Sechstel. Links die Wahrscheinlichkeitsfunktion: vom höchsten Stab bei k gleich 1 fallen die Stäbe gleichmäßig ab und werden bis k gleich 25 immer kleiner, ohne je ganz zu verschwinden. Rechts die Verteilungsfunktion, eine Treppe mit immer flacheren Stufen, die sich langsam dem Wert 1 nähert."
+
+explorative-analyse-mit-numpy.ipynb:
+  "1d815c04-9e83-4d80-b66d-d5363d49e332":
+    - "Balkendiagramm des Überlebensanteils auf der Titanic nach Geschlecht. Der Balken für weibliche Passagiere reicht bis etwa 0,74, der für männliche nur bis etwa 0,19."
+
+normalverteilung.ipynb:
+  "0ae9357f-96be-4180-8fbb-e5b4269abad5":
+    - "Histogramm einer binomialverteilten Stichprobe, Werte von etwa 20 bis 60. Die Säulen bilden eine symmetrische Glockenform mit Gipfel bei 40."
+  "3465b513-ac20-44a5-8c02-906058b2e6af":
+    - "Dasselbe Histogramm, überlagert von der roten Dichtekurve der passenden Normalverteilung. Die Kurve folgt den Säulen über den ganzen Bereich sehr genau."
+  "1ef8a15c":
+    - "Zwei Diagramme nebeneinander, die zeigen, wann die Normalapproximation der Binomialverteilung trägt. Links N gleich 30 und p gleich 0,01, also Np gleich 0,3: die Verteilung hat praktisch nur drei Säulen bei 0, 1 und 2, und die schwarze Normalkurve läuft weit in den negativen Bereich — sie passt sichtbar nicht. Rechts N gleich 1000 und p gleich 0,01, also Np gleich 10: die Säulen bilden eine Glocke zwischen 0 und 20, und die Normalkurve liegt genau darüber."
+
+wichtigste-stetige-verteilungen.ipynb:
+  "76221be7-043b-41e2-93a8-ae908de80132":
+    - "Histogramm einer Stichprobe zwischen 5 und 8 mit feiner Balkenbreite, Achse „Häufigkeit“. Die Verteilung fällt in drei deutlichen Stufen ab: von etwa 170 im Bereich 5 bis 6, auf rund 85 zwischen 6 und 7, auf etwa 45 zwischen 7 und 8. Unter dem Bild stehen Mittelwert 6,077 gegen den erwarteten Wert 6,0714 und die Standardabweichung 0,6205."
+    - "Dasselbe Histogramm, aber auf Dichte normiert statt auf Häufigkeiten: die Form ist unverändert, nur die senkrechte Achse zeigt jetzt Werte um 0,6, 0,3 und 0,15, sodass die Gesamtfläche 1 ergibt."
+    - "Dieselbe Stichprobe mit nur drei Balken, einem je Einheitsintervall. Übrig bleibt die Stufenform: etwa 5700, 2850 und 1450 Beobachtungen — jede Stufe ungefähr halb so hoch wie die vorige."
+  "fd4df7ae-888f-4f8b-aad5-794ebdc870ac":
+    - "Rote Kurve einer Funktion über dem Bereich von minus 80 bis 90, die bei etwa plus 500000 beginnt, zur Mitte hin auf nahezu null abfällt, dort über einen weiten Bereich flach verläuft und nach rechts spiegelbildlich steil ins Negative abstürzt."
+  "334bb8a6-1046-454b-ac1c-9b921d5136b4":
+    - "Dichte der Standardnormalverteilung über dem Bereich von minus 3 bis 3: die symmetrische Glockenkurve mit dem Höchstwert von etwa 0,4 bei null."
+    - "Verteilungsfunktion derselben Standardnormalverteilung: eine S-förmig steigende Kurve, die von nahezu null bei minus 3 über den Wert 0,5 bei null auf nahezu 1 bei plus 3 läuft."
+  "4a044db8-d054-4673-a359-4f494274d1ce":
+    - "Histogramm aus 10000 Stichproben einer Normalverteilung mit Erwartungswert 3 und Standardabweichung 2, in 200 Klassen. Die Glockenform ist klar zu erkennen, die einzelnen Balken zacken aber stark auf und ab — bei so feiner Einteilung schlägt die zufällige Schwankung der Besetzungszahlen durch."
+  "9753d0fd-a039-4d72-8fd1-f80c58ba4c56":
+    - "Dichte einer Mischung aus zwei Normalverteilungen, 0,6 mal N(0,1) plus 0,4 mal N(2, 0,5 im Quadrat). Die Kurve hat zwei Gipfel: einen breiten, flacheren bei null mit etwa 0,24 und einen schmaleren, höheren bei 2 mit etwa 0,35, dazwischen ein deutlich sichtbares Tal."
+  "0da093d7-7476-4088-9ea8-ae9192e436fb":
+    - "Verteilungsfunktion der Dirac-Verteilung bei null: eine Linie, die links von null konstant auf 0 liegt, bei null senkrecht auf 1 springt und rechts davon konstant 1 bleibt."
+  "94ab9253-19e3-4256-94b6-0132cdf2790f":
+    - "Dichte der Gleichverteilung auf dem Intervall von minus 1 bis 2: außerhalb null, innerhalb ein waagerechtes Plateau auf der Höhe ein Drittel, mit senkrechten Sprüngen an beiden Rändern."
+    - "Verteilungsfunktion derselben Gleichverteilung: bis minus 1 konstant null, dann eine Gerade, die gleichmäßig bis 2 auf den Wert 1 ansteigt und danach konstant 1 bleibt."
+  "dc79a2c7-07ac-4dc7-8bed-859ad3a629bf":
+    - "Dichte der Exponentialverteilung mit Parameter 2: links von null null, bei null springt sie auf ihren Höchstwert von etwa 1,9 und fällt dann rasch ab, bis sie sich ab etwa 2,5 kaum noch von der Achse abhebt."
+    - "Verteilungsfunktion der Exponentialverteilung mit Parameter 2: bis null konstant null, dann ein steiler Anstieg, der schon bei etwa 2 praktisch den Wert 1 erreicht und danach waagerecht weiterläuft."
+  "c6db802c-3fd7-4d8b-a4fb-fe13950dfc46":
+    - "Dichte der Log-Normalverteilung mit den Parametern 1 und 2: ein sehr schmaler, hoher Gipfel knapp rechts von null mit etwa 0,55, danach ein langer, flach auslaufender Schwanz, der bis 12 nicht auf null fällt."
+    - "Verteilungsfunktion derselben Log-Normalverteilung: ein zunächst steiler Anstieg, der sich dann stark verlangsamt und bei 12 erst etwa 0,77 erreicht — der schwere rechte Schwanz macht sich hier als fehlender Rest zu 1 bemerkbar."
+  "859f3280-1451-48d6-8632-ab225a7d09cf":
+    - "Dichte der Weibull-Verteilung mit den Parametern 1 und 1,3: ein steiler Anstieg von null auf das Maximum von etwa 0,74 bei 0,3, danach ein gleichmäßiger, langsamer Abfall bis 2."
+    - "Verteilungsfunktion derselben Weibull-Verteilung: ein gleichmäßiger, leicht nach rechts abflachender Anstieg von null auf etwa 0,9 bei 2."
+  "a01fd47d-0f25-47f9-9c3d-328be854fcfa":
+    - "Histogramm des ersten Merkmals des Iris-Datensatzes, der Kelchblattlänge, auf Dichte normiert, überlagert von der orangen Dichtekurve der angepassten Normalverteilung. Die Balken schwanken stark und zeigen mehrere Spitzen, die Kurve glättet darüber hinweg — die Normalverteilung ist hier eine grobe Näherung, keine gute Beschreibung."
+
+explorative-analyse-beispiele.ipynb:
+  "7de0685f-a2b1-46ec-8386-aeadcbd518f7":
+    - "Histogramm des Alkoholgehalts im Wein-Datensatz, Werte zwischen 11 und 15 Prozent in groben Klassen. Die Säulen steigen bis zu einem Höchstwert von 30 Beobachtungen bei etwa 13,5 Prozent an und fallen zu beiden Seiten ab; die Form ist annähernd, aber nicht genau symmetrisch."
+  "a4d0f2dc-f12a-4b44-a720-b93925d92cc2":
+    - "Dasselbe Merkmal in feinerer Einteilung und auf Dichte normiert, überlagert von der blauen Dichtekurve der angepassten Normalverteilung. Die Kurve liegt am Gipfel deutlich über den Säulen und an den Flanken darunter — die Normalverteilung beschreibt die Daten nur grob."
+  "285fb565-ee4b-4b60-b948-49fa74d9b712":
+    - "Drei übereinandergelegte Histogramme des Alkoholgehalts, eines je Weinklasse, in Orange, Grün und Blau und ohne Transparenz. Die drei Verteilungen liegen gegeneinander verschoben: Orange bei niedrigen Werten um 12, Grün in der Mitte, Blau bei hohen um 13,5 bis 14. Weil die Säulen einander verdecken, ist die Überlappung nicht zu erkennen."
+  "aa946239-6bd6-424a-b411-360ef02f3b3f":
+    - "Dieselben drei Klassenhistogramme, zusätzlich mit den drei angepassten Normaldichten als Kurven in Violett, Braun und Rot. Jede Kurve sitzt über ihrer Klasse; die drei Gipfel liegen bei etwa 12,2, 13,0 und 13,8 Prozent und ihre Flanken überlappen einander deutlich."
+  "45dcd526-dfd8-428d-a9d4-36df00a23b07":
+    - "Das Gesamthistogramm des Alkoholgehalts mit der blauen Kurve der gewichteten Mischung der drei Klassendichten. Diese Mischkurve folgt den Säulen erkennbar besser als die einzelne Normalverteilung zuvor: sie hat oben eine Schulter statt eines einzelnen spitzen Gipfels."
+  "dde5c59f-3780-499e-b570-991cce2a9331":
+    - "Wieder die drei Klassenhistogramme des Alkoholgehalts, diesmal halbtransparent gezeichnet. Dadurch wird sichtbar, wo die Klassen einander überdecken — besonders im Bereich zwischen 12,5 und 14 Prozent, in dem alle drei Anteile haben."
+    - "Dieselbe Dreifach-Darstellung für das zweite Merkmal, die Apfelsäure. Zwei Klassen drängen sich schmal zwischen 1 und 2, die dritte ist weit über den Bereich von 2 bis 6 gestreut — hier unterscheiden sich die Klassen vor allem in der Streuung, nicht in der Lage."
+    - "Dasselbe für den Aschegehalt zwischen 1,5 und 3,25. Alle drei Klassen liegen fast deckungsgleich um 2,2 bis 2,6; nur eine hat zusätzlich einen kleinen Anteil bei niedrigen Werten um 1,9. Dieses Merkmal trennt die Klassen praktisch nicht."
+    - "Dasselbe für die Alkalität der Asche zwischen 10 und 30. Eine Klasse liegt mit ihrem Gipfel bei etwa 17 deutlich links, die beiden anderen weiter rechts zwischen 19 und 25 und überlappen einander stark."
+    - "Dasselbe für den Magnesiumgehalt zwischen 70 und 160. Alle drei Klassen häufen sich zwischen 85 und 110; eine von ihnen hat einen langen Ausläufer nach rechts bis 160. Zur Trennung taugt das Merkmal kaum."
+    - "Dasselbe für die Gesamtphenole zwischen 1 und 4. Hier liegen die Klassen klar gestaffelt: eine mit Gipfel bei etwa 1,5, eine bei etwa 2,4 und eine bei etwa 3,0. Dieses Merkmal trennt die Klassen gut."
+    - "Dasselbe für die Flavanoide zwischen 0 und 5. Die Staffelung ist noch deutlicher als bei den Gesamtphenolen: eine Klasse drängt sich schmal bei 0,5 bis 1, die zweite liegt um 2, die dritte um 3. Das ist eines der trennschärfsten Merkmale des Datensatzes."
+    - "Dasselbe für die nicht-flavanoiden Phenole zwischen 0,1 und 0,65. Eine Klasse häuft sich bei niedrigen Werten um 0,28, eine andere ist breit über 0,4 bis 0,6 gestreut; die dritte liegt dazwischen. Die Überlappung ist groß."
+    - "Dasselbe für die Proanthocyanine zwischen 0,5 und 3,5. Eine Klasse liegt mit Gipfeln um 0,9 bis 1,1 links, die beiden anderen um 1,5 bis 2,0; nach rechts laufen alle drei flach aus."
+    - "Dasselbe für die Farbintensität zwischen 1 und 13. Eine Klasse drängt sich schmal zwischen 2 und 4, die zweite liegt um 5, und die dritte zieht sich weit nach rechts bis 13 — hier unterscheiden sich die Klassen sowohl in der Lage als auch in der Streuung stark."
+    - "Dasselbe für den Farbton zwischen 0,5 und 1,7. Eine Klasse hat ihren scharfen Gipfel bei etwa 0,6, die zweite bei 1,05, die dritte liegt breit zwischen 0,9 und 1,4. Niedrige Werte gehören eindeutig zu einer Klasse."
+    - "Dasselbe für das Verhältnis OD280 zu OD315 zwischen 1,2 und 4. Eine Klasse liegt kompakt zwischen 1,3 und 2,0, die beiden anderen überlappen zwischen 2,5 und 3,6 — das Merkmal trennt eine Klasse sauber ab, die anderen beiden nicht."
+    - "Dasselbe für den Prolingehalt zwischen 300 und 1700. Zwei Klassen liegen gemeinsam unter 900, die dritte reicht von 1000 bis über 1600 und ist dort allein. Wie die Flavanoide eignet sich dieses Merkmal gut zur Trennung."
+  "a7805d4d-e3f7-47f6-87ad-419bd0a55864":
+    - "Histogramm „alcohol“ nach Klassen, mit den drei angepassten Normaldichten als Kurven darüber. Die drei Gipfel liegen gestaffelt bei etwa 12,2, 13,2 und 13,8 Prozent; die Kurven überlappen einander in den Flanken deutlich."
+    - "Dasselbe für „malic acid“. Die Kurve der einen Klasse ist schmal und hoch bei 1,8, die der anderen beiden flach und weit nach rechts gezogen — die Normalverteilung passt hier schlecht, weil die Daten rechtsschief sind."
+    - "Dasselbe für „protein“. Eine Klasse liegt mit schmaler, hoher Kurve bei etwa 1,7, die beiden anderen flacher bei 2,8 und 3,2. Die linke Klasse ist sauber abgetrennt."
+    - "Dasselbe für „proline“. Zwei Klassen liegen mit ihren Kurven links unter 900, die dritte weit rechts mit Gipfel bei etwa 1100 und langem Auslauf bis 1600."
+  "a4526e62-19f3-412e-b024-cee5c6473223":
+    - "Streudiagramm „Alkoholgehalt vs. Äpfelsäure“, alle Punkte in einer Farbe. Die Wolke füllt den Bereich ohne erkennbare Richtung aus; unten bildet sich ein dichtes Band bei niedriger Äpfelsäure, darüber streuen die Punkte breit. Ein Zusammenhang der beiden Merkmale ist nicht zu sehen."
+    - "Streudiagramm „Protein vs. Prolin“, ebenfalls einfarbig. Hier zerfällt die Wolke sichtbar in zwei Bereiche: links unten eine Gruppe mit niedrigem Protein und niedrigem Prolin, rechts oben eine mit hohen Werten in beidem, dazwischen eine dünner besetzte Zone."
+  "bf5ef1b3-60b2-436d-a2bb-7edfd4cb94b8":
+    - "Dasselbe Streudiagramm Protein gegen Prolin, nun nach den drei Weinklassen eingefärbt. Die vorher sichtbare Zweiteilung löst sich auf: rechts oben liegt eine Klasse mit hohem Prolin, links eine mit niedrigem Protein, und die dritte füllt den unteren mittleren Bereich — erst die Farbe macht die Struktur lesbar."
+  "f1dec412-68c4-4de9-8512-d2190f9d1325":
+    - "Balkendiagramm „Anteil des Monats an allen Starkregenereignissen, in Prozent“ über die zwölf Monate. Die Verteilung ist stark auf den Sommer konzentriert: Juni und Juli liegen bei etwa 26 und 28 Prozent, die Wintermonate jeweils unter einem Prozent."
+  "017a45c7-50b1-4ea5-9100-c3a550f4f02a":
+    - "Dasselbe Balkendiagramm nur für Düsseldorf. Es bleiben zwei Balken übrig, im Juni mit zwei und im Juli mit fünf Ereignissen — bei dieser kleinen Zahl trägt die Monatsverteilung einer einzelnen Stadt keine Aussage mehr."
+  "df545ae8-9be9-41bc-b94b-b039d88f9701":
+    - "Streudiagramm der Gitterkoordinaten aller Starkregenereignisse, ohne Transparenz gezeichnet. Die Umrisse Deutschlands sind zu erahnen, aber die Punkte überdecken einander vollständig zu einer einzigen blauen Fläche, in der keine Dichteunterschiede mehr erkennbar sind. Die senkrechte Achse ist zudem noch nicht auf das Gitter umgerechnet."
+  "2235820a-0217-415a-8e91-4fe9d75d06bd":
+    - "Dasselbe Streudiagramm mit transparenten Punkten. Jetzt ist die Umrissform Deutschlands deutlich zu erkennen, und innerhalb davon werden Dichteunterschiede sichtbar: im Süden und Südwesten liegen die Punkte erkennbar dichter als im Norden."
+  "02ebf79f-9a50-4ad0-8da5-cf35644bb1b4":
+    - "Streudiagramm der Ereignisdauer gegen die Nord-Süd-Koordinate, mit sehr transparenten Punkten. Weil die Dauer nur ganzzahlige Werte annimmt, zerfällt das Bild in senkrechte Streifen; die ersten Streifen bis etwa Dauer 10 sind dicht besetzt, danach wird es rasch dünn, mit vereinzelten Streifen bis 72."
+  "98c20f74-6a72-439a-8a3f-074c0c261566":
+    - "Karte der Starkregenereignisse über Deutschland, die Punkte nach der Ereignisdauer eingefärbt. Die Fläche ist fast durchgehend grün, also kurze Dauer; nur vereinzelte blaue und helle Punkte markieren die seltenen langen Ereignisse. Die Farbskala reicht bis 72, wird aber kaum ausgeschöpft."
+  "0124881a-adda-47e8-816a-f5a56238394c":
+    - "Dieselbe Karte, eingefärbt nach dem mittleren Niederschlag. Auch hier ist fast alles grün, weil die wenigen extremen Ereignisse die Skala bis 145 aufspannen und alle übrigen Werte dadurch ins unterste Farbband zusammenfallen."
+  "976b3f72-44dc-4fea-a5d8-a5e474f272e1":
+    - "Dieselbe Karte, nachdem die Ereignisse mit mittlerem Niederschlag über 60 entfernt wurden. Jetzt nutzt die Skala nur noch den Bereich bis etwa 57, und über der ganzen Fläche werden Unterschiede sichtbar: die Punkte reichen von Grün über Dunkelblau bis Hellblau."
+  "683fd84b-7a8f-4adf-8862-e52349d5ace2":
+    - "Wieder alle Ereignisse, aber mit einer selbst zusammengesetzten Farbskala: Grün und Blau für den unteren, Orange für den oberen Wertebereich. Der Effekt entspricht dem Weglassen der Extremwerte — die Masse der Punkte ist wieder unterscheidbar, und die wenigen Ausreißer bleiben als orange Punkte sichtbar statt zu verschwinden."
+  "c2d60305-c8c0-4a60-ba29-0ad034d5f921":
+    - "Zwei übereinandergelegte Altershistogramme der Titanic-Passagiere, Überlebende und Nichtüberlebende, in Jahresschritten von 0 bis 99. Beide Verteilungen haben ihren Schwerpunkt zwischen 18 und 36 Jahren; bei den ganz kleinen Kindern liegt die eine Gruppe erkennbar über der anderen. Die Einzelbalken zacken stark, weil jedes Lebensjahr eine eigene Klasse ist."
+  "3c590cd0-2a30-48b2-90f6-6e648c778b98":
+    - "Dieselbe Darstellung, diesmal nach den drei Passagierklassen getrennt. Die dritte Klasse stellt die jüngsten Passagiere und hat ihren Gipfel um 20 Jahre; die erste Klasse ist im Mittel deutlich älter und reicht als einzige nennenswert über 60 Jahre hinaus."
+  "3c3991d7-817c-45ca-b46c-22941d9fd844":
+    - "Streudiagramm Passagierklasse gegen Überlebt-Ja-Nein, mit sehr transparenten Punkten. Weil beide Variablen nur wenige Werte annehmen, bleiben genau sechs Punkte übrig; ihre unterschiedliche Schwärze zeigt, wie viele Passagiere jeweils dahinterstehen. Am dunkelsten ist der Punkt unten rechts: nicht überlebende Passagiere der dritten Klasse."
+  "c547a6a5-4e2b-4282-951b-f41f9d79b925":
+    - "Streudiagramm „Geschwister und Ehepartner an Bord, nach Alter“. Beide Größen sind ganzzahlig, die Punkte liegen also auf einem Gitter. Der Wert 0 zieht sich als dichte Linie über das ganze Altersspektrum bis 80, der Wert 1 bis etwa 65; Werte von 3 aufwärts kommen fast nur bei Kindern unter 20 vor, der Höchstwert 8 nur bei Kleinkindern."
+
+iris.ipynb:
+  "34796b74-d57a-499f-ab9b-c561cb1916cd":
+    - "Zwei Diagramme übereinander zum Iris-Datensatz. Oben ein Streudiagramm Blütenblattlänge gegen Blütenblattbreite, die drei Arten farbig unterschieden und die Werte leicht verrauscht, damit gleiche Messwerte sich nicht überdecken: eine Art bildet unten links eine kompakte, weit abgesetzte Gruppe, die beiden anderen ziehen sich diagonal nach rechts oben und gehen ineinander über. Unten das Histogramm der Blütenblattlänge, nach denselben Farben getrennt: die abgesetzte Art als schmaler Gipfel bei kurzen Blättern, die beiden anderen als breitere, einander überlappende Verteilungen."
+
+data-cleaning.ipynb:
+  "0c564220":
+    - "Zwei Diagramme nebeneinander. Links der Tagesverlauf des Temperaturmittels über ein Jahr: die Kurve schwankt zwischen etwa minus 10 und 30 Grad, hat aber bei Tag 150 einen schmalen Ausschlag bis 231 und bei Tag 300 einen nach unten bis minus 45 — die beiden eingebauten Tippfehler. Rechts das Histogramm derselben Reihe: fast alle Werte stehen als schmaler Block zwischen minus 10 und 30, die beiden Fehler als je ein einzelner, kaum sichtbarer Strich weit links und weit rechts."
+
+multivariate-normalverteilung.ipynb:
+  "4b260d05":
+    - "Drei Dichtebilder nebeneinander, jeweils als Farbverlauf über der Ebene. Links „Normal × Gleichverteilung“: die Dichte ist senkrecht gestreift, in der einen Richtung glockenförmig, in der anderen über den ganzen Bereich konstant. In der Mitte „Normal × Exponential“: die Masse klebt am unteren Rand und läuft nach oben aus. Rechts „Normal × Normal“: konzentrische Kreise um den Ursprung — nur hier ist die Dichte in beiden Richtungen gleich."
+  "e85e46f8":
+    - "Zwei Streudiagramme nebeneinander. Links „z: Standardnormalverteilung“, eine runde Punktwolke um den Ursprung. Rechts „x = A z + μ“, dieselben Punkte nach einer linearen Abbildung: eine schmale, von links unten nach rechts oben geneigte Wolke, in die zwei schwarze Striche als Hauptachsen eingezeichnet sind — der lange entlang der Wolke, der kurze quer dazu."
+  "a05c46b8-2ccf-45e5-bc3b-95d2ad098230":
+    - "Zweidimensionale Normalverteilung mit positiver Korrelation als Dichtebild, flankiert von ihren beiden Randverteilungen: links an der Seite die Randdichte der einen Koordinate, unten die der anderen, beide glockenförmig. Die gemeinsame Dichte bildet eine von links unten nach rechts oben geneigte Ellipse."
+  "35f24430-de82-4d7c-b2b0-3a0bba222cb9":
+    - "Dieselbe Darstellung für eine negativ korrelierte Normalverteilung: die gemeinsame Dichte ist eine von links oben nach rechts unten geneigte Ellipse, während die beiden Randverteilungen an Seite und Fuß unverändert glockenförmig aussehen — an den Rändern ist die Korrelation nicht zu erkennen."
+  "36c3dc1c-52c1-48cb-bcdd-f77d810d6b77":
+    - "Zwei Höhenlinienbilder nebeneinander. Links „Levelsets der Dichte der bivariaten Normalverteilung mit Kovarianz Sigma“, rechts „Levelsets der quadratischen Form zu Sigma invers“. Beide zeigen dieselbe Schar konzentrischer, gleich geneigter Ellipsen; sie unterscheiden sich nur darin, wie dicht die Linien nach außen liegen."
+  "4c884907-df3d-4f0a-94cb-dac923118e87":
+    - "Dichte einer zweidimensionalen Normalverteilung als Fläche im Raum: ein einzelner glatter Gipfel über der Ebene, der nach allen Seiten abfällt, farbig von Gelb am Rand bis Dunkelblau an der Spitze."
+  "561690ed-8ff6-4242-ace8-9f80194891ea":
+    - "Vier kleine Raumbilder derselben zweidimensionalen Normaldichte aus vier Blickwinkeln, von fast senkrecht von oben bis nahezu von der Seite. Von oben erscheint sie als runder Farbverlauf, von der Seite als Glockenkurve — es ist jedes Mal dieselbe Fläche."
+  "d5df7e66-cdd9-4c02-baa3-bc678c029e7f":
+    - "Eine gemeinsame Verteilung, deren Masse auf einem Andreaskreuz liegt: zwei schmale Diagonalen, die sich im Ursprung treffen, sonst ist die Ebene nahezu leer. Daneben und darunter die beiden Randverteilungen, beide glockenförmig wie bei einer gewöhnlichen Normalverteilung. Die Randverteilungen legen die gemeinsame Verteilung also nicht fest."
+
+kmeans.ipynb:
+  "81036951":
+    - "Streudiagramm Blütenblattlänge gegen Blütenblattbreite des Iris-Datensatzes, nach den tatsächlichen Arten eingefärbt: eine Gruppe unten links, zwei weitere diagonal nach rechts oben. Drei schwarze Kreuze markieren die zufällig gewählten Startzentroide — eines liegt in der unteren linken Gruppe, zwei in der oberen rechten Hälfte."
+  "6a50b1bd":
+    - "Dasselbe Streudiagramm nach einem Durchlauf von 3-Means, jetzt nach den zugewiesenen Clustern eingefärbt. Die untere linke Gruppe ist sauber erfasst; in der oberen rechten Hälfte liegen die beiden anderen Cluster ineinander verzahnt. Die schwarzen Kreuze zeigen die alten, die grauen die neu berechneten Zentroide."
+  "e213554c":
+    - "Ergebnis der vektorisierten Fassung von 3-Means auf denselben Daten, Blütenblattlänge gegen Blütenblattbreite, mit drei Zentroiden als Kreuze. Das Bild entspricht dem vorherigen — die kompakte Umschreibung rechnet dasselbe."
+  "1b07566b":
+    - "Dieselben Iris-Daten, diesmal mit k gleich 5 geclustert und in den Spalten Blütenblattlänge und Blütenblattbreite gezeichnet. Fünf Kreuze markieren die Zentroide; die obere rechte Wolke ist nun in mehrere Teile zerschnitten, die untere linke Gruppe bleibt als eigener Cluster."
+  "df880201":
+    - "3-Means bis zur Konvergenz, wieder in Blütenblattlänge und -breite. Die drei Cluster und ihre Zentroide liegen jetzt stabil; die Trennung zwischen den beiden oberen Gruppen verläuft als saubere Schnittlinie statt verzahnt wie nach dem ersten Durchlauf."
+  "2f37b7d5":
+    - "Ellenbogen-Diagramm: die mittlere innere Varianz der Cluster über k von 2 bis 20. Der Wert fällt von etwa 0,54 bei k gleich 2 zunächst steil, knickt bei etwa k gleich 5 ab und sinkt danach nur noch langsam auf rund 0,06."
+  "232fa374":
+    - "Ellenbogen-Diagramm mit der Überschrift „elbow plot“, erzeugt mit der robusten Variante, die je k zwanzig Läufe probiert und den besten behält. Der Verlauf ist derselbe wie zuvor: steiler Abfall von etwa 0,54 bei k gleich 2 bis etwa k gleich 5, danach ein flaches Auslaufen auf rund 0,06 bei k gleich 20."
+  "8eced400":
+    - "Die Übungsdaten für den Fall, in dem k-Means scheitert: ein breiter Ring aus 10000 Punkten um den Ursprung, in Blau, und mitten darin eine kompakte runde Wolke aus weiteren 10000 Punkten, in Orange. Die Farben zeigen, wie die Daten erzeugt wurden — Ring und Klumpen sind die beiden wahren Klassen."
+  "bcef95e9":
+    - "Dieselben Daten nach 3-Means. Statt Ring und Klumpen zu trennen, schneidet das Verfahren den Ring in drei Bögen — oben links, rechts und unten — und schlägt den inneren Klumpen demselben Cluster wie den rechten Bogen zu. Die Klassenstruktur der Daten wird dadurch nicht wiedergefunden."
+  "369da669":
+    - "Nur der Ring, mit 3-Means und k-Means++-Start in drei Bögen zerschnitten. Die großen Kreuze markieren die berechneten Zentroide, die kleineren die Startpunkte. Alle Zentroide liegen im leeren Inneren des Rings — an Stellen also, an denen überhaupt kein Datenpunkt liegt."
+  "7092a359":
+    - "Zwei Diagramme nebeneinander. Links „So wurden die Daten erzeugt“: drei unterschiedlich große und unterschiedlich breit gestreute Punkthaufen, der größte und breiteste unten links, zwei kleine und enge oben rechts. Rechts „3-Means: die Voronoi-Zellen der Zentroide“: dieselbe Ebene in drei farbige Bereiche mit geraden Grenzen geteilt, die roten Kreuze sind die Zentroide. Der große, breite Haufen wird dabei von einer Grenze zerschnitten — k-Means teilt nach Abstand, nicht nach Streuung."
+
+dimensionsreduktion.ipynb:
+  "81104d90-8155-41e6-8c3e-bb40095b6e3c":
+    - "Drei Streudiagramme nebeneinander. Links eine kreisrunde Punktwolke aus einer zweidimensionalen Standardnormalverteilung; in der Mitte dieselbe Stichprobe nach einer willkürlichen linearen Transformation, zu einer schmalen, von links unten nach rechts oben geneigten Zigarre gestreckt; rechts die über die Singulärwertzerlegung zurücktransformierte Wolke, wieder kreisrund."
+  "c4e48e26-0348-4db5-90fb-a9d892731660":
+    - "Streudiagramm der ersten beiden Hauptkomponenten des Iris-Datensatzes, nach Art eingefärbt. Eine Gruppe liegt als kompakte Säule rechts, deutlich von den übrigen abgesetzt; die beiden anderen bilden links eine gemeinsame, diagonal verlaufende Wolke und überlappen in der Mitte."
+    - "Dieselben Daten als räumliches Streudiagramm der ersten drei Hauptkomponenten. Die abgesetzte Gruppe bleibt klar für sich, die beiden anderen liegen nebeneinander und berühren sich; die dritte Komponente trennt sie nicht zusätzlich."
+  "19601f2e-24a8-497d-a373-c5169def4ad4":
+    - "Dasselbe räumliche Streudiagramm der ersten drei Hauptkomponenten, diesmal von Scikit-learns PCA berechnet. Die Gruppen liegen identisch, nur ist das Bild entlang der ersten Komponente gespiegelt — das Vorzeichen einer Hauptkomponente ist nicht festgelegt."
+  "7a603b55-2bb2-466b-96aa-cfdfe45b2e63":
+    - "Zehn handgeschriebene Ziffern von 0 bis 9 nebeneinander, jede als grobes Graustufenbild von 8 mal 8 Pixeln aus dem Digits-Datensatz."
+  "f30b6015":
+    - "Kurve der kumulierten erklärten Varianz über der Anzahl der Hauptkomponenten, von 1 bis gut 60. Sie steigt zunächst steil, erreicht die gestrichelt eingezeichnete 90-Prozent-Marke bei rund 20 Komponenten und nähert sich danach flach dem Wert 1."
+  "990d8241-0bf6-4fbc-adcc-e57ce0dc87c2":
+    - "Kurve der Clustering-Güte über der Anzahl behaltener Hauptkomponenten. Die x-Achse ist umgekehrt, läuft also von 33 Komponenten links nach 0 rechts. Die Güte schwankt bis etwa 10 Komponenten nur leicht um 0,73, fällt dann langsam und bricht unterhalb von 5 Komponenten steil auf null ein."
+  "d86b8004-054c-4b08-b14b-762f04f7000c":
+    - "Zwei Streudiagramme übereinander, beide zeigen dieselben Daten in vier deutlich getrennten senkrechten Bändern. Oben die Ausgangsdaten, deren waagerechte Achse bis 45 reicht, während die senkrechte nur von etwa minus 8 bis 11 läuft; unten dieselben Daten nach Standardskalierung, nun in beiden Richtungen etwa gleich weit ausgedehnt. Der Mittelwert ist jeweils als kleines Kreuz eingezeichnet."
+  "126eb081-e6cc-4687-ac4a-0b7fbac34743":
+    - "Vier Streudiagramme als Zweimal-zwei-Gitter, vier Farbgruppen. Obere Zeile: PCA der unskalierten Daten, die Gruppen stehen als senkrechte Bänder nebeneinander. Untere Zeile: PCA nach Standardskalierung, das Bild ist gedreht und die Gruppen verlaufen diagonal. Linke Spalte eingefärbt nach den Labels von k-Means, rechte Spalte nach den tatsächlichen Klassen."
+  "4b5c5b45-4b1b-4169-8dc9-bea69d6d02ad":
+    - "Dasselbe Zweimal-zwei-Gitter für einen echten Datensatz mit drei Klassen. Oben die PCA ohne Skalierung, deren erste Komponente von minus 400 bis 1000 reicht und in der die Farben stark durcheinanderliegen; unten die PCA nach Standardskalierung, in der sich drei Gruppen klar abzeichnen und die k-Means-Labels links fast dieselbe Aufteilung zeigen wie die tatsächlichen Klassen rechts."
+
+lineare-regression.ipynb:
+  "5895c3dd":
+    - "Streudiagramm Blütenblattlänge gegen Blütenblattbreite des Iris-Datensatzes mit einer orangen Geraden, die als Faustregel „Breite gleich Länge halbe minus eins“ eingezeichnet ist. Durch die große obere Punktwolke läuft sie passabel, die abgesetzte kleine Gruppe unten links trifft sie dagegen gar nicht."
+  "224c63d4-4a13-4aaa-a591-a78c387aa60e":
+    - "Streudiagramm einer künstlichen Stichprobe, Einflussgröße gegen Zielgröße, mit der orangen Geraden minimalen Abstands. Die Punkte liegen in einem schmalen Band um die Gerade, weichen an den Enden aber systematisch ab: links unten liegen sie über, rechts oben unter der Geraden."
+  "b7ca6601-0ce0-4987-889b-dd16f8c3d441":
+    - "Dieselbe Punktwolke mit derselben Geraden, zusätzlich sind die Residuen als senkrechte grüne Strecken von jedem Punkt zur Geraden eingezeichnet. Ihre Länge wächst zu beiden Enden hin an."
+  "c9a19d1b":
+    - "Streudiagramm Blütenblattfläche gegen Kelchblattlänge mit der orangen Regressionsgeraden. Die Punkte streuen deutlich breiter um die Gerade als im vorigen Beispiel; am linken Rand liegt eine dichte, senkrecht gestreckte Gruppe bei sehr kleiner Blütenblattfläche."
+  "58a5aa14-5823-4ed0-9aa8-b96e67683d3a":
+    - "Dieselben Daten wie zuvor, mit zwei übereinandergelegten Anpassungen: der durchgezogenen Geraden von Scikit-learn und den grünen Punkten der Anpassung aus Scipy.stats. Beide liegen exakt aufeinander — die beiden Bibliotheken rechnen dasselbe."
+  "e37b3f78-2e40-40f8-83c9-a3140ca9d8af":
+    - "„Polynomiale Regression von Grad 1“: dieselbe Punktwolke, dieselbe Gerade, die Residuen wieder als senkrechte Strecken. Ein Polynom ersten Grades ist nichts anderes als die gewöhnliche lineare Regression, das Bild entspricht dem von oben."
+  "bab4cae6-0c19-4d8d-995a-39a73680749c":
+    - "„Polynomiale Regression von Grad 2“: dieselbe Punktwolke, jetzt mit einer gekrümmten orangen Kurve angepasst. Sie folgt den Daten über den ganzen Bereich, die grünen Residuen sind durchgehend kurz und wechseln regellos die Richtung."
+  "fcd81914-f333-4fe8-955d-6418319129a4":
+    - "„Polynomiale Regression von Grad 30“ an denselben Daten — ein Beispiel für misslungene Anpassung. Die orange Kurve verläuft über den ganzen linken Bereich als waagerechte Linie weit neben den Punkten, schießt dann ab etwa x gleich 6 steil nach oben und schlängelt sich am rechten Rand auf und ab. Die grünen Residuen sind links sehr lang und alle gleichgerichtet."
+  "423d456b":
+    - "Residuenplot zum Melbourne-Modell: Residuen gegen vorhergesagte Werte, mit gestrichelter Nulllinie. Die Punkte sind nicht gleichmäßig um null gestreut, sondern bilden links eine dichte Wolke und fächern nach rechts auf; über der Linie liegen deutlich mehr große Ausreißer als darunter — ein Hinweis, dass das Modell die teuren Objekte systematisch unterschätzt."
+  "c766b9a5-949a-4443-a723-d93cceca6e88":
+    - "Streudiagramm Distanz zum Zentrum gegen Preis für die Melbourne-Immobiliendaten, mit roter Regressionsgerade. Die Punkte bilden links einen dichten Block mit einzelnen Ausreißern bis neun Millionen; die Gerade fällt flach von etwa 1,4 Millionen bei Distanz null auf rund 0,3 Millionen bei Distanz 45."
+  "c4cf99ca-f64d-49ec-8772-d7006fb255d9":
+    - "Räumliche Darstellung des Modells mit zwei Einflussgrößen: Distanz zum Zentrum und Alter auf der Grundfläche, Preis in der Höhe. Die angepasste Regressionsebene liegt als rotes Gitter flach im Raum, die Datenpunkte sind als blasse Punkte darum gestreut."
+  "a52eb6ed-0312-4176-b31b-e2f8af8f3ae2":
+    - "Dieselben Melbourne-Daten, Distanz gegen Preis, diesmal mit einer roten Regressionskurve statt einer Geraden. Sie fällt zunächst deutlich, flacht ab etwa Distanz 20 ab und bleibt dann nahezu waagerecht — der Preisabfall mit der Entfernung ist also nicht linear."
+  "5ccb35a2-1b24-49a7-bbc5-a72382b32d08":
+    - "Drei untereinander liegende Diagramme zum selben gekrümmten Datensatz, jeweils mit nur zwei Trainingspunkten (rot) und der daraus angepassten Geraden. Je nachdem, welche zwei Punkte gezogen werden, liegt die Gerade völlig anders: oben verfehlt sie die linke Hälfte um bis zu 50 Einheiten, in der Mitte liegt sie durchgehend zu hoch, unten trifft sie die Daten passabel. Die grünen Residuen zeigen den Unterschied in der Länge."
+  "b337f071-284a-4170-a4ae-416baa8bad75":
+    - "Fünf untereinander liegende Diagramme derselben Art, diesmal mit Ridge-Regression und verschiedenen Werten des Regularisierungsparameters alpha bei denselben kleinen Trainingsmengen. Mit wachsendem alpha werden die Geraden flacher und ähneln einander stärker — die Anpassung reagiert weniger empfindlich darauf, welche zwei Punkte gezogen wurden, liegt dafür aber in der Mitte des Wertebereichs nicht mehr so nah an den Daten."
+
+kernel-methoden.ipynb:
+  "0c6b638d-c5aa-4820-9ab6-750e31463938":
+    - "Streudiagramm der Übungsdaten: eine dichte runde Punktwolke in der Mitte, umgeben von einem breiten Ring aus Punkten in etwa 8 bis 10 Einheiten Abstand. Alle Punkte haben dieselbe Farbe — die beiden Gruppen sind durch keine Gerade zu trennen."
+  "dd3329bf-67b3-4f89-a8db-c6a6d514fa24":
+    - "Drei leere dreidimensionale Koordinatensysteme nebeneinander, die dieselbe in die dritte Dimension gehobene Punktwolke aus drei Blickwinkeln zeigen sollen. Die Punkte sind mit alpha 0,02 so durchsichtig gezeichnet, dass im Bild nichts von ihnen zu sehen ist; sichtbar sind nur die Achsengitter mit Bereichen von etwa minus 10 bis 10 in der Grundfläche und 0 bis 100 in der Höhe."
+  "8ed447f8-e321-4e9a-a7ad-58d1bd193cee":
+    - "Dieselben Daten wie zuvor, jetzt nach den Labels von k-Means eingefärbt: der innere Klumpen grün, der äußere Ring blau. Nach dem Anheben in die dritte Dimension trennt k-Means die beiden Gruppen also sauber, obwohl sie in der Ebene ineinander verschachtelt liegen."
+  "145f626b-a860-4509-80f7-c0d881974647":
+    - "Dieselbe Anordnung aus Ring und Klumpen, eingefärbt nach der Vorhersage einer Kernel-Ridge-Regression. Der Ring ist durchgehend dunkel, der innere Klumpen hell, dazwischen liegen am Rand des Klumpens einige Punkte in einer Zwischenfarbe — dort ist die Vorhersage unentschieden."
+  "57e1e137-dda9-451c-9d18-1aecf3bac6e0":
+    - "Zwei Streudiagramme nebeneinander. Links die gewöhnliche Hauptkomponentenanalyse der Daten: Ring und Klumpen liegen unverändert ineinander, die PCA hat nichts getrennt. Rechts dieselbe Stichprobe nach einer Kernel-PCA: die innere Klasse ist auf einen schmalen Strich ganz links zusammengefallen, die äußere breitet sich rechts als Sichel aus — in dieser Darstellung sind die beiden Klassen durch eine senkrechte Gerade trennbar."
+
+model-selection.ipynb:
+  "673732af":
+    - "Konfusionsmatrix als Farbtafel für die drei Iris-Arten, Zeilen die wahre, Spalten die vorhergesagte Klasse. Setosa wird 50-mal richtig erkannt und nie verwechselt; Versicolor 48-mal richtig und zweimal als Virginica gelesen; Virginica nur 36-mal richtig, dafür 14-mal als Versicolor. Die Fehler sitzen also ausschließlich zwischen den beiden ähnlichen Arten."
+  "ad9d2d0a-11b2-485c-bcfd-defa9477cc55":
+    - "Streudiagramm gemessene gegen vorhergesagte Blütenblattbreite für die per Gittersuche abgestimmte Kernel-Ridge-Regression. Die Punkte folgen eng der Diagonale; auffällig ist die Lücke zwischen etwa 0,6 und 1,0, in der der Iris-Datensatz keine Messwerte hat."
+  "f0a6b8fe-5532-468c-8fde-3256fd615eb5":
+    - "Dasselbe Streudiagramm für das Modell aus der Zufallssuche statt der Gittersuche. Das Bild ist praktisch nicht von dem vorherigen zu unterscheiden — mit 40 zufälligen Versuchen wird hier dieselbe Güte erreicht wie mit dem vollständigen Gitter."
+  "85186c1c-f90a-4ea4-9213-de6142c03fff":
+    - "Zwei Streudiagramme der Fashion-MNIST-Testdaten in ihren ersten beiden Hauptkomponenten, die zehn Kleidungsklassen farbig unterschieden. Links „Correct labels“ mit den wahren Klassen, rechts „SVM result“ mit der Vorhersage der Support-Vector-Maschine. Die großen Bereiche stimmen überein; die Unterschiede liegen an den Rändern, wo die Klassen ineinander übergehen."
+  "eed3cd48-be5b-461c-9cc8-62bdbaf9b4bf":
+    - "Dieselbe Hauptkomponenten-Ebene, aber statt farbiger Punkte ist an jeder Stelle das tatsächliche Kleidungsstück als kleines Graustufenbild gezeichnet. Dadurch wird sichtbar, wonach die ersten beiden Komponenten sortieren: nach links unten liegen helle und schmale Stücke wie Hosen, nach rechts oben dunkle und breite wie Pullover und Mäntel."
+  "72c1fad4-0110-4fc5-89bb-44492f0ded46":
+    - "Streudiagramm „Wrong class“: nur die von der SVM falsch klassifizierten Testbilder, an ihrer Stelle in derselben Ebene und nach ihrer wahren Klasse eingefärbt. Sie liegen nicht gleichmäßig verteilt, sondern gehäuft in der Mitte, wo die Klassenbereiche aneinanderstoßen."
+
+expectation-maximization.ipynb:
+  "2fc62322-b991-4b28-8fec-061419c28b58":
+    - "Zwei Streudiagramme der ersten beiden Hauptkomponenten des Iris-Datensatzes nebeneinander, beide mit den drei Arten farbig und mit orangen Höhenlinien der angepassten Dichten. Links „kMeans fit“: die Höhenlinien sind exakte Kreise, die über die schräg liegenden Punktwolken hinwegbügeln. Rechts „Gaussian Mixture Model“: die Höhenlinien sind schmale, in Richtung der jeweiligen Wolke geneigte Ellipsen und liegen dadurch eng an den Daten."
+  "27a5fd4d-337a-4c69-91ac-a2083b5f56cb":
+    - "Histogramm der Übungsdaten für den EM-Algorithmus: in Grau die gewichtete Summe, darunter in Blau die erste Komponente, eine schmale Verteilung um null, und in Gelb die zweite, eine breitere um 6. Im Bereich zwischen 0 und 4 überlappen sich beide, sodass man dem Gesamthistogramm die Zerlegung nicht ansieht."
+  "5da2c828-1efc-434e-9cf6-ce564ccb8bc6":
+    - "Dasselbe Histogramm als Dichte, darüber in Blau die geschätzte Mischdichte beim Start des Verfahrens und vier senkrechte Linien: die beiden wahren Erwartungswerte und die beiden zufällig gewählten Startwerte. Die Startkurve hat ihren hohen Gipfel bei 10, wo die Daten schon dünn sind, und trifft die eigentliche Masse links davon nicht — so sieht der Ausgangspunkt der Iteration aus."
+  "928a9666-38bc-4ec6-a296-317e0e04204d":
+    - "Streudiagramm „Zu clusternde Daten“: aufgezeichnete Aufenthaltsorte, Breitengrad gegen Längengrad. Die Punkte liegen nicht als Wolken, sondern als Linienzug — sie folgen offenbar Straßen, mit dichten Verdickungen dort, wo länger verweilt wurde. Ein kleines Kreuz markiert den Mittelwert, der mitten im Leeren liegt."
+  "13f1453d-af47-47e2-be96-825a96efeb6f":
+    - "Dieselben Aufenthaltsorte nach Transformation auf Hauptkomponenten. Das Bild ist lediglich gedreht und anders skaliert; die Linienstruktur bleibt unverändert, gewonnen ist nichts."
+  "7713d7fb-b66c-4641-b206-71f5814d90d3":
+    - "Dieselbe Karte, überlagert von einer Stichprobe aus dem angepassten Mischmodell in Orange. Die erzeugten Punkte sammeln sich in zwei kompakten Flecken an den dichtesten Stellen der Spur, während der lange, dünn besetzte Linienzug dazwischen von den Gauß-Komponenten gar nicht abgedeckt wird."
+  "ac35d6e6-5523-42c8-b20c-bd361a126861":
+    - "„mixed Gaussian model, sklearn EM-fit“: die ersten beiden Hauptkomponenten des Iris-Datensatzes mit den orangen Höhenlinien der drei angepassten Normalverteilungen. Die Ellipsen folgen der Neigung der jeweiligen Punktwolke. Drei rote Kreuze markieren die fehlklassifizierten Punkte — sie liegen alle dort, wo die beiden rechten Komponenten aneinandergrenzen."
+  "99cf6b08":
+    - "Kurve des Bayesschen Informationskriteriums über der Anzahl der Komponenten k, für k gleich 1, 2, 5, 10, 20, 40, 60 und 100. Der Wert fällt von etwa 314000 auf ein Minimum von rund 293000 bei k gleich 10, steigt dann bis k gleich 60 auf etwa 347000 an und fällt bei k gleich 100 wieder auf das Niveau des Minimums. Der Verlauf ist also nicht eingipflig — wer nur die Enden ansieht, wählt leicht falsch."
+  "dfde9366-bd91-4e71-82cc-c2123051913c":
+    - "Ein Gitter aus hundert handgeschriebenen Ziffern des Digits-Datensatzes, je 8 mal 8 Pixel in Graustufen, zehn Zeilen zu zehn Bildern. Die oberen Zeilen laufen der Reihe nach von 0 bis 9, darunter folgen gemischte Ziffern in sehr unterschiedlichen Schreibweisen."
+  "715c78f9-0cb6-4d80-8102-fed54dfd4b8d":
+    - "Eine Reihe von zehn Ziffernbildern, die das Mischmodell mit hundert Komponenten selbst erzeugt hat. Sie sehen handgeschriebenen Ziffern ähnlich — erkennbar sind unter anderem eine 5, eine 0, eine 9 und eine 4 —, sind aber verwaschener als die echten und teils nicht eindeutig lesbar."
+  "74e47f30-54f8-43fd-94f5-b280a76f9d07":
+    - "Zehn Stichproben aus der ersten Komponente des Mischmodells, als Reihe von Ziffernbildern. Alle zehn zeigen dieselbe Ziffer, eine 4, in leicht wechselnder Strichstärke und Neigung — die Komponente steht für eine bestimmte Schreibweise, nicht für eine Ziffer im Allgemeinen."
+    - "Zehn Stichproben aus der zweiten Komponente: durchgehend eine 9, alle in derselben gedrungenen Schreibweise."
+    - "Zehn Stichproben aus der dritten Komponente: durchgehend eine 3, mit kantig gesetzten Bögen."
+    - "Zehn Stichproben aus der vierten Komponente: ein schmaler senkrechter Strich, also eine 1, in allen zehn Bildern nahezu gleich."
+    - "Zehn Stichproben aus der fünften Komponente: durchgehend eine 6, sehr gleichmäßig geformt."
+    - "Zehn Stichproben aus der sechsten Komponente: durchgehend eine 0, rund und kräftig gezeichnet."
+    - "Zehn Stichproben aus der siebten Komponente: wieder eine 3, aber in einer anderen Schreibweise als die dritte Komponente — enger und stärker geneigt."
+    - "Zehn Stichproben aus der achten Komponente: eine schmale Form, die zwischen 1 und 2 schwankt; hier hat die Komponente zwei Schreibweisen zusammengefasst."
+    - "Zehn Stichproben aus der neunten Komponente: durchgehend eine 3 in einer dritten, breiteren Variante."
+    - "Zehn Stichproben aus der zehnten Komponente: durchgehend eine 4, anders geschrieben als in der ersten Komponente — mit offener statt geschlossener Spitze."
+  "c0193b85-cba9-469a-9f5d-9b439fb41ff0":
+    - "Eine Reihe von zehn Ziffern, die aus dem gesamten Mischmodell gezogen wurden statt aus einer einzelnen Komponente. Entsprechend gemischt fällt das Ergebnis aus: zu erkennen sind unter anderem 3, 9, 1, 5, 6 und 7, in sehr unterschiedlicher Qualität."
+  "e6e441f7-6d6b-40da-9fbd-f68e3297f459":
+    - "Zehn Stichproben aus einer weiteren Komponente: durchgehend eine 7, jeweils mit demselben waagerechten Querstrich oben."
+  "7a5855eb-e2ea-481a-8f3f-4c618d155b38":
+    - "Eine Reihe von zehn Bildern, die ein Mischmodell aus 90 Normalverteilungen erzeugt hat, das auf der Fashion-MNIST-Klasse „Hose“ trainiert wurde. Alle zehn zeigen Hosen in leicht unterschiedlicher Beinweite und Helligkeit; sie sind weicher und an den Rändern verwaschener als echte Aufnahmen."
+  "3ab8baba":
+    - "Zehn vom Modell erzeugte Hosen, aus einem Mischmodell mit 90 Komponenten, das auf der Klasse „Hose“ in hoher Auflösung trainiert wurde. Die Silhouetten sind klar, die Stoffmuster verwaschen."
+    - "Vier erzeugte Bilder aus einem auf T-Shirts trainierten Mischmodell: kurzärmelige Oberteile mit gerader Schulterlinie, teils mit angedeutetem Aufdruck."
+    - "Vier erzeugte Bilder aus einem auf Hosen trainierten Modell: schmale, zweibeinige Silhouetten vor hellem Grund."
+    - "Vier erzeugte Bilder aus einem auf Pullover trainierten Modell: langärmelige Oberteile mit breitem Bund, durchgehend dunkel."
+    - "Vier erzeugte Bilder aus einem auf Kleider trainierten Modell: schmale, nach unten länger werdende Formen, teils mit angedeutetem Karomuster."
+    - "Vier erzeugte Bilder aus einem auf Mäntel trainierten Modell: langärmelige Oberteile, kräftiger und breiter als die Pullover, mit erkennbarem hellem Saum."
+    - "Vier erzeugte Bilder aus einem auf Sandalen trainierten Modell: flache, querliegende Formen am unteren Bildrand, die einzige Klasse hier ohne aufrechte Silhouette."
+    - "Vier erzeugte Bilder aus einem auf Hemden trainierten Modell: langärmelige Oberteile mit senkrechter Knopfleiste und Karo- oder Streifenmuster."
+
