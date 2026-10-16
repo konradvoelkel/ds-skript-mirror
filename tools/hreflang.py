@@ -3,6 +3,7 @@
 
     python3 tools/hreflang.py --fetch <ziel.json>
     python3 tools/hreflang.py <public-verzeichnis> <filemap.json> <de-site> <en-site>
+    python3 tools/hreflang.py --verify <public-verzeichnis> <filemap.json>
 
 Die englische Ausgabe liefert ihre Hälfte seit dem 2026-10-15 aus. **Ein einseitiges
 hreflang wird von Google ignoriert**, die englische Hälfte bringt also nichts, solange
@@ -19,9 +20,19 @@ den Ausgaben (`kovarianz` / `covariance`) — genau der Fall, für den es hrefla
 `null`, haben also kein englisches Gegenstück. Eine Seite ohne Alternate gehört in keinen
 Cluster, bekommt hier also *gar nichts* — auch keinen Selbstverweis.
 
-**Wenn die filemap fehlt, wird nichts geschrieben und der Lauf geht weiter.** Eine kaputte
-Hälfte ist schlechter als eine fehlende. Sichtbar wird das am Job `hreflang-map`, der dann
-orange steht; hier steht eine laute Zeile im Log.
+**Die Rückfallebene.** `hreflang/filemap.json` liegt eingecheckt im Repo. Der Job
+`hreflang-map` frischt sie auf und legt sie als Artefakt unter demselben Pfad ab, überschreibt
+die ausgecheckte Fassung also. Scheitert der Abruf — GitHub ist zwei Minuten weg, und GitLab
+reicht Artefakte nur innerhalb derselben Pipeline weiter —, bleibt die eingecheckte Karte
+stehen und das Sprachpaar bleibt vollständig. Ohne diese Ebene hieße ein Aussetzer: eine
+Ausgabe ganz ohne hreflang, beide Jobs grün, und weil ein einseitiges hreflang von Google
+ignoriert wird, fällt die englische Hälfte mit — aus 30/30 würde 0/30 auf beiden Seiten, ohne
+ein einziges rotes Signal.
+
+**Deshalb zusätzlich `--verify`**, das nach dem Einhängen am gebauten `public/` nachzählt und
+abbricht, wenn die Zahlen nicht stimmen. Melden allein genügt hier nicht: ein Log liest niemand,
+und genau dieser Fehlertyp ist im Browser unsichtbar und nur durch Nachmessen zu finden —
+derselbe wie seinerzeit die localhost-Sitemap.
 
 Gegenprobe nach dem Deploy, in ds-en:
 
@@ -65,10 +76,30 @@ def fetch(target: Path) -> int:
     if not isinstance(fmap, dict) or not fmap:
         raise SystemExit("✗ 'map' ist leer oder kein Objekt -- das kann nicht stimmen")
     paired = sum(1 for v in fmap.values() if v)
+    committed = target.read_bytes() if target.exists() else None
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_bytes(raw)
     print(f"✓ {target} ({len(raw)} Bytes): {len(fmap)} Eintraege, "
           f"{paired} mit englischem Gegenstueck, {len(fmap) - paired} ohne")
+    if committed is None:
+        print("!" * 78)
+        print("! Im Repo lag keine Karte. Die geholte Fassung bitte einchecken -- sie ist die")
+        print("! Rueckfallebene, wenn GitHub beim naechsten Lauf nicht antwortet.")
+        print("!" * 78)
+    elif committed != raw:
+        old_map = json.loads(committed)["map"]
+        dazu = sorted(set(fmap) - set(old_map))
+        weg = sorted(set(old_map) - set(fmap))
+        geaendert = sorted(k for k in set(fmap) & set(old_map) if fmap[k] != old_map[k])
+        print("!" * 78)
+        print("! Die geholte Karte weicht von der eingecheckten ab -- ein Commit ist faellig.")
+        for label, items in (("neu", dazu), ("entfallen", weg), ("geaendert", geaendert)):
+            if items:
+                print(f"!   {label}: {', '.join(items)}")
+        print("! Dieser Lauf benutzt die frische Fassung; das Repo haelt noch die alte vor.")
+        print("!" * 78)
+    else:
+        print("✓ identisch mit der eingecheckten Rueckfallebene")
     return 0
 
 
@@ -82,12 +113,11 @@ def tags(en_url: str, de_url: str) -> str:
 
 def inject(public: Path, filemap: Path, de_site: str, en_site: str) -> int:
     if not filemap.exists():
-        print("!" * 78)
-        print("! Die filemap aus ds-en fehlt -- siehe Job 'hreflang-map' (steht dann orange).")
-        print("! Es wird KEIN hreflang ausgeliefert. Das ist Absicht: eine kaputte Haelfte")
-        print("! waere schlechter als eine fehlende. Der Rest des Deploys laeuft normal.")
-        print("!" * 78)
-        return 0
+        print(f"✗ {filemap} fehlt. Die Datei liegt eingecheckt im Repo und wird von")
+        print("  hreflang-map nur aufgefrischt -- fehlt sie, stimmt etwas Grundsaetzliches")
+        print("  nicht. Ohne sie waere die Ausgabe ohne Sprachpaar, und weil ein einseitiges")
+        print("  hreflang ignoriert wird, faellt die englische Haelfte mit.")
+        return 1
 
     fmap = json.loads(filemap.read_text(encoding="utf-8"))["map"]
     # Slug der deutschen Datei -> Slug der englischen Datei (oder None).
@@ -153,8 +183,75 @@ def inject(public: Path, filemap: Path, de_site: str, en_site: str) -> int:
     return 0
 
 
+def verify(public: Path, filemap: Path) -> int:
+    """Am gebauten public/ nachzaehlen -- nicht am Log glauben.
+
+    Die Sollwerte kommen aus der filemap, nicht aus einer Konstante: kommt ein Kapitel
+    dazu, waechst die Erwartung von selbst mit. Hart abbrechen statt melden, weil dieser
+    Fehlertyp im Browser unsichtbar ist.
+    """
+    if not filemap.exists():
+        print(f"✗ {filemap} fehlt -- es laesst sich nicht einmal sagen, was erwartet waere")
+        return 1
+    fmap = json.loads(filemap.read_text(encoding="utf-8"))["map"]
+    paired = {stem(de) for de, en in fmap.items() if en}
+    unpaired = {stem(de) for de, en in fmap.items() if not en}
+
+    pages = sorted(public.rglob("index.html"))
+    seen_en: dict[str, str] = {}
+    with_tags = without = tags = 0
+    bad: list[str] = []
+    for page in pages:
+        rel = page.parent.relative_to(public).as_posix()
+        name = ROOT_STEM if rel == "." else rel
+        html = page.read_text(encoding="utf-8", errors="replace")
+        alt = dict(re.findall(r'<link rel="alternate" hreflang="([a-z-]+)" href="([^"]+)"', html))
+        tags += len(alt)
+        if name in unpaired:
+            without += 1
+            if alt:
+                bad.append(f"{name}: hat {len(alt)} Tags, obwohl ohne englisches Gegenstueck")
+            continue
+        if name not in paired:
+            bad.append(f"{name}: steht in keiner Haelfte der filemap")
+            continue
+        with_tags += 1
+        if set(alt) != {"de", "en", "x-default"}:
+            bad.append(f"{name}: Tags {sorted(alt) or 'keine'} statt de/en/x-default")
+            continue
+        if alt["x-default"] != alt["en"]:
+            bad.append(f"{name}: x-default zeigt nicht auf dieselbe URL wie hreflang=en")
+        if alt["en"] in seen_en:
+            bad.append(f"{name}: beansprucht {alt['en']}, das schon {seen_en[alt['en']]} gehoert")
+        seen_en[alt["en"]] = name
+        canonical = re.search(r'<link rel="canonical" href="([^"]+)"', html)
+        if not canonical or canonical.group(1) != alt["de"]:
+            got = canonical.group(1) if canonical else "keiner"
+            bad.append(f"{name}: Canonical {got} != Selbstverweis {alt['de']}")
+
+    soll = 3 * len(paired)
+    print(f"  {len(pages)} Seiten, {with_tags} mit drei Tags, {without} bewusst ohne, "
+          f"{tags} Tags gesamt (Soll {soll})")
+    if tags != soll or with_tags != len(paired) or without != len(unpaired):
+        bad.append(f"Zahlen stimmen nicht: {tags} Tags auf {with_tags} Seiten, "
+                   f"erwartet {soll} auf {len(paired)}")
+    for b in bad:
+        print(f"  ✗ {b}")
+    if bad:
+        print("✗ Das Sprachpaar ist nicht vollstaendig. Ein einseitiges hreflang wird")
+        print("  ignoriert -- das zoege die englische Haelfte mit herunter.")
+        return 1
+    print(f"✓ {tags} hreflang-Tags, jede englische Ziel-URL genau einmal vergeben")
+    return 0
+
+
 def main() -> int:
     argv = sys.argv[1:]
+    if argv and argv[0] == "--verify":
+        if len(argv) != 3:
+            print(__doc__)
+            return 2
+        return verify(Path(argv[1]), Path(argv[2]))
     if argv and argv[0] == "--fetch":
         if len(argv) != 2:
             print(__doc__)

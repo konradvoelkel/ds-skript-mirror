@@ -83,15 +83,21 @@ check-structure:
   # Holt pyyaml von PyPI, haengt also an derselben flatternden Strecke wie build-web.
   retry: 2
 
-# Holt die Zuordnung deutscher auf englische Kapitel aus ds-en. Sie ist dort die eine Quelle
-# der Wahrheit (die Staleness-Werkzeuge laufen auf derselben Datei), also wird sie geholt und
-# nicht abgeschrieben -- eine zweite Kopie hier wuerde irgendwann leise auseinanderlaufen.
+# Frischt die Zuordnung deutscher auf englische Kapitel aus ds-en auf. Sie ist dort die eine
+# Quelle der Wahrheit (die Staleness-Werkzeuge laufen auf derselben Datei) -- eine zweite
+# *gepflegte* Kopie hier wuerde irgendwann leise auseinanderlaufen.
 #
-# **allow_failure: true, und das ist hier die Pointe.** Scheitert der Abruf, fehlt das Artefakt,
-# und der pages-Job liefert dann *gar kein* hreflang aus statt eines falschen: eine kaputte
-# Haelfte des Sprachpaars waere schlechter als eine fehlende. Sichtbar bleibt es trotzdem --
-# dieser Job steht dann orange in der Pipeline, und pages schreibt eine laute Zeile ins Log.
-# retry: 2, weil die Strecke nach draussen flattert (siehe notify-ds-en).
+# **hreflang/filemap.json liegt trotzdem eingecheckt im Repo, als Rueckfallebene.** Das Artefakt
+# dieses Jobs liegt unter demselben Pfad und ueberschreibt die ausgecheckte Fassung; scheitert
+# der Abruf, bleibt die eingecheckte stehen. Ohne diese Ebene hiesse ein zweiminuetiger
+# GitHub-Aussetzer: eine Ausgabe ganz ohne hreflang, beide Jobs gruen -- und weil ein
+# einseitiges hreflang von Google ignoriert wird, faellt die englische Haelfte mit, aus 30/30
+# wird 0/30 auf beiden Seiten. GitLab reicht Artefakte nur innerhalb derselben Pipeline weiter,
+# ein erfolgreicher Lauf von gestern hilft also nicht.
+#
+# allow_failure bleibt richtig: der Abruf darf scheitern, weil die Rueckfallebene traegt. Weicht
+# die geholte Karte von der eingecheckten ab, sagt das Skript im Log, welche Kapitel betroffen
+# sind -- dann ist ein Commit faellig. retry: 2, weil die Strecke nach draussen flattert.
 hreflang-map:
   stage: build
   image: python:3.13-alpine
@@ -169,10 +175,14 @@ pages:
       done
     # hreflang: die deutsche Haelfte des Sprachpaars. Muss *nach* dem Canonical laufen -- der
     # Selbstverweis muss exakt die URL sein, die die Seite canonical nennt, sonst erklaert sich
-    # die Seite nicht zum Mitglied ihres eigenen Clusters. Das Skript prueft genau das und
-    # bricht ab, wenn die beiden auseinanderlaufen. Fehlt das Artefakt aus hreflang-map, laesst
-    # es alles unberuehrt und sagt es laut.
+    # die Seite nicht zum Mitglied ihres eigenen Clusters. hreflang/filemap.json kommt entweder
+    # frisch aus hreflang-map oder, wenn der Abruf scheiterte, aus dem Repo.
     - python3 tools/hreflang.py public hreflang/filemap.json "$SITE" "$EN_SITE_ORIGIN"
+    # Und danach am gebauten public/ nachzaehlen statt dem Log zu glauben. Melden genuegt hier
+    # nicht: ein fehlendes Sprachpaar ist im Browser unsichtbar, steht nur im Log und ist von
+    # aussen allein durch Nachmessen zu finden -- derselbe Fehlertyp wie die localhost-Sitemap.
+    # Die Sollwerte zieht das Skript aus der filemap, ein neues Kapitel aendert hier also nichts.
+    - python3 tools/hreflang.py --verify public hreflang/filemap.json
     # Kontrolle: bricht den Job ab, falls doch eine localhost-URL ueberlebt hat.
     # Als Block-Skalar, nicht als einzeilige Sequenz: eine unquotierte Zeile mit ": " darin
     # liest GitLab als Mapping statt als Kommando und lehnt die ganze Datei ab ("script config
