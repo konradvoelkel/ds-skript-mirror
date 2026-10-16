@@ -1,12 +1,13 @@
 ---
 title: "Data Science: von der Stochastik zum Machine Learning mit Python"
 short_title: "Vorlesungsskript"
-description: "Ein vollständiges Vorlesungsskript zur Data Science: Wahrscheinlichkeitsräume, Verteilungen, Schätzer und Tests, dazu Numpy, Pandas und Scikit-learn — und die Lernverfahren selbst programmiert statt aufgerufen."
+description: "Vorlesungsskript Data Science: von Wahrscheinlichkeitsräumen bis zum maschinellen Lernen — mit Numpy und Pandas, und den Lernverfahren selbst programmiert."
 # Nötig *zusätzlich* zum project.thumbnail in myst.yml: das Projekt-Thumbnail greift nur,
 # wo eine Seite gar kein Bild hat. Diese Seite hat eines — den CC-Knopf im Lizenzabschnitt
 # —, und ohne diese Zeile wäre ausgerechnet die Startseite die einzige, die weiter den
 # 267x50-Knopf als Vorschaukarte anbietet (am gebauten HTML geprüft).
 thumbnail: images/social-card.png
+date: 2026-10-16
 ---
 
 Dieses Skript ist eine Einführung in die Data Science, die bei der Stochastik anfängt und beim
