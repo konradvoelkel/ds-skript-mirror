@@ -183,6 +183,20 @@ pages:
     # aussen allein durch Nachmessen zu finden -- derselbe Fehlertyp wie die localhost-Sitemap.
     # Die Sollwerte zieht das Skript aus der filemap, ein neues Kapitel aendert hier also nichts.
     - python3 tools/hreflang.py --verify public hreflang/filemap.json
+    # --- Aktualitaet, strukturierte Daten, Markdown-Auslieferung -----------------------
+    # Datum je Seite aus "git log" der Quelldatei, nicht aus der Bauzeit: ein Bau am Dienstag
+    # macht ein Kapitel von 2024 nicht frisch. Setzt article:modified_time in jeden <head> und
+    # <lastmod> in jeden Sitemap-Eintrag (vorher null von 32). Braucht die volle Historie,
+    # siehe GIT_DEPTH unten -- bei einem flachen Klon bricht das Skript lieber ab, als zu raten.
+    - python3 tools/freshness.py public
+    # JSON-LD nur auf die Landingpage, Buch als Ganzes. Muss *nach* freshness.py laufen (liest
+    # dateModified aus der Seite zurueck) und *nach* der og:image-Absolutmachung oben.
+    - python3 tools/inject_jsonld.py "$SITE" public
+    # llms.txt, llms-full.txt und der Markdown-Quelltext je Kapitel. Steht bewusst zuletzt:
+    # Google ignoriert llms.txt erklaertermassen, der Nutzen liegt bei den .md-Dateien.
+    - python3 tools/llms_txt.py "$SITE" public
+    # Und wieder am gebauten public/ nachzaehlen statt dem Log zu glauben.
+    - python3 tools/freshness.py --check public
     # Kontrolle: bricht den Job ab, falls doch eine localhost-URL ueberlebt hat.
     # Als Block-Skalar, nicht als einzeilige Sequenz: eine unquotierte Zeile mit ": " darin
     # liest GitLab als Mapping statt als Kommando und lehnt die ganze Datei ab ("script config
@@ -192,6 +206,11 @@ pages:
         echo "FEHLER: localhost-URL in sitemap.xml oder robots.txt ueberlebt"
         exit 1
       fi
+  variables:
+    # freshness.py liest das Datum je Kapitel aus "git log" der Quelldatei. GitLab klont
+    # standardmaessig flach (GIT_DEPTH 20); eine seit zwanzig Commits unberuehrte Datei haette
+    # dann keinen Eintrag, und das Skript braeche ab. Also volle Historie fuer diesen Job.
+    GIT_DEPTH: "0"
   artifacts:
     paths:
       - public

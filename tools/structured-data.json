@@ -1,0 +1,48 @@
+{
+  "@context": "https://schema.org",
+  "@type": ["Book", "LearningResource"],
+  "@id": "__SITE__/#work",
+  "url": "__SITE__/",
+  "name": "Data Science: von der Stochastik zum Machine Learning mit Python",
+  "description": "Vorlesungsskript Data Science: Stochastik, Statistik und Python von den Grundlagen bis zum maschinellen Lernen. Die Schätzer und Lernverfahren — k-Means, Hauptkomponentenanalyse, Regression, Expectation Maximization — werden selbst programmiert statt aufgerufen.",
+  "inLanguage": "de",
+  "isAccessibleForFree": true,
+  "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "learningResourceType": "Vorlesungsskript",
+  "educationalLevel": "Bachelor",
+  "datePublished": "2023-04-05",
+  "copyrightYear": 2026,
+  "teaches": [
+    "Wahrscheinlichkeitsräume, Zufallsvariablen und Verteilungen",
+    "Erwartungswert, Varianz und zentraler Grenzwertsatz",
+    "Vektorisiertes Rechnen mit Numpy und Scipy",
+    "Explorative Datenanalyse mit Pandas und Matplotlib",
+    "Multivariate Statistik, Kovarianz und relative Entropie",
+    "Selbst programmierte Lernverfahren des maschinellen Lernens in Python",
+    "Statistische Modelle, Maximum Likelihood, Tests und Modellwahl",
+    "Datenschutz und DSGVO"
+  ],
+  "about": [
+    { "@type": "Thing", "name": "Data Science" },
+    { "@type": "Thing", "name": "Wahrscheinlichkeitstheorie" },
+    { "@type": "Thing", "name": "Statistik" },
+    { "@type": "Thing", "name": "Maschinelles Lernen" },
+    { "@type": "Thing", "name": "Python (Programmiersprache)" }
+  ],
+  "author": {
+    "@type": "Person",
+    "name": "Konrad Völkel",
+    "url": "https://konradvoelkel.com",
+    "affiliation": {
+      "@type": "CollegeOrUniversity",
+      "name": "Heinrich-Heine-Universität Düsseldorf",
+      "url": "https://www.hhu.de"
+    }
+  },
+  "workTranslation": {
+    "@type": "Book",
+    "name": "Data Science: from stochastics to machine learning with Python",
+    "inLanguage": "en",
+    "url": "https://datascience.konradvoelkel.com/"
+  }
+}
