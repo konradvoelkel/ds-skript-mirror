@@ -154,7 +154,13 @@ build-web:
     # verteilungen, lineare-regression) -- auf die Klasse gezaehlt waere der Job rot
     # gewesen, ohne dass etwas kaputt war.
     - |
-      n=$(find _build/html -name index.html -exec grep -oh 'text-myst-warning-text" title="' {} + | wc -l)
+      # Das "|| true" ist der Kern dieser Zeile, nicht Kosmetik. GitLab fuehrt script mit
+      # "set -eo pipefail" aus; "find -exec grep +" endet mit 1, wenn grep nichts findet,
+      # und das ist hier der GUTFALL. Ohne die Klammer riss pipefail die Pipe und errexit
+      # brach die Zuweisung ab, bevor ein echo kam: Job rot, Log ohne eine einzige
+      # Meldung, und zwar genau dann, wenn keine Formel kaputt war. Nachgewiesen am
+      # 2026-10-16, Pipeline 183640, Job 669082.
+      n=$( { find _build/html -name index.html -exec grep -oh 'text-myst-warning-text" title="' {} + || true; } | wc -l )
       if [ "$n" -ne 0 ]; then
         echo "FEHLER: $n Formel(n) rendern als roher LaTeX-Quelltext statt als Mathematik."
         find _build/html -name index.html -exec grep -l 'text-myst-warning-text" title="' {} + \
@@ -182,7 +188,10 @@ build-web:
       # Und nur ueber die Dateien, die ein Browser wirklich laedt: das gebaute HTML und
       # die Stylesheets, die es referenziert. Ein rekursives grep ueber build/ trifft die
       # fingerprinted Kopien aelterer Builds, die MyST dort liegen laesst.
-      css=$(grep -oh '/build/[^"]*\.css' _build/html/index.html | sort -u | sed 's|^/|_build/html/|')
+      # Ebenfalls mit "|| true": findet grep hier nichts, ist das ein Befund und keine
+      # Panne -- die Pruefung unten faellt dann auf die HTML-Dateien zurueck, statt dass
+      # der Job ohne Meldung stirbt.
+      css=$( { grep -oh '/build/[^"]*\.css' _build/html/index.html || true; } | sort -u | sed 's|^/|_build/html/|' )
       ziele="$(find _build/html -name '*.html') $css"
       treffer=$(grep -l -E 'https://fonts\.(googleapis|gstatic)\.com' $ziele 2>/dev/null || true)
       if [ -n "$treffer" ]; then
