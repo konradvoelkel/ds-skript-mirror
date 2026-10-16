@@ -47,6 +47,10 @@ PROJECT_NOTES.md
 BRANDING.md
 TODO.md
 todo/
+# Ohne Schraegstrich zusaetzlich, weil "todo" seit dem 2026-10-16 ein Symlink nach
+# ~/notizen/ds-skript/todo ist: "todo/" trifft Verzeichnisse, nicht den Link selbst,
+# und er stand danach als unversioniert im git status.
+todo
 .sync-exclude.lst
 *.local-widgets.ipynb
 
