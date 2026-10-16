@@ -65,10 +65,22 @@ def project(html: Path) -> dict:
 
 def git_date(name: str) -> str:
     """ISO-8601-Datum des letzten Commits, der diese Datei angefasst hat."""
-    res = subprocess.run(
-        ["git", "log", "-1", "--format=%cI", "--", name],
-        cwd=ROOT, capture_output=True, text=True,
-    )
+    try:
+        res = subprocess.run(
+            ["git", "log", "-1", "--format=%cI", "--", name],
+            cwd=ROOT, capture_output=True, text=True,
+        )
+    except FileNotFoundError:
+        raise SystemExit(
+            "✗ git ist nicht installiert.\n"
+            "  Im CI heisst das: python:3.13-alpine bringt keins mit.\n"
+            '  Der Job braucht "apk add --no-cache git" vor diesem Schritt.'
+        )
+    if res.returncode != 0:
+        # Ein Fehler von git ist etwas anderes als "git kennt diese Datei nicht", und die
+        # beiden zu verwechseln kostete beim Bauen eine halbe Stunde Fehlersuche: bei einem
+        # Rechteproblem meldete das Skript "flacher Klon" und schickte in die falsche Richtung.
+        raise SystemExit(f"✗ git scheiterte fuer {name}:\n  {res.stderr.strip()}")
     date = res.stdout.strip()
     if not date:
         raise SystemExit(

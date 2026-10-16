@@ -143,6 +143,11 @@ pages:
   # die Shell-Werkzeuge darunter sind dieselbe Busybox, die sed/find-Kette bleibt unveraendert.
   image: python:3.13-alpine
   script:
+    # git nachinstallieren: python:3.13-alpine bringt keins mit, und freshness.py liest das
+    # Datum je Kapitel aus "git log" der Quelldatei. Ohne diese Zeile bricht der Job ab --
+    # nachgewiesen am 2026-10-16, Pipeline nach e229a9d: der Ruf an ds-en ging raus (gleiche
+    # Stage), pages fiel aus, und die Seite blieb auf dem Stand von 07:55 stehen.
+    - apk add --no-cache git >/dev/null
     - mv _build/html public
     - cp exports/ds-skript.pdf public/ || echo "no PDF in this run"
     # --- Absolute URLs nachtragen -------------------------------------------------------
