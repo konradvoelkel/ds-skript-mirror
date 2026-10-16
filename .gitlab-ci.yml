@@ -88,6 +88,12 @@ check-structure:
     # Farbtyp der Transparenz tragen kann (sonst ist das Logo im Dunkelmodus ein Block),
     # und ein Seitenverhaeltnis, das noch zum viewBox des SVG passt.
     - python3 tools/logo_raster.py --verify
+    # Die eingecheckten Bilder in images/ muessen optimiert sein. --check kodiert das
+    # Repository nicht hinter dem Ruecken neu, sondern scheitert und sagt, was zu tun
+    # ist. Am 2026-10-16 waren hier 5,3 von 9,0 MB zu holen: Matplotlib und die
+    # Zeichenprogramme schreiben RGBA, ein Plot hat aber keine Transparenz, und PNG
+    # komprimiert vier Kanaele viel schlechter als einen.
+    - uv run --with pillow --with numpy python tools/optimize_images.py images/ --max-width 1600 --check
   # Holt pyyaml von PyPI, haengt also an derselben flatternden Strecke wie build-web.
   retry: 2
 
@@ -185,6 +191,21 @@ build-web:
         exit 1
       fi
       echo "ok: Schriften liegen lokal, kein Google-Fonts-Abruf in $(echo $ziele | wc -w) Dateien"
+    # --- Die gebauten PNG neu kodieren ------------------------------------------------
+    # Hier liegen auch die Bildausgaben der Notebooks: MyST schreibt die eingebetteten
+    # base64-Ausgaben beim Bauen als Dateien nach build/. Deshalb ist dieser Gewinn ohne
+    # eine einzige Aenderung an den 15 Notebooks mit Bildausgaben zu haben -- und ein
+    # Neuausfuehren eines Notebooks macht hier nichts kaputt.
+    #
+    # Ohne --max-width: Matplotlib hat die in der Figurengroesse geschrieben, die das
+    # Notebook verlangt hat, sie kommen also etwa in Anzeigegroesse an. Sie
+    # herunterzurechnen hiesse, einen Plot schlecht neu zu rendern statt ein Bild gut zu
+    # komprimieren. Die Kappung gilt nur fuer die handgemachten Quellen in images/,
+    # geprueft in check-structure.
+    #
+    # Die Dateinamen bleiben, wie MyST sie vergeben hat -- der Fingerabdruck stammt aus
+    # der Quelle, nicht aus dem Inhalt der gebauten Datei. Nur die Bytes werden kleiner.
+    - uv run --with pillow --with numpy python tools/optimize_images.py _build/html/build
   # Am 2026-10-15 nach 149 s in einen Connect-Timeout gegen PyPI gelaufen und damit die ganze
   # deploy-Stage uebersprungen (pages und notify-ds-en: skipped). Dieselbe flatternde Strecke
   # wie bei notify-ds-en, derselbe Griff.
@@ -264,6 +285,16 @@ pages:
     # Bild ein <link rel=preload as=image>, und ein vorgeladenes Bild wird sofort geholt,
     # was loading auch sagt. Am 2026-10-16 waren das 228 Preloads bei null lazy; danach
     # 171 lazy und 57 Preloads, naemlich je Seite das Logo und die erste Abbildung.
+    # Die drei fremden Stylesheets des Themes von hier ausliefern statt von zwei CDN.
+    # Laeuft vor head_meta, wie in ds-en. Begruendung, Hashes und Lizenzen:
+    # _site/vendor/PROVENANCE.txt.
+    #
+    # Mehr als ein sed, weil die URLs auch im Client-JavaScript stehen: Remix rendert
+    # die <head>-Links aus Route-Modulen. Am 2026-10-16 nachgemessen, je URL 32
+    # HTML-Dateien *und* ein Bundle. Nur das Markup umzuschreiben hiesse, die Seite
+    # laedt richtig und fuegt bei der Hydration die CDN-Links wieder hinzu -- holt also
+    # beide Kopien, schlechter als vorher und unsichtbar ohne Netzwerkprotokoll.
+    - python3 tools/vendor_assets.py public --base "$BASE_URL"
     - python3 tools/head_meta.py "$SITE" public --base "$BASE_URL"
     # hreflang: die deutsche Haelfte des Sprachpaars. Muss *nach* dem Canonical laufen -- der
     # Selbstverweis muss exakt die URL sein, die die Seite canonical nennt, sonst erklaert sich
@@ -298,6 +329,29 @@ pages:
         echo "FEHLER: localhost-URL in sitemap.xml oder robots.txt ueberlebt"
         exit 1
       fi
+      # Und kein Stylesheet mehr von einem CDN. Gegrept werden die drei *URLs*, nicht
+      # die Hostnamen: thebes Laufzeit holt Pyodide, MathJax und require.js weiter von
+      # dort, und zwar erst, wenn ein Leser ein Notebook lebendig macht. Ein Waechter
+      # auf die Hostnamen waere nur zu befriedigen, indem man thebe loescht. Das Buch
+      # zu lesen kontaktiert keinen Dritten; den Code darin laufen zu lassen schon.
+      for u in \
+        "cdn.jsdelivr.net/npm/katex@" \
+        "cdnjs.cloudflare.com/ajax/libs/font-awesome/" \
+        "cdn.jsdelivr.net/npm/jupyter-matplotlib@"; do
+        if grep -rq "$u" public --include='*.html' --include='*.js'; then
+          echo "FEHLER: ein Stylesheet wird weiter vom CDN geholt: $u"
+          grep -rl "$u" public --include='*.html' --include='*.js' | sed 's|^|  |' | head -5
+          exit 1
+        fi
+      done
+      # Gegenprobe, damit der Waechter nicht gruen ist, weil das Theme die Stylesheets
+      # gar nicht mehr laedt: die vendorierten Pfade muessen referenziert UND da sein.
+      for f in vendor/katex/katex.min.css vendor/font-awesome/css/font-awesome.css \
+               vendor/jupyter-matplotlib/mpl_widget.css; do
+        [ -s "public/$f" ] || { echo "FEHLER: public/$f fehlt"; exit 1; }
+        grep -rq "$f" public --include='*.html' || { echo "FEHLER: $f wird von keiner Seite referenziert"; exit 1; }
+      done
+      echo "ok: kein CDN-Stylesheet mehr, drei vendorierte Pfade referenziert und vorhanden"
   variables:
     # freshness.py liest das Datum je Kapitel aus "git log" der Quelldatei. GitLab klont
     # standardmaessig flach (GIT_DEPTH 20); eine seit zwanzig Commits unberuehrte Datei haette
