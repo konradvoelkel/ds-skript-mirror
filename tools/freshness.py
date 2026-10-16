@@ -77,8 +77,12 @@ def _git(args: list[str]) -> subprocess.CompletedProcess:
     except FileNotFoundError:
         raise SystemExit(
             "✗ git ist nicht installiert, also ist aus der Historie kein Datum zu lesen.\n"
-            "  Im CI heisst das: python:3.13-alpine bringt keins mit.\n"
-            '  Der Job braucht "apk add --no-cache git" vor diesem Schritt.'
+            "  Welcher Griff hilft, haengt am Image des Jobs -- die Meldung nannte hier\n"
+            "  bis zum 2026-10-16 nur Alpine und schickte damit beim Ausfall von\n"
+            "  build-web in das falsche Image:\n"
+            "    python:3.13-alpine (pages, hreflang-map): apk add --no-cache git\n"
+            "    $CI_REGISTRY_IMAGE (build-web, build-pdf): git gehoert ins Dockerfile,\n"
+            "      dann baut build-image es mit; nachinstallieren je Job waere doppelt."
         )
 
 
