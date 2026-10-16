@@ -17,9 +17,20 @@
    der Datei, 400 und 600 werden daraus interpoliert. Die vier Gewichte des alten
    @import kamen bei Google schon aus denselben zwei URLs.
 
-   Der url() ist relativ zu *diesem* Stylesheet. MyST legt es unter build/ ab, also
-   zeigt ../fonts/ auf die Dateien, die build-web neben das gebaute HTML kopiert --
-   ohne Platzhalter und ohne BASE_URL, auch bei einem Umzug des Buches.
+   __BASE__ ersetzt der pages-Job durch BASE_URL. Ein *relativer* url() geht hier nicht,
+   und das war am 2026-10-16 ein echter Fehler: MyST legt dieses Stylesheet **zweimal**
+   ab -- als /myst-theme.css im Wurzelpfad der Seite und fingerprinted als
+   /build/custom-style-<hash>.css -- und das HTML bindet die Kopie im Wurzelpfad ein.
+   Von dort zeigte "../fonts/" eine Ebene *ueber* /ds-skript/, also auf den Server-Root:
+   302 statt der Schrift, und die deutsche Ausgabe lief mit der Systemschrift, waehrend
+   die englische Inter zeigte. Aufgefallen ist es Konrad im Vergleich beider Seiten.
+   Fuer zwei Ablageorte kann kein relativer Pfad richtig sein; wurzelabsolut kann es.
+
+   Beim lokalen "myst build" steht der Platzhalter noch da, die Schriften fallen dann auf
+   die Systemschrift zurueck und das Layout bleibt. tools/check_css_assets.py prueft im
+   pages-Job, dass jeder url() aus dem Stylesheet, **das das HTML wirklich einbindet**,
+   im Artefakt existiert -- genau der Schritt, den meine erste Pruefung uebersprungen hat:
+   sie loeste gegen die fingerprinted Kopie auf, die der Browser nie laedt.
 
    Herkunft, Pruefsummen und Lizenzen: _site/fonts/PROVENANCE.txt. */
 @font-face {
@@ -27,14 +38,14 @@
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
-  src: url('../fonts/inter-latin.woff2') format('woff2');
+  src: url('__BASE__/fonts/inter-latin.woff2') format('woff2');
 }
 @font-face {
   font-family: 'JetBrains Mono';
   font-style: normal;
   font-weight: 400 800;
   font-display: swap;
-  src: url('../fonts/jetbrains-mono-latin.woff2') format('woff2');
+  src: url('__BASE__/fonts/jetbrains-mono-latin.woff2') format('woff2');
 }
 
 :root {

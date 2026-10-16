@@ -303,8 +303,21 @@ pages:
     # HTML-Dateien *und* ein Bundle. Nur das Markup umzuschreiben hiesse, die Seite
     # laedt richtig und fuegt bei der Hydration die CDN-Links wieder hinzu -- holt also
     # beide Kopien, schlechter als vorher und unsichtbar ohne Netzwerkprotokoll.
+    # __BASE__ in den Schrift-URLs von custom-style.css durch BASE_URL ersetzen. MyST legt
+    # dieses Stylesheet zweimal ab -- als myst-theme.css im Wurzelpfad und fingerprinted
+    # unter build/ --, und das HTML bindet die Kopie im Wurzelpfad ein. Ein relativer url()
+    # kann fuer beide Orte nicht stimmen: am 2026-10-16 zeigte "../fonts/" von
+    # /ds-skript/myst-theme.css aus auf den Server-Root, Antwort 302, und die deutsche
+    # Ausgabe lief still mit der Systemschrift, waehrend die englische Inter zeigte.
+    - find public -name 'myst-theme.css' -o -name 'custom-style-*.css' | xargs sed -i "s|__BASE__|$BASE_URL|g"
     - python3 tools/vendor_assets.py public --base "$BASE_URL"
     - python3 tools/head_meta.py "$SITE" public --base "$BASE_URL"
+    # Loest jeden url() der eingebundenen Stylesheets auf -- gegen die Datei, die im <link>
+    # steht, nicht gegen eine, von der man annimmt, sie werde geladen. Genau diesen Schritt
+    # hatte meine erste Pruefung uebersprungen; sie meldete "DA" an der fingerprinted Kopie,
+    # die der Browser nie laedt. Deckt zugleich die zwanzig KaTeX-Schriften ab, die ihr
+    # Stylesheet relativ zu sich selbst nennt.
+    - python3 tools/check_css_assets.py public --base "$BASE_URL"
     # hreflang: die deutsche Haelfte des Sprachpaars. Muss *nach* dem Canonical laufen -- der
     # Selbstverweis muss exakt die URL sein, die die Seite canonical nennt, sonst erklaert sich
     # die Seite nicht zum Mitglied ihres eigenen Clusters. hreflang/filemap.json kommt entweder
