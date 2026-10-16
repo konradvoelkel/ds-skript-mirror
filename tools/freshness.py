@@ -63,19 +63,56 @@ def project(html: Path) -> dict:
     return cfg["projects"][0]
 
 
-def git_date(name: str) -> str:
-    """ISO-8601-Datum des letzten Commits, der diese Datei angefasst hat."""
+def _git(args: list[str]) -> subprocess.CompletedProcess:
+    """git aufrufen und „git ist gar nicht da" an *einer* Stelle beantworten.
+
+    Beide Aufrufer brauchen das, und refuse_shallow() läuft zuerst: ohne diesen Helfer
+    stirbt ein fehlendes git dort mit einem nackten FileNotFoundError, der nichts
+    Brauchbares nennt. Genau dieser Ausfall war `5b7818b` — python:3.13-alpine bringt
+    kein git mit. Die Faktorisierung ist aus `ds-en` übernommen, das sie beim Portieren
+    gefunden hat.
+    """
     try:
-        res = subprocess.run(
-            ["git", "log", "-1", "--format=%cI", "--", name],
-            cwd=ROOT, capture_output=True, text=True,
-        )
+        return subprocess.run(["git", *args], cwd=ROOT, capture_output=True, text=True)
     except FileNotFoundError:
         raise SystemExit(
-            "✗ git ist nicht installiert.\n"
+            "✗ git ist nicht installiert, also ist aus der Historie kein Datum zu lesen.\n"
             "  Im CI heisst das: python:3.13-alpine bringt keins mit.\n"
             '  Der Job braucht "apk add --no-cache git" vor diesem Schritt.'
         )
+
+
+def refuse_shallow() -> None:
+    """Abbrechen, wenn der Klon flach ist — bevor ein einziges Datum gelesen wird.
+
+    Diese Prüfung kommt aus `ds-en` zurück und schliesst ein Loch im hiesigen Entwurf.
+    Die Annahme war: bei einem flachen Klon liefert `git log` für eine unberührte Datei
+    *nichts*, und dann bricht git_date() ab. Das stimmt für GitLabs `GIT_DEPTH: 20`.
+
+    Es stimmt **nicht** für Tiefe 1. Gegen einen Commit ohne Eltern meldet git *jede*
+    Datei als von ihm geändert, `git log -1 -- <datei>` antwortet also für alle 32 — mit
+    dem Zeitstempel von HEAD. Das Skript läuft glatt durch und meldet Erfolg. ds-en hat
+    das an einem `git clone --depth 1` nachgemessen: alle 30 Seiten auf die Sekunde des
+    Deploy-Commits datiert, wo die echten Daten über drei Tage streuen.
+
+    Das ist genau das Bauzeit-Datum, dessen Verhinderung der Zweck dieser Datei ist —
+    erreicht über den einen Weg, den der Wächter nicht abdeckte, und stumm, weil die
+    Ausgabe wie ein korrekter Lauf aussieht. Also wird die Tiefe direkt behauptet statt
+    aus einer fehlenden Antwort geschlossen.
+    """
+    if _git(["rev-parse", "--is-shallow-repository"]).stdout.strip() == "true":
+        raise SystemExit(
+            "✗ das ist ein flacher Klon. git würde für jede Datei das Datum von HEAD\n"
+            "  melden, und jede Seite behauptete, im Moment des Deploys geändert worden\n"
+            "  zu sein. Der Job braucht\n"
+            '    variables:\n      GIT_DEPTH: "0"\n'
+            "  Erfunden wird hier nichts."
+        )
+
+
+def git_date(name: str) -> str:
+    """ISO-8601-Datum des letzten Commits, der diese Datei angefasst hat."""
+    res = _git(["log", "-1", "--format=%cI", "--", name])
     if res.returncode != 0:
         # Ein Fehler von git ist etwas anderes als "git kennt diese Datei nicht", und die
         # beiden zu verwechseln kostete beim Bauen eine halbe Stunde Fehlersuche: bei einem
@@ -93,7 +130,15 @@ def git_date(name: str) -> str:
 
 
 def pages(html: Path) -> list[tuple[str, Path, str]]:
-    """(slug, index.html, datum) je Seite. Der erste toc-Eintrag ist die Startseite."""
+    """(slug, index.html, datum) je Seite. Der erste toc-Eintrag ist die Startseite.
+
+    Die Startseite bekommt nicht ihr eigenes git-Datum, sondern das **jüngste aller
+    Seiten**. Sie ist das Titelblatt des Buchs, nicht ein Kapitel: `inject_jsonld.py`
+    liest ihr `article:modified_time` als `dateModified` des Werks zurück, und das Werk
+    hat sich geändert, sobald irgendein Kapitel sich geändert hat. Ohne diese Ausnahme
+    veraltete die Angabe, sobald monatelang nur Kapitel angefasst werden.
+    """
+    refuse_shallow()
     out = []
     for n, name in enumerate(toc_files(project(html)["toc"])):
         slug = "" if n == 0 else Path(name).stem
@@ -101,6 +146,9 @@ def pages(html: Path) -> list[tuple[str, Path, str]]:
         if not target.exists():
             raise SystemExit(f"✗ {target} fehlt; toc und Bau sind sich uneinig")
         out.append((slug, target, git_date(name)))
+    if out:
+        newest = max(date for _, _, date in out)
+        out[0] = (out[0][0], out[0][1], newest)
     return out
 
 
@@ -148,7 +196,51 @@ def stamp_sitemap(html: Path, entries) -> int:
     return hits
 
 
+def stamp_source() -> int:
+    """Das Datum der Ausgabe in den Frontmatter der Landingpage schreiben.
+
+    Das ist die *sichtbare* Hälfte, und sie steht bewusst nur auf dieser einen Seite.
+    MyST 1.10.1 rendert ein Projekt-Datum aus `myst.yml` auf allen 32 Seiten gleich
+    (am 2026-10-16 gemessen), und 16 davon hätten damit ein Datum behauptet, das ihr
+    Quelltext nicht hergibt. Auf dem Titelblatt dagegen ist „Stand der Ausgabe" genau die
+    richtige Aussage, und es ist derselbe Wert, den die Seite als `article:modified_time`
+    und als `dateModified` des Werks ohnehin trägt.
+
+    Mitzuwissen: Das Theme formatiert hart englisch („October 16, 2026"). `language: de`
+    ändert daran nichts (geprüft), und eine deutsche Zeichenkette wirft MyST still weg
+    (`"date":""`). Das ist der Preis dieser Zeile, bewusst bezahlt.
+
+    Läuft **vor** dem Bau und schreibt in den Quelltext; das Ergebnis wird nicht
+    eingecheckt. Lokal ohne diesen Schritt zu bauen heisst nur: kein Datum auf der Seite.
+    """
+    import yaml  # absichtlich lokal: der pages-Job hat kein PyYAML und braucht es nicht
+
+    refuse_shallow()
+    cfg = yaml.safe_load((ROOT / "myst.yml").read_text(encoding="utf-8"))
+    files = toc_files(cfg["project"]["toc"])
+    date = max(git_date(f) for f in files)[:10]  # nur der Tag; die Uhrzeit wäre Lärm
+
+    landing = ROOT / files[0]
+    text = landing.read_text(encoding="utf-8")
+    if not text.startswith("---\n"):
+        raise SystemExit(f"✗ {landing.name} hat keinen Frontmatter")
+    end = text.find("\n---", 4)
+    if end < 0:
+        raise SystemExit(f"✗ {landing.name}: Frontmatter nicht abgeschlossen")
+
+    head, rest = text[:end], text[end:]
+    if re.search(r"(?m)^date:", head):
+        head = re.sub(r"(?m)^date:.*$", f"date: {date}", head)
+    else:
+        head = head.rstrip("\n") + f"\ndate: {date}"
+    landing.write_text(head + rest, encoding="utf-8")
+    print(f"✓ {landing.name}: Stand der Ausgabe auf {date} gesetzt")
+    return 0
+
+
 def main() -> int:
+    if "--stamp-source" in sys.argv:
+        return stamp_source()
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     if len(args) != 1:
         print(__doc__)

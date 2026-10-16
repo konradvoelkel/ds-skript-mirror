@@ -114,8 +114,18 @@ hreflang-map:
 build-web:
   stage: build
   image: $CI_REGISTRY_IMAGE:latest
+  variables:
+    # freshness.py liest das Datum aus "git log". Bei einem flachen Klon bricht es ab --
+    # und muss das auch, siehe refuse_shallow(): bei Tiefe 1 meldet git fuer *jede* Datei
+    # das Datum von HEAD, und dann traegt jede Seite die Sekunde des Deploys.
+    GIT_DEPTH: "0"
   script:
     - uv sync
+    # Stand der Ausgabe in den Frontmatter der Landingpage schreiben, vor dem Bau. Nur dort:
+    # ein Projekt-Datum in myst.yml stuende auf allen 32 Seiten gleich, und 16 davon haetten
+    # damit ein Datum behauptet, das ihr Quelltext nicht hergibt. Braucht die volle Historie,
+    # siehe GIT_DEPTH.
+    - uv run --with pyyaml python tools/freshness.py --stamp-source
     - uv run myst build --html
   # Am 2026-10-15 nach 149 s in einen Connect-Timeout gegen PyPI gelaufen und damit die ganze
   # deploy-Stage uebersprungen (pages und notify-ds-en: skipped). Dieselbe flatternde Strecke
@@ -128,8 +138,18 @@ build-web:
 build-pdf:
   stage: build
   image: $CI_REGISTRY_IMAGE:latest
+  variables:
+    # freshness.py liest das Datum aus "git log". Bei einem flachen Klon bricht es ab --
+    # und muss das auch, siehe refuse_shallow(): bei Tiefe 1 meldet git fuer *jede* Datei
+    # das Datum von HEAD, und dann traegt jede Seite die Sekunde des Deploys.
+    GIT_DEPTH: "0"
   script:
     - uv sync
+    # Stand der Ausgabe in den Frontmatter der Landingpage schreiben, vor dem Bau. Nur dort:
+    # ein Projekt-Datum in myst.yml stuende auf allen 32 Seiten gleich, und 16 davon haetten
+    # damit ein Datum behauptet, das ihr Quelltext nicht hergibt. Braucht die volle Historie,
+    # siehe GIT_DEPTH.
+    - uv run --with pyyaml python tools/freshness.py --stamp-source
     - uv run myst build --pdf
   allow_failure: true
   retry: 2
