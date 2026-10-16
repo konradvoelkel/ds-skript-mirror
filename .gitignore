@@ -54,11 +54,15 @@ todo
 .sync-exclude.lst
 *.local-widgets.ipynb
 
-# Rohtranskripte und Standbilder der Aufzeichnungen (erzeugt, nicht versioniert)
+# Rohtranskripte und Standbilder der Aufzeichnungen (erzeugt, nicht versioniert).
+# Beide Schreibweisen, aus demselben Grund wie bei "todo" oben: wird der Pfad ein
+# Symlink nach ~/notizen, trifft die Variante mit Schraegstrich ihn nicht.
 transcripts/
+transcripts
 
 # Folien (slides/): Archiv, Sammel-PDFs und LaTeX-Hilfsdateien bleiben lokal
 slides/slides25/
+slides/slides25
 slides/auto/
 slides/*Alle Folien*.pdf
 slides/*-handout.tex
