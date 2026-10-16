@@ -161,3 +161,32 @@ aside.myst-admonition-danger, aside.myst-admonition-error {
 aside.myst-admonition-danger > header {
   color: var(--hhu-red) !important;
 }
+
+/* --- Lange Formeln schoben die ganze Seite zur Seite ------------------------------
+   Gemessen bei 375 px: deskriptive-statistik war 613 px breit, zwei Drittel breiter als
+   das Geraet. Nicht die Tabelle war schuld -- die steckt in einem div.overflow-auto und
+   scrollt brav in ihrer eigenen Box --, sondern zwei lange Formeln *im Fliesstext* einer
+   Aufzaehlung. span.katex ist inline, nimmt sich die Breite, die die Formel braucht, und
+   inline-Elemente kennen weder max-width noch overflow. Der Fall ist nicht deutsch: die
+   englische Ausgabe misst auf derselben Seite dieselben 613 px.
+
+   Sechs Varianten am CI-treuen Bau gegeneinander gemessen (die KaTeX-Schriften kommen
+   erst im pages-Job dazu, ein nackter `myst build` misst deshalb falsch):
+
+     - `.katex { display:inline-block; max-width:100%; overflow-x:auto }` repariert die
+       Breite, macht aber **jede** Inline-Formel 2 px hoeher. Auf erwartungswert mit 512
+       Formeln sind das +2482 px Seitenhoehe, also ungleichmaessiger Zeilenabstand ueberall
+       dort, wo Mathematik im Satz steht. Zu teuer fuer eine kaputte Seite.
+     - `.katex-display` und ein max-width auf die Vorfahren greifen gar nicht: die
+       ueberbreite Formel steht inline in einem <li>, nicht in einem Display-Block.
+     - Diese Fassung kostet +48 px auf erwartungswert statt +2482 und laesst die
+       Inline-Metrik in Ruhe, weil sie das *umgebende* Element scrollen laesst.
+
+   Nachgeprueft bei 375 und 1200 px ueber vier Kapitel: genau ein Element bekommt einen
+   Querscrollbalken (die ueberbreite Formel, nur auf dem Handy), nichts wird senkrecht
+   abgeschnitten, der Desktop bleibt unveraendert. Browser ohne :has() verhalten sich wie
+   bisher -- die Regel faellt dort einfach weg. */
+p:has(> .katex),
+li:has(.katex) {
+  overflow-x: auto;
+}
