@@ -190,3 +190,32 @@ p:has(> .katex),
 li:has(.katex) {
   overflow-x: auto;
 }
+
+/* --- Lange Ueberschriften schoben die Seite um ein paar Pixel ----------------------
+   Fuenf Seiten liefen bei 375 px um 4 bis 11 px ueber, wo die englische Ausgabe exakt
+   375 misst: numpy 379, datenschutz 380, Landingpage 382, statistische-tests 383,
+   data-cleaning 386. Zu wenig, um es zu benennen, genug, damit die Seite bei jedem
+   Wischen seitlich federt.
+
+   Die Ursache ist nicht der Text, der passt: "Wahrscheinlichkeitsvektoren" ist 343 px
+   breit in einer 351 px breiten h2. Es ist der Permalink dahinter -- ein leerer Anker,
+   den das Theme hinter jede Ueberschrift setzt und der bei x=365 beginnt, waehrend die
+   Ueberschrift bei 363 endet. Er steht also ausserhalb seiner eigenen Box und zieht die
+   Seite auf 367 und damit auf 379. Deutsche Komposita geraten einfach oefter in diese
+   Lage als englische Ueberschriften.
+
+   Deshalb hilft hier auch kein Umbruch: `overflow-wrap: anywhere` und `min-width: 0`
+   aendern nichts, weil der Text ja hineinpasst. Gemessen wirksam sind drei Varianten;
+   diese ist die sparsamste, und sie greift nur dort, wo das Problem ueberhaupt auftritt.
+   Auf dem Desktop hat die Ueberschrift Platz, und dort waere das Clipping nicht
+   folgenlos: der Permalink erscheint beim Darueberfahren, und genau den wuerde es
+   abschneiden. Auf dem Handy gibt es kein Darueberfahren.
+
+   Nachgemessen ueber sieben Seiten: die fuenf betroffenen gehen auf exakt 375, die
+   beiden unauffaelligen bleiben, keine einzige Ueberschrift wird sichtbar beschnitten,
+   und bei 1200 px greift die Regel nicht. */
+@media (max-width: 480px) {
+  h1, h2, h3, h4, h5, h6 {
+    overflow-x: clip;
+  }
+}
