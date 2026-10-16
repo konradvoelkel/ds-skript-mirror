@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Die OpenGraph-Tags nachtragen, die MyST auslaesst, die Schriften vorladen und die
-Abbildungen unter der Falz verzoegert laden.
+"""Die OpenGraph-Tags nachtragen, die MyST auslaesst, die Sprache setzen, die Schriften
+vorladen und die Abbildungen unter der Falz verzoegert laden.
 
     python3 tools/head_meta.py <site-url> <html-dir> [--base BASE_URL]
 
@@ -10,13 +10,25 @@ oder im Frontmatter eines Kapitels gesagt werden kann. Portiert aus ds-en am
 fehlt" unten.
 
 
-1. og:url und og:site_name
---------------------------
+1. Die fuenf Karten-Tags, die MyST auslaesst
+-------------------------------------------
 
-MyST schreibt og:title, og:description und og:image und hoert dann auf. og:url ist, was
-eine Plattform als kanonische Identitaet eines geteilten Links behandelt: ohne es werden
-aus zwei Schreibweisen derselben URL zwei Karten mit zwei Kommentarstraengen.
-og:site_name setzt den Namen des Buchs auf die Karte und speist Googles Site-Name-Signal.
+MyST schreibt og:title, og:description und og:image und hoert dann auf. Fuenf fehlen:
+
+- **og:url** ist, was eine Plattform als kanonische Identitaet eines geteilten Links
+  behandelt: ohne es werden aus zwei Schreibweisen derselben URL zwei Karten mit zwei
+  Kommentarstraengen.
+- **og:site_name** setzt den Namen des Buchs auf die Karte und speist Googles
+  Site-Name-Signal.
+- **twitter:card = summary_large_image.** Die Vorschaukarte liegt in 1200x630 vor
+  (tools/social_card.py), aber ohne diese Zeile zeigt X die kleine Karte mit
+  Briefmarkenbild. Die Inhalte holt X sich aus den og:-Tags, twitter:title und
+  twitter:description sind deshalb ueberfluessig -- nur die Kartenform muss gesagt werden.
+- **og:type**: "book" auf dem Titelblatt, "article" auf den Kapiteln. Die Vorgabe ohne
+  Angabe ist "website", also das, was ein Shop-Startseite waere.
+- **og:locale = de_DE** und **og:locale:alternate = en_US**. Die zweite Zeile ist die
+  Karten-Entsprechung des hreflang-Paars: sie sagt der Plattform, dass es dieselbe Sache
+  auf Englisch gibt (tools/hreflang.py macht das fuer Suchmaschinen).
 
 og:url bekommt dieselbe URL wie der Canonical -- mit Schraegstrich, die Form, die 200
 liefert. Deshalb laeuft dieser Schritt *nach* dem Canonical-Schritt in .gitlab-ci.yml.
@@ -105,10 +117,15 @@ Zweimal laufen
 --------------
 
 Idempotent, und es prueft Nachbedingungen statt der eigenen Aenderungen: jede Seite muss
-am Ende ein og:url und ein og:site_name haben, jede Seite muss lang="de" fuehren, und
-kein lazy gemachtes Bild darf noch ein Preload tragen. Ein zweiter Lauf ist ein zulaessiger Leerlauf, der trotzdem besteht,
+am Ende die fuenf Karten-Tags und lang="de" fuehren, und kein lazy gemachtes Bild darf
+noch ein Preload tragen. Ein zweiter Lauf ist ein zulaessiger Leerlauf, der trotzdem besteht,
 waehrend Markup, das MyST unter uns verschoben hat, auffaellt -- der Fall, fuer den die
 Pruefung eigentlich da ist.
+
+Ergaenzt wird deshalb **je Tag**, nicht pauschal: ein Artefakt, das die vorige Fassung
+dieses Skripts schon bearbeitet hat, bekommt genau die Tags nach, die ihm fehlen. Die
+Alternative -- ein Riegel an og:url fuer alle Tags -- bricht in dem Moment, in dem ein
+Tag dazukommt.
 """
 
 from __future__ import annotations
@@ -137,17 +154,52 @@ def project_title(index_html: str) -> str:
     return title
 
 
-def head_tags(url: str, site_name: str, base: str) -> str:
+def head_tags(
+    url: str, site_name: str, base: str, lang: str, is_landing: bool
+) -> list[tuple[str, str]]:
+    """Die Tags als (Merkmal, Tag): das Merkmal sagt, ob die Seite das Tag schon hat.
+
+    Je Tag gepruefen, nicht einmal pauschal fuer alle. Ein Riegel an og:url allein
+    (so stand es bis zum 2026-10-16) heisst: kommt ein Tag hinzu, bleibt es auf jedem
+    Artefakt aus, das die vorige Fassung schon bearbeitet hat -- und die Nachbedingung
+    schlaegt an, ohne dass ein Lauf das heilen kann. Beim Hinzufuegen der Karten-Tags
+    genau so passiert, im Image nachgestellt.
+    """
+    # de -> de_DE: OpenGraph will den Unterstrich-Code, nicht das Sprachkuerzel.
+    locale = {"de": "de_DE", "en": "en_US"}.get(lang, lang)
+    alternate = "en_US" if locale != "en_US" else "de_DE"
     tags = [
-        f'<meta property="og:url" content="{html.escape(url, quote=True)}"/>',
-        f'<meta property="og:site_name" content="{html.escape(site_name, quote=True)}"/>',
+        (
+            'property="og:url"',
+            f'<meta property="og:url" content="{html.escape(url, quote=True)}"/>',
+        ),
+        (
+            'property="og:site_name"',
+            f'<meta property="og:site_name" content="{html.escape(site_name, quote=True)}"/>',
+        ),
+        (
+            'property="og:type"',
+            f'<meta property="og:type" content="{"book" if is_landing else "article"}"/>',
+        ),
+        ('property="og:locale"', f'<meta property="og:locale" content="{locale}"/>'),
+        (
+            'property="og:locale:alternate"',
+            f'<meta property="og:locale:alternate" content="{alternate}"/>',
+        ),
+        (
+            'name="twitter:card"',
+            '<meta name="twitter:card" content="summary_large_image"/>',
+        ),
     ]
     tags += [
-        f'<link rel="preload" href="{base}/fonts/{f}" as="font" '
-        f"type=\"font/woff2\" crossorigin/>"
+        (
+            f'href="{base}/fonts/{f}"',
+            f'<link rel="preload" href="{base}/fonts/{f}" as="font" '
+            f"type=\"font/woff2\" crossorigin/>",
+        )
         for f in FONTS
     ]
-    return "".join(tags)
+    return tags
 
 
 def set_html_lang(doc: str, lang: str) -> tuple[str, bool]:
@@ -246,10 +298,17 @@ def main() -> None:
         url = page_url(site, rel)
         doc = f.read_text(encoding="utf-8")
 
-        if 'property="og:url"' not in doc:
+        fehlend = [
+            tag
+            for marker, tag in head_tags(
+                url, name, args.base, args.lang, str(rel) == "."
+            )
+            if marker not in doc
+        ]
+        if fehlend:
             if "</head>" not in doc:
                 sys.exit(f"FEHLER: {f} hat kein </head>")
-            doc = doc.replace("</head>", head_tags(url, name, args.base) + "</head>", 1)
+            doc = doc.replace("</head>", "".join(fehlend) + "</head>", 1)
             n_head += 1
 
         doc, had_lang = set_html_lang(doc, args.lang)
@@ -269,8 +328,15 @@ def main() -> None:
         doc = f.read_text(encoding="utf-8")
         if 'property="og:url"' not in doc:
             sys.exit(f"FEHLER: {f} hat weiterhin kein og:url")
-        if 'property="og:site_name"' not in doc:
-            sys.exit(f"FEHLER: {f} hat weiterhin kein og:site_name")
+        for prop, kind in (
+            ("og:site_name", "property"),
+            ("og:type", "property"),
+            ("og:locale", "property"),
+            ("og:locale:alternate", "property"),
+            ("twitter:card", "name"),
+        ):
+            if f'{kind}="{prop}"' not in doc:
+                sys.exit(f"FEHLER: {f} hat weiterhin kein {prop}")
         m_html = re.search(r"<html\b[^>]*>", doc, re.I)
         if not m_html or not re.search(
             rf'\blang="{re.escape(args.lang)}"', m_html.group(0), re.I
@@ -294,7 +360,7 @@ def main() -> None:
                 sys.exit(f"FEHLER: {f} laedt ein lazy-Bild weiterhin vor: {href.group(1)}")
 
     print(
-        f"head_meta: {len(pages)} Seiten, og:url und og:site_name auf allen "
+        f"head_meta: {len(pages)} Seiten, die fuenf Karten-Tags auf allen "
         f"({n_head} ergaenzt), lang=\"{args.lang}\" auf allen ({n_lang} gesetzt), "
         f"{n_lazy} Abbildungen lazy, {n_preload} Bild-Preloads entfernt"
     )
