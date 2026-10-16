@@ -1,6 +1,41 @@
 /* custom-style.css */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap');
+/* --- Schriften, selbst ausgeliefert ------------------------------------------------
+   Hier stand bis 2026-10-16 ein @import von fonts.googleapis.com. Der kostete drei
+   Dinge auf einmal:
+
+   1. Eine drei Ebenen tiefe, rendernde Anfragekette. Ein @import in einem Stylesheet
+      wird erst entdeckt, wenn dieses Stylesheet geholt und geparst ist, und laesst sich
+      deshalb weder vorladen noch parallelisieren.
+   2. Einen Dritten bei jedem Seitenaufruf, der die IP-Adresse jedes Lesers sieht.
+   3. Ausgerechnet in diesem Buch einen DSGVO-Verstoss der Art, vor der datenschutz.md
+      warnt: LG Muenchen I, 20.01.2022, 3 O 17493/20, Schadensersatz fuer genau diese
+      Einbindung. Das Kapitel zitiert die noyb-Beschwerden und die Google-Analytics-
+      Entscheidungen von 2022 -- und wurde von fonts.googleapis.com ausgeliefert.
+
+   Je *eine* Datei pro Familie: beide sind variable Fonts, die Gewichtsachse steckt in
+   der Datei, 400 und 600 werden daraus interpoliert. Die vier Gewichte des alten
+   @import kamen bei Google schon aus denselben zwei URLs.
+
+   Der url() ist relativ zu *diesem* Stylesheet. MyST legt es unter build/ ab, also
+   zeigt ../fonts/ auf die Dateien, die build-web neben das gebaute HTML kopiert --
+   ohne Platzhalter und ohne BASE_URL, auch bei einem Umzug des Buches.
+
+   Herkunft, Pruefsummen und Lizenzen: _site/fonts/PROVENANCE.txt. */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('../fonts/inter-latin.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url('../fonts/jetbrains-mono-latin.woff2') format('woff2');
+}
 
 :root {
   /* HHU Corporate Identity Colors */
