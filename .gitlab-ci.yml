@@ -383,6 +383,23 @@ pages:
         find public -name '*.html' | xargs grep -l "$f" >/dev/null 2>&1 || { echo "FEHLER: $f wird von keiner Seite referenziert"; exit 1; }
       done
       echo "ok: kein CDN-Stylesheet mehr, drei vendorierte Pfade referenziert und vorhanden"
+    # --- Vorkompression ------------------------------------------------------------------
+    # GitLab Pages komprimiert nichts von sich aus -- am 2026-10-16 am Live-Stand gemessen:
+    # kein content-encoding, auch nicht mit "Accept-Encoding: gzip, deflate, br", und im
+    # Browser transferSize 6.567 kB gegen decodedBodySize 6.580 kB. Es liefert aber eine
+    # daneben liegende .gz aus, wenn eine da ist (so dokumentiert). Also eine hinlegen:
+    # 5.251 kB -> 1.470 kB je Aufruf der Landingpage, 72 % weniger.
+    #
+    # **Muss der letzte Schritt sein.** Ab hier existiert jede Textdatei zweimal, und die
+    # .gz ist das, was praktisch jeder Leser bekommt. Stuende dieser Schritt vor einer der
+    # Umschreibungen oben, lieferte die Seite allen Browsern die alte Fassung aus, waehrend
+    # curl ohne Accept-Encoding und jeder Blick ins Artefakt die neue zeigen -- derselbe
+    # Fehlertyp wie die localhost-Sitemap und die Schriften hinter dem relativen url().
+    - python3 tools/precompress.py public
+    # Und nachmessen statt der Meldung zu glauben: --check packt jede .gz wieder aus und
+    # vergleicht byteweise. Die vier Fehlerfaelle (veraltet, fehlend, defekt, verwaist) sind
+    # am 2026-10-16 lokal gegen das gebaute Artefakt durchgespielt, jeder einzeln rot.
+    - python3 tools/precompress.py public --check
   variables:
     # freshness.py liest das Datum je Kapitel aus "git log" der Quelldatei. GitLab klont
     # standardmaessig flach (GIT_DEPTH 20); eine seit zwanzig Commits unberuehrte Datei haette
