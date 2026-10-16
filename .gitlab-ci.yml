@@ -334,13 +334,18 @@ pages:
       # dort, und zwar erst, wenn ein Leser ein Notebook lebendig macht. Ein Waechter
       # auf die Hostnamen waere nur zu befriedigen, indem man thebe loescht. Das Buch
       # zu lesen kontaktiert keinen Dritten; den Code darin laufen zu lassen schon.
+      # find statt "grep -r --include": der Job laeuft in python:3.13-alpine, und dessen
+      # grep ist busybox. "--include" ist eine GNU-Erweiterung; busybox antwortet
+      # "grep: unrecognized option: include=*.html" und Rueckgabewert 2. Am 2026-10-16
+      # im Image nachgestellt, nachdem genau das hier gestanden hatte.
+      ziele=$(find public -name '*.html' -o -name '*.js')
       for u in \
         "cdn.jsdelivr.net/npm/katex@" \
         "cdnjs.cloudflare.com/ajax/libs/font-awesome/" \
         "cdn.jsdelivr.net/npm/jupyter-matplotlib@"; do
-        if grep -rq "$u" public --include='*.html' --include='*.js'; then
+        if echo "$ziele" | xargs grep -l "$u" 2>/dev/null | head -1 | grep -q .; then
           echo "FEHLER: ein Stylesheet wird weiter vom CDN geholt: $u"
-          grep -rl "$u" public --include='*.html' --include='*.js' | sed 's|^|  |' | head -5
+          echo "$ziele" | xargs grep -l "$u" 2>/dev/null | sed 's|^|  |' | head -5
           exit 1
         fi
       done
@@ -349,7 +354,7 @@ pages:
       for f in vendor/katex/katex.min.css vendor/font-awesome/css/font-awesome.css \
                vendor/jupyter-matplotlib/mpl_widget.css; do
         [ -s "public/$f" ] || { echo "FEHLER: public/$f fehlt"; exit 1; }
-        grep -rq "$f" public --include='*.html' || { echo "FEHLER: $f wird von keiner Seite referenziert"; exit 1; }
+        find public -name '*.html' | xargs grep -l "$f" >/dev/null 2>&1 || { echo "FEHLER: $f wird von keiner Seite referenziert"; exit 1; }
       done
       echo "ok: kein CDN-Stylesheet mehr, drei vendorierte Pfade referenziert und vorhanden"
   variables:
