@@ -1,0 +1,254 @@
+#!/usr/bin/env python3
+"""Die OpenGraph-Tags nachtragen, die MyST auslaesst, die Schriften vorladen und die
+Abbildungen unter der Falz verzoegert laden.
+
+    python3 tools/head_meta.py <site-url> <html-dir> [--base BASE_URL]
+
+Drei Dinge, alle als Nachbearbeitung am gebauten HTML, weil keines davon in myst.yml
+oder im Frontmatter eines Kapitels gesagt werden kann. Portiert aus ds-en am
+2026-10-16; dort macht dasselbe Skript noch ein viertes, siehe "Was hier absichtlich
+fehlt" unten.
+
+
+1. og:url und og:site_name
+--------------------------
+
+MyST schreibt og:title, og:description und og:image und hoert dann auf. og:url ist, was
+eine Plattform als kanonische Identitaet eines geteilten Links behandelt: ohne es werden
+aus zwei Schreibweisen derselben URL zwei Karten mit zwei Kommentarstraengen.
+og:site_name setzt den Namen des Buchs auf die Karte und speist Googles Site-Name-Signal.
+
+og:url bekommt dieselbe URL wie der Canonical -- mit Schraegstrich, die Form, die 200
+liefert. Deshalb laeuft dieser Schritt *nach* dem Canonical-Schritt in .gitlab-ci.yml.
+
+**Der Name wird aus der Landingpage gelesen, nie hart geschrieben.** Deren <title> ist
+der Projekttitel allein, ein Umbenennen in myst.yml traegt sich also von selbst durch
+und kann keine veraltete Zeichenkette hinterlassen.
+
+
+2. Das Vorladen der Schriften
+-----------------------------
+
+Die zwei woff2-Dateien liegen seit dem 2026-10-16 auf demselben Server (siehe
+_site/fonts/PROVENANCE.txt), aber eine Schrift, die aus einem Stylesheet referenziert
+wird, wird immer noch erst entdeckt, wenn dieses Stylesheet geholt und geparst ist. Das
+Vorladen holt sie auf Ebene eins.
+
+`crossorigin` ist **noetig, obwohl sie von derselben Herkunft kommen**: Schriftanfragen
+laufen im CORS-Modus, und ein Preload, dessen Modus nicht zur spaeteren Anfrage passt,
+wird zweimal geholt statt einmal -- der eine Fehler, der aus dieser Verbesserung eine
+Verschlechterung macht.
+
+
+3. loading="lazy" auf den Abbildungen -- und die Preloads, die es aufgehoben haetten
+------------------------------------------------------------------------------------
+
+Das erste Bild in <main> bleibt eager: das LCP-Element verzoegert zu laden heisst genau
+die Messung zu verschlechtern, um die es geht. Alles danach bekommt `loading="lazy"` und
+`decoding="async"`. Das Logo der Navigation steht ausserhalb von <main> und wird nie
+angefasst.
+
+**Das Attribut allein haette nichts getan.** MyST schreibt fuer *jedes* Bild der Seite
+ein `<link rel="preload" as="image">` in den Kopf -- am 2026-10-16 zwoelf auf kmeans,
+sechzehn auf lineare-regression, vierzehn auf dimensionsreduktion, bei null lazy. Das,
+und nicht das fehlende Attribut, ist der Grund, warum ein Kapitel seinen ganzen
+Abbildungssatz vor dem load-Ereignis holt. Ein vorgeladenes Bild wird sofort geholt, was
+`loading` auch sagt; die zwei Tags widersprechen sich und das Preload gewinnt.
+
+Das Preload wird deshalb fuer genau die Bilder entfernt, die lazy geworden sind, und
+bleibt fuer die zwei, die es haben sollen: das Logo (ausserhalb von <main>) und die
+erste Abbildung (LCP-Kandidat). Die Entfernung an die Menge der lazy gemachten URLs zu
+binden, statt alle Preloads zu streichen, ist genau das, was diese zwei erhaelt.
+
+Nur die <main>-Scheibe wird umgeschrieben. Der Rest des Dokuments traegt MySTs
+Hydrations-Nutzlast -- die ganze Seite noch einmal als JSON in einem <script> -- und ein
+freilaufender regulaerer Ausdruck darauf wuerde Zeichenketten aendern, die der Browser
+als Daten liest.
+
+
+Was hier absichtlich fehlt
+--------------------------
+
+ds-ens Fassung kuerzt zusaetzlich den Titel-Suffix und muss dafuer in die
+Hydrations-Nutzlast schreiben, weil das Theme den Titel daraus neu rendert. **Das ist
+hier nicht portiert** (Uebergabe aus ds-en, Abschnitt 7): ds-skripts Suffix ist
+" - Data Science Vorlesungsskript", 32 Zeichen gegen ds-ens 49, und die Messung, die es
+dort rechtfertigte -- auf 29 von 30 Seiten war der Suffix ohnehin abgeschnitten --, ist
+hier deutlich milder. `site.title` ist in myst.yml nicht gesetzt, der Hebel existiert
+also, falls er je gewollt ist. Wird er gezogen: das Theme rendert den Titel aus der
+Nutzlast neu, ein Bearbeiten von <title> im Markup allein ist im Browser wieder weg --
+und Google rendert, bevor es indexiert.
+
+
+Zweimal laufen
+--------------
+
+Idempotent, und es prueft Nachbedingungen statt der eigenen Aenderungen: jede Seite muss
+am Ende ein og:url und ein og:site_name haben, und kein lazy gemachtes Bild darf noch
+ein Preload tragen. Ein zweiter Lauf ist ein zulaessiger Leerlauf, der trotzdem besteht,
+waehrend Markup, das MyST unter uns verschoben hat, auffaellt -- der Fall, fuer den die
+Pruefung eigentlich da ist.
+"""
+
+from __future__ import annotations
+
+import argparse
+import html
+import pathlib
+import re
+import sys
+
+FONTS = ("inter-latin.woff2", "jetbrains-mono-latin.woff2")
+
+
+def page_url(site: str, rel: pathlib.PurePath) -> str:
+    """Die URL, die 200 liefert: mit Schraegstrich, so wie der Canonical sie hat."""
+    return f"{site}/" if str(rel) == "." else f"{site}/{rel}/"
+
+
+def project_title(index_html: str) -> str:
+    m = re.search(r"<title[^>]*>(.*?)</title>", index_html, re.S | re.I)
+    if not m:
+        sys.exit("FEHLER: die Landingpage hat kein <title>; kein Name fuer og:site_name")
+    title = m.group(1).strip()
+    if not title:
+        sys.exit("FEHLER: der <title> der Landingpage ist leer")
+    return title
+
+
+def head_tags(url: str, site_name: str, base: str) -> str:
+    tags = [
+        f'<meta property="og:url" content="{html.escape(url, quote=True)}"/>',
+        f'<meta property="og:site_name" content="{html.escape(site_name, quote=True)}"/>',
+    ]
+    tags += [
+        f'<link rel="preload" href="{base}/fonts/{f}" as="font" '
+        f"type=\"font/woff2\" crossorigin/>"
+        for f in FONTS
+    ]
+    return "".join(tags)
+
+
+def lazy_load_figures(doc: str) -> tuple[str, set[str]]:
+    """Jedes <img> in <main> ausser dem ersten verzoegert laden.
+
+    Gibt das Dokument und die Menge der src-URLs zurueck, die lazy geworden sind, damit
+    der Aufrufer die passenden Preloads entfernen kann -- ohne das hat das Attribut
+    ueberhaupt keine Wirkung.
+    """
+    m = re.search(r"<main\b[^>]*>.*?</main>", doc, re.S | re.I)
+    if not m:
+        return doc, set()
+
+    main = m.group(0)
+    lazied: set[str] = set()
+    seen = 0
+
+    def img_sub(tag: re.Match) -> str:
+        nonlocal seen
+        seen += 1
+        t = tag.group(0)
+        if seen == 1:  # LCP-Kandidat bleibt eager und behaelt sein Preload
+            return t
+        src = re.search(r'\bsrc="([^"]*)"', t, re.I)
+        if src:
+            lazied.add(src.group(1))
+        if re.search(r"\bloading=", t, re.I):
+            return t
+        return t[:-1].rstrip() + ' loading="lazy" decoding="async"' + t[-1]
+
+    main_new = re.sub(r"<img\b[^>]*?/?>", img_sub, main, flags=re.I)
+    return doc[: m.start()] + main_new + doc[m.end() :], lazied
+
+
+def drop_image_preloads(doc: str, srcs: set[str]) -> tuple[str, int]:
+    """`<link rel="preload" as="image">` fuer die jetzt lazy geladenen Bilder entfernen."""
+    if not srcs:
+        return doc, 0
+    n = 0
+
+    def link_sub(m: re.Match) -> str:
+        nonlocal n
+        tag = m.group(0)
+        if 'as="image"' not in tag:
+            return tag
+        href = re.search(r'\bhref="([^"]*)"', tag)
+        if href and href.group(1) in srcs:
+            n += 1
+            return ""
+        return tag
+
+    doc = re.sub(r'<link\b[^>]*rel="preload"[^>]*/?>', link_sub, doc, flags=re.I)
+    return doc, n
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("site")
+    ap.add_argument("html_dir")
+    ap.add_argument("--base", default="", help="BASE_URL, der Pfad, unter dem die Seite liegt")
+    args = ap.parse_args()
+
+    site = args.site.rstrip("/")
+    root = pathlib.Path(args.html_dir)
+    index = root / "index.html"
+    if not index.exists():
+        sys.exit(f"FEHLER: {index} existiert nicht; nach dem HTML-Bau laufen lassen")
+
+    name = project_title(index.read_text(encoding="utf-8"))
+
+    pages = sorted(root.rglob("index.html"))
+    n_lazy = n_preload = n_head = 0
+
+    for f in pages:
+        rel = f.parent.relative_to(root)
+        url = page_url(site, rel)
+        doc = f.read_text(encoding="utf-8")
+
+        if 'property="og:url"' not in doc:
+            if "</head>" not in doc:
+                sys.exit(f"FEHLER: {f} hat kein </head>")
+            doc = doc.replace("</head>", head_tags(url, name, args.base) + "</head>", 1)
+            n_head += 1
+
+        doc, lazied = lazy_load_figures(doc)
+        doc, dropped = drop_image_preloads(doc, lazied)
+        n_lazy += len(lazied)
+        n_preload += dropped
+
+        f.write_text(doc, encoding="utf-8")
+
+    # Nachbedingungen, keine Bilanz dieses Laufs: ein zweiter Lauf ist ein zulaessiger
+    # Leerlauf, waehrend unter uns verschobenes Markup auffallen muss.
+    for f in pages:
+        doc = f.read_text(encoding="utf-8")
+        if 'property="og:url"' not in doc:
+            sys.exit(f"FEHLER: {f} hat weiterhin kein og:url")
+        if 'property="og:site_name"' not in doc:
+            sys.exit(f"FEHLER: {f} hat weiterhin kein og:site_name")
+        # Ein lazy gemachtes Bild, das noch ein Preload traegt, hebt sich selbst auf.
+        m = re.search(r"<main\b[^>]*>.*?</main>", doc, re.S | re.I)
+        if not m:
+            continue
+        lazy_srcs = set(re.findall(r'<img\b[^>]*\bloading="lazy"[^>]*>', m.group(0), re.I))
+        lazy_urls = {
+            s.group(1)
+            for tag in lazy_srcs
+            if (s := re.search(r'\bsrc="([^"]*)"', tag))
+        }
+        for tag in re.findall(r'<link\b[^>]*rel="preload"[^>]*>', doc, re.I):
+            if 'as="image"' not in tag:
+                continue
+            href = re.search(r'\bhref="([^"]*)"', tag)
+            if href and href.group(1) in lazy_urls:
+                sys.exit(f"FEHLER: {f} laedt ein lazy-Bild weiterhin vor: {href.group(1)}")
+
+    print(
+        f"head_meta: {len(pages)} Seiten, og:url und og:site_name auf allen "
+        f"({n_head} ergaenzt), {n_lazy} Abbildungen lazy, "
+        f"{n_preload} Bild-Preloads entfernt"
+    )
+
+
+if __name__ == "__main__":
+    main()

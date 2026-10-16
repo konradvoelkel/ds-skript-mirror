@@ -157,7 +157,12 @@ project:
     - file: orga.md
 site:
   options:
-    logo: images/logo-wide.svg
+    # Das Raster, nicht das SVG. logo-wide.svg ist 437 kB -- einer seiner Pfade ist
+    # allein 117 kB Koordinaten --, und es rendert in der Navbar mit 72x36 CSS-Pixeln,
+    # weil das Theme die Hoehe pinnt. Es bleibt die Quelle und liegt weiter im Repo;
+    # ausgeliefert wird images/logo-wide.png, von tools/logo_raster.py mit 216x108 (3x)
+    # daraus gerendert. Auf der Leitung sind das rund 100 kB weniger je Seite.
+    logo: images/logo-wide.png
     logo_alt: "Data Science: Vorlesungsskript"
     favicon: images/favicon.ico
     folders: true
