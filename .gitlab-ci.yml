@@ -80,6 +80,14 @@ check-structure:
     # niemandem auf: das alt-Attribut ist dann *da*, es sagt nur nichts. --check schlaegt
     # an, wenn jemand nach dem Ausfuehren das --apply vergisst.
     - uv run --with pyyaml python tools/alt_texts.py --check
+    # Das Navbar-Logo wird ausgeliefert als images/logo-wide.png, gerendert aus dem SVG
+    # (tools/logo_raster.py). Kein byte-exakter Vergleich: die PNG entsteht aus librsvg
+    # oder Inkscape gegen die cairo- und Schriftversionen der jeweiligen Maschine, ein
+    # Bytevergleich scheiterte an Dingen, die mit dem Logo nichts zu tun haben. Geprueft
+    # wird, was zaehlt und worueber kein Renderer anderer Meinung ist: 216x108, ein
+    # Farbtyp der Transparenz tragen kann (sonst ist das Logo im Dunkelmodus ein Block),
+    # und ein Seitenverhaeltnis, das noch zum viewBox des SVG passt.
+    - python3 tools/logo_raster.py --verify
   # Holt pyyaml von PyPI, haengt also an derselben flatternden Strecke wie build-web.
   retry: 2
 
@@ -127,6 +135,56 @@ build-web:
     # siehe GIT_DEPTH.
     - uv run --with pyyaml python tools/freshness.py --stamp-source
     - uv run myst build --html
+    # --- Gescheiterte Formeln zaehlen ---------------------------------------------------
+    # Eine Formel, die KaTeX nicht uebersetzt, ist strukturell perfekt: ein span mit Text
+    # darin, kein Fehlerstatus, nichts fehlt, und "myst build" sagt kein Wort. MyST rendert
+    # sie als den rohen Quelltext hinter einem Warndreieck. Am 2026-10-16 standen so sechs
+    # "\\,^\\circ" in deskriptive-statistik.md monatelang als LaTeX auf der Seite -- gefunden
+    # hat sie ein Mensch beim Lesen, nicht eine der Pruefungen.
+    #
+    # Gezaehlt wird auf title=, NICHT auf die Klasse allein: dieselbe Klasse formatiert die
+    # eigenen {warning}-Admonitions des Buchs, und die haben kein title-Attribut. Am
+    # 2026-10-16 waren das 6 Klassentreffer bei 0 Warndreiecken (wichtigste-diskrete-
+    # verteilungen, lineare-regression) -- auf die Klasse gezaehlt waere der Job rot
+    # gewesen, ohne dass etwas kaputt war.
+    - |
+      n=$(find _build/html -name index.html -exec grep -oh 'text-myst-warning-text" title="' {} + | wc -l)
+      if [ "$n" -ne 0 ]; then
+        echo "FEHLER: $n Formel(n) rendern als roher LaTeX-Quelltext statt als Mathematik."
+        find _build/html -name index.html -exec grep -l 'text-myst-warning-text" title="' {} + \
+          | sed 's|_build/html/|  betroffen: |'
+        exit 1
+      fi
+      echo "ok: keine gescheiterten Formeln"
+    # --- Schriften mitkopieren und den Dritten verriegeln -------------------------------
+    # Bis zum 2026-10-16 zog custom-style.css die Schriften per @import von
+    # fonts.googleapis.com. Begruendung und Herkunft: _site/fonts/PROVENANCE.txt.
+    # MyST kopiert aus _site/ nur das Stylesheet selbst, die Schriften also hier.
+    # Der url() im CSS ist relativ zu build/custom-style-<hash>.css, darum ../fonts/.
+    - mkdir -p _build/html/fonts
+    - cp _site/fonts/*.woff2 _build/html/fonts/
+    # Die Lizenzen muessen mitreisen (OFL 1.1), auch in der ausgelieferten Fassung.
+    - cp _site/fonts/OFL-*.txt _build/html/fonts/
+    - |
+      for f in inter-latin.woff2 jetbrains-mono-latin.woff2; do
+        [ -s "_build/html/fonts/$f" ] || { echo "FEHLER: _build/html/fonts/$f fehlt"; exit 1; }
+      done
+      # Gezaehlt wird MIT Schema. Ohne Schema trifft das Muster den Kommentar in
+      # custom-style.css, der die Entfernung erklaert -- am 2026-10-16 zwei Treffer, die
+      # den Job rot gemacht haetten, ohne dass etwas kaputt war.
+      #
+      # Und nur ueber die Dateien, die ein Browser wirklich laedt: das gebaute HTML und
+      # die Stylesheets, die es referenziert. Ein rekursives grep ueber build/ trifft die
+      # fingerprinted Kopien aelterer Builds, die MyST dort liegen laesst.
+      css=$(grep -oh '/build/[^"]*\.css' _build/html/index.html | sort -u | sed 's|^/|_build/html/|')
+      ziele="$(find _build/html -name '*.html') $css"
+      treffer=$(grep -l -E 'https://fonts\.(googleapis|gstatic)\.com' $ziele 2>/dev/null || true)
+      if [ -n "$treffer" ]; then
+        echo "FEHLER: ausgeliefertes Artefakt fragt wieder bei Google Fonts an:"
+        echo "$treffer" | sed 's|^|  |'
+        exit 1
+      fi
+      echo "ok: Schriften liegen lokal, kein Google-Fonts-Abruf in $(echo $ziele | wc -w) Dateien"
   # Am 2026-10-15 nach 149 s in einen Connect-Timeout gegen PyPI gelaufen und damit die ganze
   # deploy-Stage uebersprungen (pages und notify-ds-en: skipped). Dieselbe flatternde Strecke
   # wie bei notify-ds-en, derselbe Griff.
@@ -198,6 +256,15 @@ pages:
         if [ "$rel" = "." ]; then url="$SITE/"; else url="$SITE/$rel/"; fi
         grep -q 'rel="canonical"' "$f" || sed -i "s|</head>|<link rel=\"canonical\" href=\"$url\"/></head>|" "$f"
       done
+    # og:url und og:site_name nachtragen, die Schriften vorladen, und die Abbildungen
+    # unter der Falz verzoegert laden. Muss *nach* dem Canonical laufen: og:url bekommt
+    # dieselbe URL, die der Canonical nennt.
+    #
+    # Das lazy-Attribut allein waere wirkungslos gewesen -- MyST schreibt fuer *jedes*
+    # Bild ein <link rel=preload as=image>, und ein vorgeladenes Bild wird sofort geholt,
+    # was loading auch sagt. Am 2026-10-16 waren das 228 Preloads bei null lazy; danach
+    # 171 lazy und 57 Preloads, naemlich je Seite das Logo und die erste Abbildung.
+    - python3 tools/head_meta.py "$SITE" public --base "$BASE_URL"
     # hreflang: die deutsche Haelfte des Sprachpaars. Muss *nach* dem Canonical laufen -- der
     # Selbstverweis muss exakt die URL sein, die die Seite canonical nennt, sonst erklaert sich
     # die Seite nicht zum Mitglied ihres eigenen Clusters. hreflang/filemap.json kommt entweder
