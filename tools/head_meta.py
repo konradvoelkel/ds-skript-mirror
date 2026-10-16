@@ -66,6 +66,27 @@ freilaufender regulaerer Ausdruck darauf wuerde Zeichenketten aendern, die der B
 als Daten liest.
 
 
+4. lang="de" am <html>
+----------------------
+
+Das Theme schreibt `<html lang="en">`, hart im Bundle (am 2026-10-16 zwoelf Vorkommen in
+book-theme), und myst.yml hat keinen Schalter dafuer. Eine deutsche Seite, die sich als
+englisch ausgibt, laesst Screenreader den Text englisch aussprechen und widerspricht
+allem anderen am Dokument: hreflang="de", inLanguage "de" im JSON-LD, 1300 Woerter
+Deutsch.
+
+**Hier reicht das Markup, anders als beim Titel** -- und das ist gemessen, nicht
+angenommen. Am 2026-10-16 lokal gegen dasselbe Bundle: `_build/html` auf "de" gepatcht,
+mit python3 -m http.server unter dem richtigen Basispfad ausgeliefert, im Browser nach
+der Hydration und nach einer Navigation nachgesehen -- beide Male "de". React korrigiert
+die Abweichung am Wurzelelement nicht, der Titel dagegen wird aus der Nutzlast neu
+gerendert. Das ist der Unterschied, und er war vorher nicht absehbar.
+
+Das sichtbare Datum ("October 16, 2026") haengt *nicht* hieran: das Theme formatiert es
+mit toLocaleDateString, also nach der Locale des Lesers, und im serverseitig gebauten
+HTML nach der des CI-Containers. Ein eigenes Thema, siehe
+todo/seo-landingpage-2026-10-16.md.
+
 Was hier absichtlich fehlt
 --------------------------
 
@@ -84,8 +105,8 @@ Zweimal laufen
 --------------
 
 Idempotent, und es prueft Nachbedingungen statt der eigenen Aenderungen: jede Seite muss
-am Ende ein og:url und ein og:site_name haben, und kein lazy gemachtes Bild darf noch
-ein Preload tragen. Ein zweiter Lauf ist ein zulaessiger Leerlauf, der trotzdem besteht,
+am Ende ein og:url und ein og:site_name haben, jede Seite muss lang="de" fuehren, und
+kein lazy gemachtes Bild darf noch ein Preload tragen. Ein zweiter Lauf ist ein zulaessiger Leerlauf, der trotzdem besteht,
 waehrend Markup, das MyST unter uns verschoben hat, auffaellt -- der Fall, fuer den die
 Pruefung eigentlich da ist.
 """
@@ -127,6 +148,21 @@ def head_tags(url: str, site_name: str, base: str) -> str:
         for f in FONTS
     ]
     return "".join(tags)
+
+
+def set_html_lang(doc: str, lang: str) -> tuple[str, bool]:
+    """Die Sprache am <html> setzen. Gibt das Dokument und zurueck, ob es sie schon hatte."""
+    m = re.search(r"<html\b[^>]*>", doc, re.I)
+    if not m:
+        return doc, False
+    tag = m.group(0)
+    if re.search(rf'\blang="{re.escape(lang)}"', tag, re.I):
+        return doc, True
+    if re.search(r'\blang="[^"]*"', tag, re.I):
+        new_tag = re.sub(r'\blang="[^"]*"', f'lang="{lang}"', tag, count=1, flags=re.I)
+    else:
+        new_tag = tag[:5] + f' lang="{lang}"' + tag[5:]
+    return doc[: m.start()] + new_tag + doc[m.end() :], False
 
 
 def lazy_load_figures(doc: str) -> tuple[str, set[str]]:
@@ -187,6 +223,11 @@ def main() -> None:
     ap.add_argument("site")
     ap.add_argument("html_dir")
     ap.add_argument("--base", default="", help="BASE_URL, der Pfad, unter dem die Seite liegt")
+    ap.add_argument(
+        "--lang",
+        default="de",
+        help='Sprache fuer das <html lang>-Attribut (Vorgabe "de"; das Theme sagt "en")',
+    )
     args = ap.parse_args()
 
     site = args.site.rstrip("/")
@@ -198,7 +239,7 @@ def main() -> None:
     name = project_title(index.read_text(encoding="utf-8"))
 
     pages = sorted(root.rglob("index.html"))
-    n_lazy = n_preload = n_head = 0
+    n_lazy = n_preload = n_head = n_lang = 0
 
     for f in pages:
         rel = f.parent.relative_to(root)
@@ -210,6 +251,10 @@ def main() -> None:
                 sys.exit(f"FEHLER: {f} hat kein </head>")
             doc = doc.replace("</head>", head_tags(url, name, args.base) + "</head>", 1)
             n_head += 1
+
+        doc, had_lang = set_html_lang(doc, args.lang)
+        if not had_lang:
+            n_lang += 1
 
         doc, lazied = lazy_load_figures(doc)
         doc, dropped = drop_image_preloads(doc, lazied)
@@ -226,6 +271,11 @@ def main() -> None:
             sys.exit(f"FEHLER: {f} hat weiterhin kein og:url")
         if 'property="og:site_name"' not in doc:
             sys.exit(f"FEHLER: {f} hat weiterhin kein og:site_name")
+        m_html = re.search(r"<html\b[^>]*>", doc, re.I)
+        if not m_html or not re.search(
+            rf'\blang="{re.escape(args.lang)}"', m_html.group(0), re.I
+        ):
+            sys.exit(f'FEHLER: {f} fuehrt weiterhin nicht lang="{args.lang}"')
         # Ein lazy gemachtes Bild, das noch ein Preload traegt, hebt sich selbst auf.
         m = re.search(r"<main\b[^>]*>.*?</main>", doc, re.S | re.I)
         if not m:
@@ -245,8 +295,8 @@ def main() -> None:
 
     print(
         f"head_meta: {len(pages)} Seiten, og:url und og:site_name auf allen "
-        f"({n_head} ergaenzt), {n_lazy} Abbildungen lazy, "
-        f"{n_preload} Bild-Preloads entfernt"
+        f"({n_head} ergaenzt), lang=\"{args.lang}\" auf allen ({n_lang} gesetzt), "
+        f"{n_lazy} Abbildungen lazy, {n_preload} Bild-Preloads entfernt"
     )
 
 

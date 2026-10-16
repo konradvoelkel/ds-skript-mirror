@@ -311,7 +311,11 @@ pages:
     # Ausgabe lief still mit der Systemschrift, waehrend die englische Inter zeigte.
     - find public -name 'myst-theme.css' -o -name 'custom-style-*.css' | xargs sed -i "s|__BASE__|$BASE_URL|g"
     - python3 tools/vendor_assets.py public --base "$BASE_URL"
-    - python3 tools/head_meta.py "$SITE" public --base "$BASE_URL"
+    # Setzt ausserdem lang="de" am <html> -- das Theme schreibt "en" hart ins Bundle, und
+    # myst.yml hat keinen Schalter dafuer. Dass das Markup hier reicht (anders als beim
+    # Titel, der aus der Hydrations-Nutzlast neu gerendert wird), ist am 2026-10-16 lokal
+    # gegen dasselbe Bundle gemessen: nach der Hydration und nach einer Navigation "de".
+    - python3 tools/head_meta.py "$SITE" public --base "$BASE_URL" --lang de
     # Loest jeden url() der eingebundenen Stylesheets auf -- gegen die Datei, die im <link>
     # steht, nicht gegen eine, von der man annimmt, sie werde geladen. Genau diesen Schritt
     # hatte meine erste Pruefung uebersprungen; sie meldete "DA" an der fingerprinted Kopie,
