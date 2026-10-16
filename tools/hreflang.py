@@ -50,7 +50,7 @@ import sys
 import urllib.request
 from pathlib import Path
 
-FILEMAP_URL = "https://raw.githubusercontent.com/konradvoelkel/ds-en/main/sync/filemap.json"
+FILEMAP_URL = "https://raw.githubusercontent.com/konradvoelkel/ds-en/main/sync/filemap.json.ABSICHTLICH-KAPUTT-TEST"
 
 # Die Landingpage ist in beiden Ausgaben die Wurzel der Seite, nicht /landing-page/.
 ROOT_STEM = "landing-page"
