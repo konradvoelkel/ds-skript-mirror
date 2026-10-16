@@ -87,6 +87,13 @@ englisch ausgibt, laesst Screenreader den Text englisch aussprechen und widerspr
 allem anderen am Dokument: hreflang="de", inLanguage "de" im JSON-LD, 1300 Woerter
 Deutsch.
 
+Das Attribut im ausgelieferten HTML zu setzen reicht aber nicht. Die Hydration des Themes
+schreibt lang="en" zurueck: am 2026-10-16 nachgemessen, ohne JavaScript "de", mit
+JavaScript "en" -- ausgerechnet der Screenreader sieht also die falsche Sprache. Deshalb
+geht ein kleiner Waechter mit, ein MutationObserver auf genau diesem Attribut. Einmalig
+zuweisen genuegt nicht, weil das Theme ein Client-Router ist und jeder Kapitelwechsel
+ohne Neuladen das Attribut erneut setzt.
+
 **Hier reicht das Markup, anders als beim Titel** -- und das ist gemessen, nicht
 angenommen. Am 2026-10-16 lokal gegen dasselbe Bundle: `_build/html` auf "de" gepatcht,
 mit python3 -m http.server unter dem richtigen Basispfad ausgeliefert, im Browser nach
@@ -135,6 +142,9 @@ import html
 import pathlib
 import re
 import sys
+
+# Erkennungszeichen des Sprach-Waechters, damit ein zweiter Lauf Leerlauf bleibt.
+MARKER_LANG = "/*lang-waechter*/"
 
 FONTS = ("inter-latin.woff2", "jetbrains-mono-latin.woff2")
 
@@ -217,6 +227,32 @@ def set_html_lang(doc: str, lang: str) -> tuple[str, bool]:
     return doc[: m.start()] + new_tag + doc[m.end() :], False
 
 
+def keep_html_lang(doc: str, lang: str) -> tuple[str, bool]:
+    """Das lang nach der Hydration wieder setzen -- sonst haelt es nur bis zum ersten Frame.
+
+    set_html_lang repariert das *ausgelieferte* HTML. Das reicht fuer Crawler und fuer
+    Lesen ohne JavaScript, aber nicht fuer den Leser: das Theme traegt lang="en" hart im
+    Bundle, und die Hydration schreibt es zurueck. Nachgemessen am 2026-10-16 auf der
+    ausgelieferten Seite -- ohne JavaScript "de", mit JavaScript "en". Ausgerechnet der
+    Screenreader, fuer den das Attribut da ist, sieht also die falsche Sprache.
+
+    Ein MutationObserver statt einer einmaligen Zuweisung, weil das Zuruecksetzen nicht
+    nur beim ersten Laden passiert: das Theme ist ein Client-Router, und jeder Wechsel
+    zwischen zwei Kapiteln ohne Neuladen setzt das Attribut erneut.
+    """
+    if MARKER_LANG in doc:
+        return doc, True
+    if "</head>" not in doc:
+        return doc, False
+    script = (
+        f'<script>{MARKER_LANG}(function(){{var l="{lang}",h=document.documentElement;'
+        "function f(){if(h.lang!==l)h.lang=l}f();"
+        'new MutationObserver(f).observe(h,{attributes:true,attributeFilter:["lang"]});'
+        "})();</script>"
+    )
+    return doc.replace("</head>", script + "</head>", 1), False
+
+
 def lazy_load_figures(doc: str) -> tuple[str, set[str]]:
     """Jedes <img> in <main> ausser dem ersten verzoegert laden.
 
@@ -291,7 +327,7 @@ def main() -> None:
     name = project_title(index.read_text(encoding="utf-8"))
 
     pages = sorted(root.rglob("index.html"))
-    n_lazy = n_preload = n_head = n_lang = 0
+    n_lazy = n_preload = n_head = n_lang = n_guard = 0
 
     for f in pages:
         rel = f.parent.relative_to(root)
@@ -314,6 +350,9 @@ def main() -> None:
         doc, had_lang = set_html_lang(doc, args.lang)
         if not had_lang:
             n_lang += 1
+        doc, had_guard = keep_html_lang(doc, args.lang)
+        if not had_guard:
+            n_guard += 1
 
         doc, lazied = lazy_load_figures(doc)
         doc, dropped = drop_image_preloads(doc, lazied)
@@ -342,6 +381,9 @@ def main() -> None:
             rf'\blang="{re.escape(args.lang)}"', m_html.group(0), re.I
         ):
             sys.exit(f'FEHLER: {f} fuehrt weiterhin nicht lang="{args.lang}"')
+        if MARKER_LANG not in doc:
+            sys.exit(f"FEHLER: {f} hat keinen Sprach-Waechter -- die Hydration"
+                     f' setzt lang wieder auf "en"')
         # Ein lazy gemachtes Bild, das noch ein Preload traegt, hebt sich selbst auf.
         m = re.search(r"<main\b[^>]*>.*?</main>", doc, re.S | re.I)
         if not m:
@@ -361,7 +403,8 @@ def main() -> None:
 
     print(
         f"head_meta: {len(pages)} Seiten, die fuenf Karten-Tags auf allen "
-        f"({n_head} ergaenzt), lang=\"{args.lang}\" auf allen ({n_lang} gesetzt), "
+        f"({n_head} ergaenzt), lang=\"{args.lang}\" auf allen ({n_lang} gesetzt, "
+        f"{n_guard} Waechter), "
         f"{n_lazy} Abbildungen lazy, {n_preload} Bild-Preloads entfernt"
     )
 
