@@ -110,8 +110,8 @@ eine Übersetzung dieses Originals und folgt ihm; wo beide auseinanderlaufen, gi
 Fassung.
 
 [Konrad Völkel](https://www.konradvoelkel.com/) hat zwei weitere Vorlesungsskripten
-veröffentlicht: [Einführung in Python](https://voelkel.pages.cs.uni-duesseldorf.de/eipy-skript/)
-für die Programmiergrundlagen und
+veröffentlicht: [Einführung in Python](https://voelkel.pages.cs.uni-duesseldorf.de/eipy-skript/), das Python als
+zweite Programmiersprache einführt, und
 [Einführung in Deep Learning](https://voelkel.pages.cs.uni-duesseldorf.de/eidl-skript/), das an
 dieses Skript anschließt.
 
