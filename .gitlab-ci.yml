@@ -453,11 +453,17 @@ mirror-to-github:
     - git config --global credential.helper store
     - printf 'https://x-access-token:%s@github.com\n' "$GITHUB_MIRROR_TOKEN" > ~/.git-credentials
     - chmod 600 ~/.git-credentials
-    # --mirror auf beiden Seiten. Ein einfacher Push schickt eine Spitze; ds-en loest
-    # beliebige Commits dazwischen auf (git show <sha>:<datei> zwischen zwei Pins) und
-    # braucht die echte Historie.
+    # Spiegelklon, damit die echte Historie mitkommt: ds-en loest beliebige Commits auf
+    # (git show <sha>:<datei> zwischen zwei Pins) und braucht nicht nur eine Spitze.
     - git clone --mirror "$CI_REPOSITORY_URL" repo.git
-    - git -C repo.git push --mirror https://github.com/konradvoelkel/ds-skript-mirror.git
+    # Explizite Refspecs statt --mirror. --mirror schickt *jede* Ref, die der Klon kennt, und
+    # ein Klon ueber CI_REPOSITORY_URL kennt auch GitLabs interne refs/pipelines/<id> -- eine
+    # pro Lauf, die sich im Spiegel ewig ansammeln wuerden. Der erste erfolgreiche Lauf hat
+    # genau das getan. Heads und Tags sind, was ds-en braucht; --prune raeumt drueben auf,
+    # was hier geloescht wurde, bleibt dabei aber innerhalb dieser beiden Refspecs.
+    - |
+      git -C repo.git push --prune https://github.com/konradvoelkel/ds-skript-mirror.git \
+        "+refs/heads/*:refs/heads/*" "+refs/tags/*:refs/tags/*"
     - git -C repo.git rev-parse HEAD
   retry: 2
   rules:
