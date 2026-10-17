@@ -410,6 +410,52 @@ pages:
       - public
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+# Spiegelt das Repo nach GitHub. GitLab bleibt fuehrend; nichts ausser diesem Job schreibt
+# jemals in den Spiegel, ds-en liest ihn nur.
+#
+# **Warum ueberhaupt.** Die HHU-GitLab gibt Git ueber HTTP nur Eingeloggten: die Projektseite
+# antwortet 200, /info/refs?service=git-upload-pack antwortet 401, und die API meldet trotzdem
+# "public" -- oeffentlich fuer den Browser, geschlossen fuer einen Klon. Ein GitHub-Runner
+# kommt also nicht an uns heran, und ds-ens Staleness-Check ist deshalb seit seinem Bestehen
+# kein einziges Mal durchgelaufen. Kein Retry ueberlebt ein 401. Zweiter Grund, Konrads: auf
+# GitHub lassen sich Issues leichter anlegen, der Spiegel ist also auch die Meldestelle fuer
+# die deutsche Ausgabe.
+#
+# Kein allow_failure. Ein still scheiternder Spiegel ist schlechter als keiner: ds-en
+# vergliche dann gegen eine eingefrorene Kopie und meldete ewig "up to date" -- genau der
+# stille Erfolg, den der Check verhindern soll.
+#
+# Was hier rausgeht, vor dem Einbau geprueft: genau ein Branch, main, keine Tags, 207
+# Commits. todo/, transcripts/, PROJECT_NOTES.md und TODO.md kommen in keinem Commit der
+# Historie vor -- sie waren nie drin, nicht nur heute ignoriert. Keine Treffer auf gaengige
+# Token-Muster. Der Buchinhalt ist ohnehin CC BY-SA.
+mirror-to-github:
+  stage: deploy
+  image: alpine/git:latest
+  variables:
+    GIT_STRATEGY: none
+  script:
+    # Frueh und verstaendlich abbrechen, statt in einen anonymen Push zu laufen, der mit
+    # "Authentication failed" endet und wie ein GitHub-Problem aussieht.
+    - test -n "$GITHUB_MIRROR_TOKEN" || { echo "FEHLER - CI-Variable GITHUB_MIRROR_TOKEN fehlt"; exit 1; }
+    # Das Token steht bewusst nicht in der Push-URL. GitLab maskiert es zwar im Log, aber die
+    # Maskierung greift nur auf exakte Treffer, und eine Remote-URL taucht in git-Fehlern, in
+    # Trace-Ausgaben und in Fremdwerkzeugen an Stellen auf, die man nicht alle kennt. Der
+    # Credential-Store liegt im Container und verschwindet mit ihm.
+    - git config --global credential.helper store
+    - printf 'https://x-access-token:%s@github.com\n' "$GITHUB_MIRROR_TOKEN" > ~/.git-credentials
+    - chmod 600 ~/.git-credentials
+    # --mirror auf beiden Seiten. Ein einfacher Push schickt eine Spitze; ds-en loest
+    # beliebige Commits dazwischen auf (git show <sha>:<datei> zwischen zwei Pins) und
+    # braucht die echte Historie.
+    - git clone --mirror "$CI_REPOSITORY_URL" repo.git
+    - git -C repo.git push --mirror https://github.com/konradvoelkel/ds-skript-mirror.git
+    - git -C repo.git rev-parse HEAD
+  retry: 2
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+
 
 # Sagt der englischen Ausgabe (github.com/konradvoelkel/ds-en) Bescheid, dass hier gepusht
 # wurde, damit sie ihren Staleness-Check fahren kann. Der event_type "ds-skript-push" ist
@@ -455,6 +501,12 @@ notify-ds-en:
         https://api.github.com/repos/konradvoelkel/ds-en/dispatches \
         -d "{\"event_type\":\"ds-skript-push\",\"client_payload\":{\"sha\":\"$CI_COMMIT_SHA\"}}"
   # Zweite Ebene: faengt ab, was curl nicht sieht — ein fehlgeschlagener Image-Pull etwa.
+  # Erst spiegeln, dann Bescheid sagen. Ohne das laufen beide Jobs gleichzeitig los, und
+  # ds-en klont den Spiegel womoeglich, bevor dieser Push drin ist -- der Check urteilte dann
+  # gegen den vorherigen Stand und meldete "up to date", obwohl sich gerade etwas bewegt hat.
+  # Faellt der Spiegel aus, wird dieser Job uebersprungen: lieber keine Meldung als eine, die
+  # auf eine veraltete Kopie zeigt.
+  needs: ["mirror-to-github"]
   retry: 2
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
