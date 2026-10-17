@@ -431,9 +431,17 @@ pages:
 # Token-Muster. Der Buchinhalt ist ohnehin CC BY-SA.
 mirror-to-github:
   stage: deploy
-  image: alpine/git:latest
+  # entrypoint: [""] ist noetig, nicht Kosmetik: alpine/git setzt git selbst als Entrypoint,
+  # der Runner haengt seinen Shell-Aufruf hinten an, und der Job stirbt sofort mit
+  # "git: 'sh' is not a git command". Genau so ist der erste Versuch gescheitert.
+  image:
+    name: alpine/git:latest
+    entrypoint: [""]
   variables:
     GIT_STRATEGY: none
+  # Ohne das zieht der Job die Artefakte der build-Stage -- Website und PDF, zweistellige
+  # Megabyte -- fuer nichts: er klont ja selbst.
+  dependencies: []
   script:
     # Frueh und verstaendlich abbrechen, statt in einen anonymen Push zu laufen, der mit
     # "Authentication failed" endet und wie ein GitHub-Problem aussieht.
