@@ -227,6 +227,55 @@ def set_html_lang(doc: str, lang: str) -> tuple[str, bool]:
     return doc[: m.start()] + new_tag + doc[m.end() :], False
 
 
+MONATE = ("Januar", "Februar", "März", "April", "Mai", "Juni",
+          "Juli", "August", "September", "Oktober", "November", "Dezember")
+
+
+def datum_eindeutschen(doc: str) -> tuple[str, int]:
+    """Das sichtbare Datum deutsch schreiben. Nur der Text, nie das Attribut.
+
+    MyST rendert `date:` aus dem Frontmatter als `October 16, 2026` -- englisch, weil das
+    Theme keine Lokalisierung kennt und seine Sprache ohnehin hart auf "en" steht. Auf einer
+    Seite, die sich seit 1f48c57 als lang="de" ausweist, steht damit ein englisches Datum
+    unter der deutschen Autorenzeile.
+
+    Ersetzt wird ausschliesslich der **Text** zwischen den Tags. Das `dateTime`-Attribut
+    bleibt unberuehrt: es ist die maschinenlesbare Angabe, ISO 8601 ist dort richtig, und
+    freshness.py sowie das JSON-LD haengen daran.
+
+    Die Monatsnamen stehen hier als Liste und kommen nicht aus `locale`: der CI-Container
+    bringt keine de_DE-Locale mit, und ein stillschweigender Rueckfall auf C haette wieder
+    englische Namen geliefert -- derselbe Fehler, nur schwerer zu sehen.
+
+    Betrifft heute genau eine Seite, die Landingpage; die Kapitel tragen kein Datum. Die
+    Funktion laeuft trotzdem ueber alle, damit ein kuenftiges Kapiteldatum mitgenommen wird.
+    """
+    import datetime as _dt
+
+    # Gezaehlt werden Aenderungen, nicht Treffer: ein zweiter Lauf findet dasselbe Element
+    # wieder, aendert nichts und soll das auch so berichten.
+    geaendert = [0]
+
+    def ersetze(m: re.Match) -> str:
+        vor, iso, mitte, text, nach = m.groups()
+        try:
+            d = _dt.date.fromisoformat(iso)
+        except ValueError:
+            return m.group(0)
+        deutsch = f"{d.day}. {MONATE[d.month - 1]} {d.year}"
+        if text == deutsch:
+            return m.group(0)
+        geaendert[0] += 1
+        return f"{vor}{iso}{mitte}{deutsch}{nach}"
+
+    doc, _ = re.subn(
+        r'(<time\b[^>]*\bdateTime=")(\d{4}-\d{2}-\d{2})("[^>]*class="[^"]*myst-fm-date-string[^"]*"[^>]*>)'
+        r'([^<]*)(</time>)',
+        ersetze, doc,
+    )
+    return doc, geaendert[0]
+
+
 def keep_html_lang(doc: str, lang: str) -> tuple[str, bool]:
     """Das lang nach der Hydration wieder setzen -- sonst haelt es nur bis zum ersten Frame.
 
@@ -327,7 +376,7 @@ def main() -> None:
     name = project_title(index.read_text(encoding="utf-8"))
 
     pages = sorted(root.rglob("index.html"))
-    n_lazy = n_preload = n_head = n_lang = n_guard = 0
+    n_lazy = n_preload = n_head = n_lang = n_guard = n_datum = 0
 
     for f in pages:
         rel = f.parent.relative_to(root)
@@ -353,6 +402,10 @@ def main() -> None:
         doc, had_guard = keep_html_lang(doc, args.lang)
         if not had_guard:
             n_guard += 1
+
+        if args.lang == "de":
+            doc, umgestellt = datum_eindeutschen(doc)
+            n_datum += umgestellt
 
         doc, lazied = lazy_load_figures(doc)
         doc, dropped = drop_image_preloads(doc, lazied)
@@ -381,6 +434,16 @@ def main() -> None:
             rf'\blang="{re.escape(args.lang)}"', m_html.group(0), re.I
         ):
             sys.exit(f'FEHLER: {f} fuehrt weiterhin nicht lang="{args.lang}"')
+        if args.lang == "de":
+            m_datum = re.search(
+                r'class="[^"]*myst-fm-date-string[^"]*"[^>]*>([^<]*)</time>', doc
+            )
+            if m_datum and re.search(
+                r"\b(January|February|March|April|May|June|July|August|September|"
+                r"October|November|December)\b", m_datum.group(1)
+            ):
+                sys.exit(f"FEHLER: {f} zeigt das Datum weiterhin englisch: "
+                         f"{m_datum.group(1)!r}")
         if MARKER_LANG not in doc:
             sys.exit(f"FEHLER: {f} hat keinen Sprach-Waechter -- die Hydration"
                      f' setzt lang wieder auf "en"')
@@ -404,7 +467,7 @@ def main() -> None:
     print(
         f"head_meta: {len(pages)} Seiten, die fuenf Karten-Tags auf allen "
         f"({n_head} ergaenzt), lang=\"{args.lang}\" auf allen ({n_lang} gesetzt, "
-        f"{n_guard} Waechter), "
+        f"{n_guard} Waechter), {n_datum} Datum eingedeutscht, "
         f"{n_lazy} Abbildungen lazy, {n_preload} Bild-Preloads entfernt"
     )
 
