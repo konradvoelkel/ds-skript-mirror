@@ -15,7 +15,7 @@ project:
     - name: Dr. Konrad Völkel
       affiliations:
         - Heinrich-Heine Universität Düsseldorf
-      url: http://www.konradvoelkel.com
+      url: https://www.konradvoelkel.com/
   license: CC-BY-SA-4.0
   copyright: 2026 CC-BY-SA 4.0
   exclude:

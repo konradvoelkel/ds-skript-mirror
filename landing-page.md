@@ -123,6 +123,8 @@ oder aus einer anderen Perspektive zu betrachten. In der ersten Vorlesung haben 
 
 ## Lizenz
 
+Verfasst von [Dr. Konrad Völkel](https://www.konradvoelkel.com/), Heinrich-Heine-Universität Düsseldorf.
+
 Dieses Vorlesungsskript steht unter der [Creative Commons Lizenz Namensnennung – Weitergabe unter gleichen Bedingungen 4.0 (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/deed.de). <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de"><img src="https://mirrors.creativecommons.org/presskit/buttons/80x15/png/by-sa.png" height="20" alt="Lizenzknopf Creative Commons Namensnennung – Weitergabe unter gleichen Bedingungen 4.0"/></a> Jeglicher Code außerdem unter der GPL3.
 
 Davon ausgenommen sind gekennzeichnete Fremdinhalte, die unter ihrer jeweils eigenen Lizenz stehen: die eingebundenen xkcd-Comics (CC BY-NC 2.5), das Venn-Diagramm von Drew Conway (CC BY-NC 3.0) und der Melbourne-Housing-Datensatz von Anthony Pino (CC BY-NC-SA 4.0). Bei jedem dieser Inhalte steht die Quelle an Ort und Stelle. Die [Vorlesungsfolien](folien.md) enthalten weitere Fremdbilder; sie sind in der README des Folienordners im Repositorium aufgeführt.
