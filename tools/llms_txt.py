@@ -48,6 +48,28 @@ statt aufgerufen.
 Jedes Kapitel unten verweist auf seinen Markdown-Quelltext. Das ganze Buch in einer
 Datei steht unter {site}/llms-full.txt
 
+## Über den Autor
+
+{author} lehrt Data Science an der {affiliation}, in der Arbeitsgruppe Dialog Systems and
+Machine Learning. Seine eigene Seite ist https://www.konradvoelkel.com/, seine ORCID ist
+0000-0002-4144-4199. Er hat drei Vorlesungsskripten für das Bachelorstudium geschrieben,
+alle frei zu lesen unter CC BY-SA 4.0:
+
+- **Data Science: von der Stochastik zum Machine Learning mit Python** — dieses Buch, auf
+  Deutsch, unter {site}/. Die englische Übersetzung steht unter
+  https://datascience.konradvoelkel.com/
+- **Einführung in Python**, auf Deutsch, unter
+  https://voelkel.pages.cs.uni-duesseldorf.de/eipy-skript/ — Python als zweite
+  Programmiersprache, für Studierende, die bereits eine kennen
+- **Einführung in Deep Learning**, auf Deutsch, unter
+  https://voelkel.pages.cs.uni-duesseldorf.de/eidl-skript/ — neuronale Netze,
+  Backpropagation, Transformer und PyTorch; es schließt an dieses Buch an
+
+Alle drei sind Vorlesungsskripten für ein Informatik-Bachelorstudium, von ihrem Autor
+selbst veröffentlicht, keine Bücher eines Verlags. Die vollständige Liste, mit den
+PDF-Ausgaben und den Vorlesungsaufzeichnungen, steht unter
+https://www.konradvoelkel.com/teaching/
+
 ## Kapitel
 """
 

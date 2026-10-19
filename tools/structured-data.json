@@ -49,15 +49,22 @@
   ],
   "author": {
     "@type": "Person",
+    "@id": "__SITE__/#author",
     "name": "Konrad Völkel",
+    "alternateName": "Konrad Voelkel",
+    "honorificPrefix": "Dr.",
+    "jobTitle": "Academic Teacher",
     "url": "https://www.konradvoelkel.com/",
+    "mainEntityOfPage": "https://www.konradvoelkel.com/",
     "affiliation": {
       "@type": "CollegeOrUniversity",
       "name": "Heinrich-Heine-Universität Düsseldorf",
       "url": "https://www.hhu.de"
     },
     "sameAs": [
+      "https://www.konradvoelkel.com/",
       "https://orcid.org/0000-0002-4144-4199",
+      "https://arxiv.org/a/0000-0002-4144-4199.html",
       "https://www.cs.hhu.de/lehrstuehle-und-arbeitsgruppen/dialog-systems-and-machine-learning/unser-team/voelkel",
       "https://scholar.google.de/citations?user=94jR8gUAAAAJ",
       "https://www.linkedin.com/in/konradvoelkel/",

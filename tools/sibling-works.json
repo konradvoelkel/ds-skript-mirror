@@ -1,0 +1,40 @@
+[
+  {
+    "@type": [
+      "Book",
+      "LearningResource"
+    ],
+    "@id": "https://voelkel.pages.cs.uni-duesseldorf.de/eipy-skript/#work",
+    "url": "https://voelkel.pages.cs.uni-duesseldorf.de/eipy-skript/",
+    "name": "Einführung in Python",
+    "alternateName": "Introduction to Python",
+    "description": "Vorlesungsskript, das Python als zweite Programmiersprache einführt, für Studierende, die bereits eine kennen: Datentypen, Kontrollfluss, Objekte, das Werkzeug rund um ein Python-Projekt und Anwendungsentwicklung.",
+    "inLanguage": "de",
+    "isAccessibleForFree": true,
+    "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "learningResourceType": "Vorlesungsskript",
+    "educationalLevel": "Bachelor",
+    "author": {
+      "@id": "__SITE__/#author"
+    }
+  },
+  {
+    "@type": [
+      "Book",
+      "LearningResource"
+    ],
+    "@id": "https://voelkel.pages.cs.uni-duesseldorf.de/eidl-skript/#work",
+    "url": "https://voelkel.pages.cs.uni-duesseldorf.de/eidl-skript/",
+    "name": "Einführung in Deep Learning",
+    "alternateName": "Introduction to Deep Learning",
+    "description": "Vorlesungsskript zum Deep Learning, das an dieses Data-Science-Skript anschließt: Perzeptron und Backpropagation, Architekturen, Repräsentationslernen, Transformer und große Sprachmodelle, in PyTorch programmiert.",
+    "inLanguage": "de",
+    "isAccessibleForFree": true,
+    "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "learningResourceType": "Vorlesungsskript",
+    "educationalLevel": "Bachelor",
+    "author": {
+      "@id": "__SITE__/#author"
+    }
+  }
+]

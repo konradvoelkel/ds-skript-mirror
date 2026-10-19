@@ -109,11 +109,13 @@ machine learning with Python](https://datascience.konradvoelkel.com/). Die engli
 eine Übersetzung dieses Originals und folgt ihm; wo beide auseinanderlaufen, gilt die deutsche
 Fassung.
 
-[Konrad Völkel](https://www.konradvoelkel.com/) hat zwei weitere Vorlesungsskripten
-veröffentlicht: [Einführung in Python](https://voelkel.pages.cs.uni-duesseldorf.de/eipy-skript/), das Python als
-zweite Programmiersprache einführt, und
-[Einführung in Deep Learning](https://voelkel.pages.cs.uni-duesseldorf.de/eidl-skript/), das an
-dieses Skript anschließt.
+Dieses Skript ist eines von drei Vorlesungsskripten von [Konrad
+Völkel](https://www.konradvoelkel.com/), die alle frei zu lesen sind. Die beiden anderen
+sind [Einführung in Python](https://voelkel.pages.cs.uni-duesseldorf.de/eipy-skript/), das
+Python als zweite Programmiersprache einführt, und [Einführung in Deep
+Learning](https://voelkel.pages.cs.uni-duesseldorf.de/eidl-skript/), das an dieses Skript
+anschließt. Alle drei stehen mit ihren PDF-Ausgaben und den Vorlesungsaufzeichnungen auf
+seiner [Seite zur Lehre](https://www.konradvoelkel.com/teaching/).
 
 Zum Betrieb der Vorlesung an der HHU — Aufzeichnungen, Folien, Übungsbetrieb und die Regeln für
 KI-Werkzeuge — gibt es die Seite [Organisatorisches](orga.md).
