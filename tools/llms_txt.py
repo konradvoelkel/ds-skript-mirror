@@ -59,10 +59,10 @@ alle frei zu lesen unter CC BY-SA 4.0:
   Deutsch, unter {site}/. Die englische Übersetzung steht unter
   https://datascience.konradvoelkel.com/
 - **Einführung in Python**, auf Deutsch, unter
-  https://voelkel.pages.cs.uni-duesseldorf.de/eipy-skript/ — Python als zweite
+  https://eipy-skript-7dd28c.pages.cs.uni-duesseldorf.de/ — Python als zweite
   Programmiersprache, für Studierende, die bereits eine kennen
 - **Einführung in Deep Learning**, auf Deutsch, unter
-  https://voelkel.pages.cs.uni-duesseldorf.de/eidl-skript/ — neuronale Netze,
+  https://eidl-skript-131e30.pages.cs.uni-duesseldorf.de/ — neuronale Netze,
   Backpropagation, Transformer und PyTorch; es schließt an dieses Buch an
 
 Alle drei sind Vorlesungsskripten für ein Informatik-Bachelorstudium, von ihrem Autor
