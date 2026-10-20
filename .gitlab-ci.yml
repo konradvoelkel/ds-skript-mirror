@@ -255,7 +255,12 @@ pages:
     # Datum je Kapitel aus "git log" der Quelldatei. Ohne diese Zeile bricht der Job ab --
     # nachgewiesen am 2026-10-16, Pipeline nach e229a9d: der Ruf an ds-en ging raus (gleiche
     # Stage), pages fiel aus, und die Seite blieb auf dem Stand von 07:55 stehen.
-    - apk add --no-cache git >/dev/null
+    #
+    # brotli dazu: Python kennt das Verfahren nicht (weder Standardbibliothek noch Image),
+    # und tools/precompress.py ruft deshalb das Programm auf. Fehlt es, bricht das Skript
+    # ab statt die .br still weglassen -- eine Seite, die unbemerkt wieder 15 % groesser
+    # ausgeliefert wird, faellt niemandem auf.
+    - apk add --no-cache git brotli >/dev/null
     - mv _build/html public
     - cp exports/ds-skript.pdf public/ || echo "no PDF in this run"
     # --- Absolute URLs nachtragen -------------------------------------------------------
@@ -387,8 +392,13 @@ pages:
     # GitLab Pages komprimiert nichts von sich aus -- am 2026-10-16 am Live-Stand gemessen:
     # kein content-encoding, auch nicht mit "Accept-Encoding: gzip, deflate, br", und im
     # Browser transferSize 6.567 kB gegen decodedBodySize 6.580 kB. Es liefert aber eine
-    # daneben liegende .gz aus, wenn eine da ist (so dokumentiert). Also eine hinlegen:
-    # 5.251 kB -> 1.470 kB je Aufruf der Landingpage, 72 % weniger.
+    # daneben liegende .gz oder .br aus, wenn eine da ist (so dokumentiert). Also beide
+    # hinlegen: 5.251 kB -> 1.470 kB je Aufruf der Landingpage mit gzip, 72 % weniger.
+    #
+    # Seit dem 2026-10-20 auch .br, nachdem der Live-Nachweis fuer gzip da war -- dass diese
+    # Instanz eine daneben liegende Datei ueberhaupt ausliefert, war die Voraussetzung, und
+    # sie ist gemessen: content-encoding: gzip, 153.464 -> 33.670 Bytes auf der Startseite.
+    # Pages bevorzugt .br, wenn beide daneben liegen; die .gz bleibt die Rueckfallebene.
     #
     # **Muss der letzte Schritt sein.** Ab hier existiert jede Textdatei zweimal, und die
     # .gz ist das, was praktisch jeder Leser bekommt. Stuende dieser Schritt vor einer der
