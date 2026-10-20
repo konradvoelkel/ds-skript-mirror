@@ -29,6 +29,39 @@ Dadurch hängt dieses Skript an der Reihenfolge im Job: erst `freshness.py`, dan
 Fehlt eins von beidem, bricht es ab, statt die Angabe still wegzulassen.
 
 
+Was das Buch ausmacht: Zielgruppe, Herausgeber, Kapitel
+-------------------------------------------------------
+
+Drei Angaben, die der SEO-Befund vom 2026-10-16 vorschlug (`todo/seo-landingpage-2026-10-16.md`,
+Punkt 6), zwei davon fest in `structured-data.json`, eine erzeugt:
+
+* `audience`: eine `EducationalAudience` mit `educationalRole: student`. Zusammen mit
+  `educationalLevel: Bachelor`, das schon dastand, sagt das, *fuer wen* das Buch ist.
+* `publisher`: eine Referenz auf `#author`, **nicht** auf die HHU. Der Befund schlug die
+  Universitaet vor; das waere falsch. Das Buch ist selbst veroeffentlicht -- genau das sagt
+  auch `llms.txt` ("von ihrem Autor selbst veroeffentlicht, keine Buecher eines Verlags") --,
+  und ein `publisher: Heinrich-Heine-Universitaet` behauptete eine Herausgeberschaft, die
+  niemand ausuebt: kein Lektorat, keine ISBN, keine Freigabe. Die Zugehoerigkeit des Autors
+  steht bereits als `affiliation` da und ist die Angabe, die stimmt. Dieselbe Linie wie beim
+  nicht behaupteten `Course`/`provider` oben.
+* `hasPart`: die 31 Kapitel als `Chapter`-Knoten mit `position`, `name` und `url`.
+
+`hasPart` wird **aus dem Bau gelesen, nicht gepflegt**: `config.json` im gebauten Ordner
+fuehrt unter `projects[0].pages` die flache Leseliste, Teil-Ueberschriften (ohne `slug`) und
+Kapitel (mit `slug`, `title`) in der Reihenfolge der `toc`. Ein neues Kapitel wandert damit
+von selbst in die strukturierten Daten; eine hier gepflegte Liste waere spaetestens beim
+dritten Umbenennen falsch. Dieselbe Quelle benutzt `llms_txt.py`.
+
+Die `description` der Kapitel kommt **nicht** mit: sie steht auf jeder Kapitelseite schon als
+`meta name="description"`, und die 31 Beschreibungen sind zusammen 5,1 kB -- sie wuerden den
+Block von 12,8 auf rund 18 kB treiben, ohne eine Angabe hinzuzufuegen, die ein Crawler nicht
+an ihrer eigenen URL findet. Die Kapitelliste selbst kostet 10,4 kB (2,4 kB vorher, 12,8
+nachher, am 2026-10-20 am gebauten Artefakt gemessen); komprimiert geht davon ein Bruchteil
+ueber die Leitung.
+`position` kommt mit, weil die Reihenfolge eines Lehrbuchs eine Aussage ist: Kapitel 3 setzt
+Kapitel 2 voraus.
+
+
 Drei Werke, ein Autor
 ---------------------
 
@@ -71,6 +104,37 @@ TEMPLATE = Path(__file__).resolve().parent / "structured-data.json"
 SIBLINGS = Path(__file__).resolve().parent / "sibling-works.json"
 
 
+def chapter_nodes(site: str, html: Path) -> list[dict]:
+    """Die Kapitel als `hasPart`, in der Reihenfolge der toc. Siehe oben, Abschnitt 2.
+
+    Quelle ist `config.json` des *gebauten* Ordners, nicht `myst.yml`: der Bau hat die toc
+    schon aufgeloest (Teile und Kapitel flach, mit Slug und Titel), und dieses Skript
+    arbeitet ohnehin am Artefakt.
+    """
+    cfg = json.loads((html / "config.json").read_text(encoding="utf-8"))["projects"][0]
+    index = cfg.get("index")
+    nodes: list[dict] = []
+    for page in cfg.get("pages", []):
+        slug = page.get("slug")
+        # Ohne Slug ist der Eintrag eine Teil-Ueberschrift ("Einfuehrung") und hat keine
+        # eigene Seite; der Index ist die Landingpage und nicht Teil ihrer selbst.
+        if not slug or slug == index:
+            continue
+        if not (html / slug / "index.html").exists():
+            raise SystemExit(
+                f"✗ config.json nennt das Kapitel {slug}, aber {html / slug} ist nicht gebaut"
+            )
+        nodes.append({
+            "@type": "Chapter",
+            "position": len(nodes) + 1,
+            "name": page.get("title") or slug,
+            "url": f"{site}/{slug}/",
+        })
+    if not nodes:
+        raise SystemExit(f"✗ {html / 'config.json'} nennt kein einziges Kapitel")
+    return nodes
+
+
 def sibling_nodes(site: str, book: dict) -> list[dict]:
     """Die beiden anderen Vorlesungsskripten. Siehe „Drei Werke, ein Autor“."""
     nodes = json.loads(SIBLINGS.read_text(encoding="utf-8").replace("__SITE__", site))
@@ -87,7 +151,7 @@ def sibling_nodes(site: str, book: dict) -> list[dict]:
     return nodes
 
 
-def pruefen(target: Path, page: str, book: dict, site: str) -> int:
+def pruefen(target: Path, page: str, book: dict, site: str, html: Path) -> int:
     """Nachbedingung am gebauten HTML, nicht eine Bilanz dessen, was dieser Lauf schrieb.
 
     Läuft auch dann, wenn der Block schon dastand: ein zweiter Lauf schreibt nichts, soll
@@ -118,6 +182,27 @@ def pruefen(target: Path, page: str, book: dict, site: str) -> int:
     if not str(buch.get("dateModified", "")).startswith("20"):
         print(f"✗ {target}: dateModified im Buchknoten fehlt oder ist unplausibel")
         return 1
+    if buch.get("publisher", {}).get("@id") != book["author"]["@id"]:
+        print(f"✗ {target}: publisher ist {buch.get('publisher')}, erwartet war eine "
+              f"Referenz auf {book['author']['@id']} (selbst veroeffentlicht)")
+        return 1
+    if buch.get("audience", {}).get("@type") != "EducationalAudience":
+        print(f"✗ {target}: audience fehlt oder ist keine EducationalAudience")
+        return 1
+    # Die Kapitelliste wird gegen den Bau geprueft, nicht gegen sich selbst: ein Kapitel,
+    # das die toc nicht mehr fuehrt, muss hier auffallen und nicht stehenbleiben.
+    kapitel = buch.get("hasPart") or []
+    soll = chapter_nodes(site, html)
+    if kapitel != soll:
+        fehlend = [n["url"] for n in soll if n["url"] not in {k.get("url") for k in kapitel}]
+        zuviel = [k.get("url") for k in kapitel if k.get("url") not in {n["url"] for n in soll}]
+        print(f"✗ {target}: hasPart nennt {len(kapitel)} Kapitel, der Bau {len(soll)}"
+              + (f"; es fehlen {fehlend[:3]}" if fehlend else "")
+              + (f"; zu viel sind {zuviel[:3]}" if zuviel else "")
+              + ("; gleiche Menge, andere Reihenfolge oder Benennung"
+                 if not fehlend and not zuviel else ""))
+        return 1
+
     andere = [n for n in graph if n is not buch]
     erwartet = sibling_nodes(site, book)
     if len(andere) != len(erwartet):
@@ -131,6 +216,7 @@ def pruefen(target: Path, page: str, book: dict, site: str) -> int:
             return 1
     print(f"✓ strukturierte Daten auf {target}: {buch['@type'][0]} {buch['url']}, "
           f"Stand {buch['dateModified'][:10]}, Autor {book['author']['@id']}, "
+          f"{len(kapitel)} Kapitel in hasPart, "
           f"dazu {len(andere)} weitere Werke desselben Autors: "
           f"{', '.join(n.get('name', '?') for n in andere)}")
     return 0
@@ -148,7 +234,7 @@ def main() -> int:
 
     if "application/ld+json" in page:
         print(f"✓ {target} trägt bereits strukturierte Daten; nichts geschrieben")
-        return pruefen(target, page, data, site)
+        return pruefen(target, page, data, site, html)
 
     card = re.search(r'<meta property="og:image" content="([^"]+)"', page)
     if not card:
@@ -164,6 +250,9 @@ def main() -> int:
         print(f"✗ {target} hat kein article:modified_time — lief freshness.py vorher?")
         return 1
     data["dateModified"] = stamp.group(1)
+
+    # Die Kapitel aus dem Bau, nicht von Hand: siehe Abschnitt 2 des Docstrings.
+    data["hasPart"] = chapter_nodes(site, html)
 
     # Der Kontext wandert hoch zum Graphen; ein Knoten innerhalb eines `@graph`, der seinen
     # eigenen mitführt, ist zwar erlaubt, aber Rauschen.
@@ -184,8 +273,9 @@ def main() -> int:
     page = page.replace("</head>", block + "</head>", 1)
     target.write_text(page, encoding="utf-8")
     print(f"✓ strukturierte Daten in {target} ({len(payload)} Bytes, "
-          f"Karte {data['image'].split('/')[-1]}, Stand {data['dateModified'][:10]})")
-    return pruefen(target, page, data, site)
+          f"Karte {data['image'].split('/')[-1]}, Stand {data['dateModified'][:10]}, "
+          f"{len(data['hasPart'])} Kapitel)")
+    return pruefen(target, page, data, site, html)
 
 
 if __name__ == "__main__":

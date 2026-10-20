@@ -13,6 +13,10 @@
   "license": "https://creativecommons.org/licenses/by-sa/4.0/",
   "learningResourceType": "Vorlesungsskript",
   "educationalLevel": "Bachelor",
+  "audience": {
+    "@type": "EducationalAudience",
+    "educationalRole": "student"
+  },
   "datePublished": "2023-04-05",
   "copyrightYear": 2026,
   "teaches": [
@@ -71,6 +75,9 @@
       "https://github.com/konradvoelkel",
       "https://gitlab.cs.uni-duesseldorf.de/voelkel"
     ]
+  },
+  "publisher": {
+    "@id": "__SITE__/#author"
   },
   "workTranslation": {
     "@type": "Book",
