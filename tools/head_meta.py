@@ -33,9 +33,14 @@ MyST schreibt og:title, og:description und og:image und hoert dann auf. Fuenf fe
 og:url bekommt dieselbe URL wie der Canonical -- mit Schraegstrich, die Form, die 200
 liefert. Deshalb laeuft dieser Schritt *nach* dem Canonical-Schritt in .gitlab-ci.yml.
 
-**Der Name wird aus der Landingpage gelesen, nie hart geschrieben.** Deren <title> ist
-der Projekttitel allein, ein Umbenennen in myst.yml traegt sich also von selbst durch
-und kann keine veraltete Zeichenkette hinterlassen.
+**Der Name wird aus dem Bau gelesen, nie hart geschrieben**, und zwar aus
+`config.json`: dort steht unter `projects[0].title` der Projekttitel aus myst.yml, ein
+Umbenennen traegt sich also von selbst durch und kann keine veraltete Zeichenkette
+hinterlassen. Bis zum 2026-10-29 stand hier, der `<title>` der Landingpage sei "der
+Projekttitel allein" -- das war falsch. Er ist Seitentitel *plus* Projekttitel als
+Suffix, und og:site_name trug deshalb dreizehn Tage lang auf allen 32 Seiten "Data
+Science: von der Stochastik zum Machine Learning mit Python - Data Science
+Vorlesungsskript". Siehe project_title().
 
 
 2. Das Vorladen der Schriften
@@ -154,6 +159,7 @@ from __future__ import annotations
 
 import argparse
 import html
+import json
 import pathlib
 import re
 import sys
@@ -169,14 +175,51 @@ def page_url(site: str, rel: pathlib.PurePath) -> str:
     return f"{site}/" if str(rel) == "." else f"{site}/{rel}/"
 
 
-def project_title(index_html: str) -> str:
-    m = re.search(r"<title[^>]*>(.*?)</title>", index_html, re.S | re.I)
-    if not m:
-        sys.exit("FEHLER: die Landingpage hat kein <title>; kein Name fuer og:site_name")
-    title = m.group(1).strip()
-    if not title:
-        sys.exit("FEHLER: der <title> der Landingpage ist leer")
-    return title
+def project_title(root: pathlib.Path) -> str:
+    """Der Projekttitel, aus `config.json` des gebauten Ordners.
+
+    Nicht aus dem `<title>` der Landingpage, und das war bis zum 2026-10-29 der Fehler
+    dieses Skripts: dort steht nicht der Projekttitel, sondern der Seitentitel *plus*
+    dem Projekttitel als Suffix. `og:site_name` trug deshalb auf allen 32 Seiten „Data
+    Science: von der Stochastik zum Machine Learning mit Python - Data Science
+    Vorlesungsskript" statt „Data Science Vorlesungsskript".
+
+    Dieselbe Quelle wie `inject_jsonld.py` und `llms_txt.py`: der Bau hat `myst.yml`
+    schon aufgeloest, und dieses Skript arbeitet ohnehin am Artefakt. In der
+    Hydrations-Nutzlast steht derselbe Wert unter `config.projects[0].title`, aber die
+    muesste je Seite geparst werden, waehrend `config.json` eine Datei ist.
+    """
+    cfg = root / "config.json"
+    if not cfg.exists():
+        sys.exit(f"FEHLER: {cfg} fehlt; kein Name fuer og:site_name")
+    try:
+        projects = json.loads(cfg.read_text(encoding="utf-8"))["projects"]
+        title = projects[0]["title"]
+    except (ValueError, KeyError, IndexError, TypeError) as e:
+        sys.exit(f"FEHLER: {cfg} hat kein projects[0].title ({e})")
+    if not isinstance(title, str) or not title.strip():
+        sys.exit(f"FEHLER: projects[0].title in {cfg} ist leer")
+    return title.strip()
+
+
+SITE_NAME_TAG = re.compile(r'<meta\b[^>]*\bproperty="og:site_name"[^>]*>', re.I)
+
+
+def fix_site_name(doc: str, name: str) -> tuple[str, bool]:
+    """Ein vorhandenes `og:site_name` auf den richtigen Namen ziehen.
+
+    Der Riegel in `head_tags` fragt nur, *ob* die Seite das Tag hat, nicht mit welchem
+    Inhalt -- ein Artefakt, das die vorige Fassung dieses Skripts schon bearbeitet hat,
+    behielte sonst den falschen Namen, und zwar unbemerkt. Genau diese Klasse Fehler hat
+    das Tag vom 2026-10-16 bis zum 2026-10-29 falsch stehen lassen.
+    """
+    hit = SITE_NAME_TAG.search(doc)
+    if not hit:
+        return doc, False
+    richtig = f'<meta property="og:site_name" content="{html.escape(name, quote=True)}"/>'
+    if hit.group(0) == richtig:
+        return doc, False
+    return doc[: hit.start()] + richtig + doc[hit.end() :], True
 
 
 def head_tags(
@@ -411,10 +454,10 @@ def main() -> None:
     if not index.exists():
         sys.exit(f"FEHLER: {index} existiert nicht; nach dem HTML-Bau laufen lassen")
 
-    name = project_title(index.read_text(encoding="utf-8"))
+    name = project_title(root)
 
     pages = sorted(root.rglob("index.html"))
-    n_lazy = n_preload = n_head = n_lang = n_guard = n_datum = 0
+    n_lazy = n_preload = n_head = n_lang = n_guard = n_datum = n_name = 0
 
     for f in pages:
         rel = f.parent.relative_to(root)
@@ -433,6 +476,9 @@ def main() -> None:
                 sys.exit(f"FEHLER: {f} hat kein </head>")
             doc = doc.replace("</head>", "".join(fehlend) + "</head>", 1)
             n_head += 1
+
+        doc, korrigiert = fix_site_name(doc, name)
+        n_name += korrigiert
 
         doc, had_lang = set_html_lang(doc, args.lang)
         if not had_lang:
@@ -467,6 +513,16 @@ def main() -> None:
         ):
             if f'{kind}="{prop}"' not in doc:
                 sys.exit(f"FEHLER: {f} hat weiterhin kein {prop}")
+        # Und bei og:site_name den Inhalt, nicht nur das Tag: dass es dasteht, war von
+        # Anfang an wahr -- falsch war, was drinstand.
+        m_name = SITE_NAME_TAG.search(doc)
+        steht = re.search(r'\bcontent="([^"]*)"', m_name.group(0)) if m_name else None
+        if not steht or html.unescape(steht.group(1)) != name:
+            sys.exit(
+                f"FEHLER: {f} fuehrt als og:site_name "
+                f"{html.unescape(steht.group(1)) if steht else '(nichts)'!r}, "
+                f"erwartet {name!r} aus config.json"
+            )
         m_html = re.search(r"<html\b[^>]*>", doc, re.I)
         if not m_html or not re.search(
             rf'\blang="{re.escape(args.lang)}"', m_html.group(0), re.I
@@ -506,7 +562,8 @@ def main() -> None:
         f"head_meta: {len(pages)} Seiten, die fuenf Karten-Tags auf allen "
         f"({n_head} ergaenzt), lang=\"{args.lang}\" auf allen ({n_lang} gesetzt, "
         f"{n_guard} Waechter), {n_datum} Datum eingedeutscht, "
-        f"{n_lazy} Abbildungen lazy, {n_preload} Bild-Preloads entfernt"
+        f"{n_lazy} Abbildungen lazy, {n_preload} Bild-Preloads entfernt; "
+        f"og:site_name {name!r} ({n_name} korrigiert)"
     )
 
 
