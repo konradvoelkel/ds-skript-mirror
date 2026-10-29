@@ -369,6 +369,22 @@ pages:
     # also steht die Hoehe als <style id="gliederungsplatz"> im Kopf und der Selektor
     # greift die eigenen Klassen des Themes. Vor hydration.py, dessen Waechter ihn haelt.
     - python3 tools/outline_reserve.py public
+    # Kapitellinks auf die URL bringen, die 200 liefert. MyST verlinkt "/ds-skript/kmeans",
+    # GitLab Pages antwortet darauf mit 302 auf "/ds-skript/kmeans/" -- am 2026-10-29
+    # gemessen rund 40 ms je Link, auf derselben Verbindung. Canonical und Sitemap nennen
+    # die Form mit Schraegstrich seit d929f14; die Links taten es nicht.
+    #
+    # Zwei Stellen, und diesmal traegt wirklich nur die zweite ueber die Hydration: ein
+    # href im Markup wird vom Neurendern aus der Nutzlast ueberschrieben, mit Proxy und
+    # Marken je Feld nachgewiesen. Geschrieben wird beides, weil das ausgelieferte
+    # Dokument ist, was ein Crawler ohne JavaScript liest -- derselbe Grund wie beim
+    # loading="lazy" in head_meta.py.
+    #
+    # Die Seitenleiste bleibt ohne Schraegstrich, und das ist eine Entscheidung: ihr href
+    # kommt aus dem Slug, und ein Schraegstrich dort kostet gemessen die Vorschaukarten
+    # aller Links im Artikel und die aufgeklappte Gruppe der aktuellen Seite. Von 502
+    # hrefs tragen danach alle den Schraegstrich, nach der Hydration noch 285.
+    - python3 tools/trailing_slash.py public --base "$BASE_URL"
     # Loest jeden url() der eingebundenen Stylesheets auf -- gegen die Datei, die im <link>
     # steht, nicht gegen eine, von der man annimmt, sie werde geladen. Genau diesen Schritt
     # hatte meine erste Pruefung uebersprungen; sie meldete "DA" an der fingerprinted Kopie,
@@ -425,6 +441,12 @@ pages:
     # Hoehe, die im Kopf steht. Die gerenderte Hoehe ist zur Bauzeit nicht behauptbar --
     # ein umgebrochener Eintrag ist 24 px hoeher, und das weiss nur eine Schriftmetrik.
     - python3 tools/outline_reserve.py --check public
+    # Und dasselbe fuer die Kapitellinks, hier unten aus demselben Grund: dazwischen
+    # liegen alle Schritte, die noch am Markup und an der Nutzlast drehen. Geprueft wird
+    # das Ergebnis und nicht die Zahl der Aenderungen -- ein zweiter Lauf aendert null und
+    # muss gruen sein --, und zwar in allen drei Fassungen derselben Angabe: Markup,
+    # Hydrations-Nutzlast und Seiten-JSON.
+    - python3 tools/trailing_slash.py --check public --base "$BASE_URL"
     # Kontrolle: bricht den Job ab, falls doch eine localhost-URL ueberlebt hat.
     # Als Block-Skalar, nicht als einzeilige Sequenz: eine unquotierte Zeile mit ": " darin
     # liest GitLab als Mapping statt als Kommando und lehnt die ganze Datei ab ("script config
