@@ -29,7 +29,10 @@ Indexieren, sieht die Fassung ohne Canonical und ohne Sprachpaar. Begründung, T
 und die Messungen: `todo/seo-landingpage-2026-10-16.md` §16.
 
 Zwei Dinge tut dieses Skript: es bringt die Nutzlast in Ordnung, und es hängt einen
-kleinen Wächter in den Kopf, der die Tags zurückholt, die React ausgeräumt hat.
+kleinen Wächter in den Kopf, der die Tags zurückholt, die React ausgeräumt hat. **Welcher
+Weg für welches Tag gilt, ist nicht Geschmack**: wo das Theme ein Feld der Nutzlast
+rendert, wird das Feld gesetzt (dann rendert React es von selbst richtig und es gibt gar
+keine Abweichung); wo es keines gibt, bleibt nur der Wächter.
 
 
 1. `page.domain`
@@ -60,10 +63,32 @@ ausgeliefert daneben, und der Wächter unten wäre grün, weil er nur HTML ansie
 die Art Lücke, aus der die localhost-Sitemap entstanden ist.
 
 
-2. Der Kopf-Wächter
+2. Die Vorschaukarte absolut, in der Nutzlast
+---------------------------------------------
+
+Die zwei `sed`-Zeilen im `pages`-Job machen `og:image` im Markup absolut, weil OpenGraph
+keine relative URL akzeptiert. Nach der Hydration steht die Karte wieder relativ da, denn
+das Theme baut `og:image` aus `page.frontmatter.thumbnailOptimized || thumbnail`
+(Kapitel) bzw. `project.thumbnailOptimized || thumbnail` (Landingpage) **neu aus der
+Nutzlast**.
+
+Das ist der eine Fall, in dem es ein Feld gibt — also hier und nicht im Wächter unten:
+schreibt die Nutzlast dieselbe absolute URL, rendert React sie von selbst richtig, und
+die Abweichung zwischen ausgeliefertem und hydriertem Kopf verschwindet, statt
+überschrieben zu werden. Dieselbe Stelle, die ds-ens `head_meta.py` aus demselben Grund
+anfasst (`set_payload_card`).
+
+**Nur diese vier Felder.** Die Nutzlast trägt zusätzlich `project.pages[]` und
+`config.projects[0].pages[]`, einen Eintrag je Seite des Buchs mit eigenem `thumbnail`,
+und das sind keine Kartenangaben: das Theme rendert sie als die kleine Vorschau, die beim
+Überfahren eines internen Links aufgeht. Die mit umzuschreiben machte jede Vorschau im
+Buch zur gleichen Karte.
+
+
+3. Der Kopf-Wächter
 -------------------
 
-Für die Tags selbst gibt es **keinen Platz in der Nutzlast**, und das ist gemessen, nicht
+Für die übrigen Tags gibt es **keinen Platz in der Nutzlast**, und das ist gemessen, nicht
 vermutet: im Bundle nachgelesen ist `links()` in beiden Route-Modulen eine *Konstante*
 (die vier Stylesheets des Themes, `()=>[Cp]` bzw. `()=>[{rel:"stylesheet",…}]`), und der
 Meta-Erzeuger nimmt nur `origin`, `url`, `title`, `description`, `image`, `twitter` und
@@ -135,10 +160,20 @@ GUARD_RE = re.compile(r"<script>" + re.escape(MARKER) + r".*?</script>", re.S)
 # (Muster im Kopf, Attribute, die die Identität des Tags ausmachen).
 #
 # Die Werte stehen *nicht* hier, sondern werden aus dem gebauten Kopf gelesen -- siehe
-# Abschnitt 2 des Docstrings.
+# Abschnitt 3 des Docstrings. og:image fehlt mit Absicht: dafuer gibt es ein Feld in der
+# Nutzlast, siehe absolute_card().
 GESCHUETZT = (
     (re.compile(r'<link\b[^>]*\brel="canonical"[^>]*>', re.I), ("rel",)),
     (re.compile(r'<link\b[^>]*\bhreflang="[^"]*"[^>]*>', re.I), ("rel", "hreflang")),
+    (
+        re.compile(
+            r'<meta\b[^>]*\bproperty="(?:og:url|og:site_name|og:type|og:locale'
+            r'|og:locale:alternate)"[^>]*>',
+            re.I,
+        ),
+        ("property",),
+    ),
+    (re.compile(r'<meta\b[^>]*\bname="twitter:card"[^>]*>', re.I), ("name",)),
 )
 
 ATTR_RE = re.compile(r'([a-zA-Z:_-]+)\s*=\s*"([^"]*)"')
@@ -277,6 +312,32 @@ def set_domain(doc: str, origin: str) -> tuple[str, bool]:
     return edit_payload(doc, mutate)
 
 
+def absolute_card(doc: str, site: str, base: str) -> tuple[str, bool]:
+    """Die Vorschaukarte in der Nutzlast absolut machen. Abschnitt 2 des Docstrings.
+
+    Umgeschrieben wird nur, was wurzelrelativ unter dem Basispfad auf `/build/` zeigt --
+    damit ein zweiter Lauf Leerlauf bleibt und eine fremde URL unberührt.
+    """
+    prefix = f"{base}/build/"
+
+    def mutate(payload: dict) -> bool:
+        changed = False
+        for route in routes(payload):
+            page = route.get("page")
+            front = page.get("frontmatter") if isinstance(page, dict) else None
+            for node in (front, route.get("project")):
+                if not isinstance(node, dict):
+                    continue
+                for key in ("thumbnail", "thumbnailOptimized"):
+                    url = node.get(key)
+                    if isinstance(url, str) and url.startswith(prefix):
+                        node[key] = site + url[len(base) :]
+                        changed = True
+        return changed
+
+    return edit_payload(doc, mutate)
+
+
 def whole(doc: str, f: pathlib.Path) -> None:
     """Die Nachbedingung, die der ds-en-Unfall gekostet hat: ist das Dokument ganz?
 
@@ -354,6 +415,17 @@ def check(root: pathlib.Path, base: str) -> int:
                     f" Origin mit Schema und ohne Pfad"
                 )
             n += 1
+            front = page.get("frontmatter")
+            for node in (front, route.get("project")):
+                if not isinstance(node, dict):
+                    continue
+                for key in ("thumbnail", "thumbnailOptimized"):
+                    url = node.get(key)
+                    if isinstance(url, str) and url.startswith(f"{base}/build/"):
+                        sys.exit(
+                            f"FEHLER: {f}: {key} in der Nutzlast ist weiterhin relativ"
+                            f" ({url}) -- og:image waere nach der Hydration wieder relativ"
+                        )
     print(
         f"✓ {len(pages)} Seiten: Nutzlast lesbar, {n} mal page.domain als Origin; "
         f"kein localhost:3000 mehr, weder im HTML noch in {len(rest)} Seiten-JSON"
@@ -387,13 +459,15 @@ def main() -> int:
     if not pages:
         sys.exit(f"FEHLER: keine Seite unter {root}")
 
-    n_dom = n_tags = 0
+    n_dom = n_card = n_tags = 0
     for f in pages:
         doc = f.read_text(encoding="utf-8")
         rel = f.parent.relative_to(root)
 
         doc, geaendert = set_domain(doc, origin)
         n_dom += geaendert
+        doc, karte = absolute_card(doc, site, base)
+        n_card += karte
 
         tags = collect_tags(head_slice(doc, f))
         script = guard_script(page_path(base, rel), tags)
@@ -410,7 +484,8 @@ def main() -> int:
 
     print(
         f"hydration: {len(pages)} Seiten, page.domain auf {origin} "
-        f"({n_dom} Nutzlasten, {n_json} Seiten-JSON), {n_tags} Tags in den Wächtern"
+        f"({n_dom} Nutzlasten, {n_json} Seiten-JSON), Karte absolut ({n_card}), "
+        f"{n_tags} Tags in den Wächtern"
     )
     return check(root, base)
 
