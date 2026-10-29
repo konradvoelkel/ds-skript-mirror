@@ -217,7 +217,13 @@ ATTR_RE = re.compile(r'([a-zA-Z:_-]+)\s*=\s*"([^"]*)"')
 # Stylesheet aus image_dims.py und trägt auf der größten Seite rund 40 Regeln. Es noch
 # einmal in die Wächter-Nutzlast zu schreiben würde jede Seite ein zweites Mal damit
 # belasten, und es gibt nichts zu vergleichen -- es fehlt oder es ist da.
-BEWAHRT = ("bildmasse",)
+#
+# `gliederungsplatz` ist aus demselben Grund hier und aus demselben Grund CSS:
+# outline_reserve.py hält den Platz frei, den das Theme für die Artikel-Gliederung erst
+# nach dem Mount braucht. Auch das ein Knoten im Kopf, den React ausräumt und der
+# zurückgehängt werden kann, während ein Attribut am Kasten in `<main>` das Neurendern
+# nicht überlebt.
+BEWAHRT = ("bildmasse", "gliederungsplatz")
 
 ID_RE = {i: re.compile(r'<[a-z]+\b[^>]*\bid="' + i + r'"', re.I) for i in BEWAHRT}
 

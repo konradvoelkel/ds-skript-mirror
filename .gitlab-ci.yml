@@ -355,6 +355,20 @@ pages:
     # (536x585, 722x796, ...). Der Sprung, den die Hydration selbst macht (CLS 0,2556 in
     # vier von sechs Laeufen, in beiden Fassungen), bleibt davon unberuehrt.
     - python3 tools/image_dims.py public --base "$BASE_URL"
+    # Und derselbe Griff fuer den Kasten der Artikel-Gliederung, der *den* Sprung macht,
+    # den die Zeile darueber als "bleibt davon unberuehrt" fuehrte. Das Theme liefert ihn
+    # mit leerem <nav> aus und fuellt ihn nach dem Mount; unterhalb von lg steht er im
+    # Fluss, also faellt alles darunter in dem Moment nach unten. Am 2026-10-29 bei
+    # 375x812 am Live-Stand gemessen: der erste Absatz rutscht um 296 px auf der
+    # Startseite, 392 px auf /kmeans/, 696 px auf /expectation-maximization/. Mit der
+    # Reservierung in allen drei Faellen 0. Dieselbe Ursache, die ds-en am 2026-10-18 mit
+    # 88c5664 behoben hat; dort danach CLS 0 statt 0,153 und 0,278.
+    #
+    # Auch hier zwei Stellen und aus demselben Grund nur eine davon im Koerper: ds-en
+    # setzt eine Custom Property an den Kasten, das ueberlebt hier das Neurendern nicht,
+    # also steht die Hoehe als <style id="gliederungsplatz"> im Kopf und der Selektor
+    # greift die eigenen Klassen des Themes. Vor hydration.py, dessen Waechter ihn haelt.
+    - python3 tools/outline_reserve.py public
     # Loest jeden url() der eingebundenen Stylesheets auf -- gegen die Datei, die im <link>
     # steht, nicht gegen eine, von der man annimmt, sie werde geladen. Genau diesen Schritt
     # hatte meine erste Pruefung uebersprungen; sie meldete "DA" an der fingerprinted Kopie,
@@ -406,6 +420,11 @@ pages:
     # den Massen *ihrer* Datei, und dazu das Stylesheet, das genau zu ihnen passt und im
     # Kopf vor dem Waechter steht. Falsche Masse halten Platz frei, nur den falschen.
     - python3 tools/image_dims.py public --base "$BASE_URL" --check
+    # Und dasselbe fuer die Gliederung, aus demselben Grund hier unten. Geprueft wird die
+    # Eingabe der Rechnung: die Ueberschriften, die am Ende in <main> stehen, gegen die
+    # Hoehe, die im Kopf steht. Die gerenderte Hoehe ist zur Bauzeit nicht behauptbar --
+    # ein umgebrochener Eintrag ist 24 px hoeher, und das weiss nur eine Schriftmetrik.
+    - python3 tools/outline_reserve.py --check public
     # Kontrolle: bricht den Job ab, falls doch eine localhost-URL ueberlebt hat.
     # Als Block-Skalar, nicht als einzeilige Sequenz: eine unquotierte Zeile mit ": " darin
     # liest GitLab als Mapping statt als Kommando und lehnt die ganze Datei ab ("script config
