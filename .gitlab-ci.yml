@@ -263,6 +263,18 @@ pages:
     - apk add --no-cache git brotli >/dev/null
     - mv _build/html public
     - cp exports/ds-skript.pdf public/ || echo "no PDF in this run"
+    # Die Bestaetigungsdatei der Google Search Console. Sie muss **unter dem Pfad der Property**
+    # liegen, also unter /ds-skript/ -- eine Property auf dem Host-Wurzelverzeichnis waere nicht
+    # zu bestaetigen, weil GitLab dort auf seinen Login weiterleitet (dieselbe Lage, die schon
+    # die robots.txt unwirksam macht, siehe todo/geo-bewertung.md Abschnitt 1).
+    #
+    # Nicht die Meta-Tag-Variante: dieses Theme rendert den <head> bei der Hydration neu und
+    # wirft nachgetragene Tags weg (TODO Zeile 1d). Google liest beim Bestaetigen das
+    # Rohdokument, es haette also wahrscheinlich funktioniert -- aber eine Datei stellt die
+    # Frage gar nicht erst. Kein Fehlerzweig: fehlt sie, soll der Job abbrechen, denn eine
+    # stillschweigend nicht mehr ausgelieferte Datei nimmt der Console die Bestaetigung
+    # wieder weg.
+    - cp _site/google0dd174ae44033090.html public/
     # --- Absolute URLs nachtragen -------------------------------------------------------
     # MyST holt robots.txt und sitemap.xml beim statischen Bau vom eigenen Dev-Server und
     # schreibt dessen Origin hinein: ohne diesen Schritt enthaelt die deployte sitemap.xml
