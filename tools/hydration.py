@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""Was in der Hydrations-Nutzlast des Themes steht, richtigstellen.
+"""Was die Hydration des Themes anfasst: die Nutzlast, und der Kopf danach.
 
     python3 tools/hydration.py <site-url> <html-verzeichnis> [--base BASE_URL]
     python3 tools/hydration.py --check <html-verzeichnis> [--base BASE_URL]
 
-Im `pages`-Job nach dem Bau laufen zu lassen, vor `precompress.py` wie jeder Schritt,
-der HTML ändert.
+Im `pages`-Job als **letzter** Kopf-Schritt laufen zu lassen, nach `hreflang.py`,
+`freshness.py`, `inject_jsonld.py` und `llms_txt.py`: das Skript liest die Tags, die
+diese geschrieben haben, aus dem Kopf zurück und baut daraus seinen Wächter. Vor
+`precompress.py`, wie jeder Schritt, der HTML ändert.
 
 Warum es dieses Skript gibt
 ---------------------------
@@ -26,12 +28,12 @@ sieht das, was wir geschrieben haben. Alles, was rendert, und Google rendert vor
 Indexieren, sieht die Fassung ohne Canonical und ohne Sprachpaar. Begründung, Tabellen
 und die Messungen: `todo/seo-landingpage-2026-10-16.md` §16.
 
-Dieses Skript ist der erste Schritt dieser Reparatur, und er ist klein: **die Nutzlast
-in Ordnung bringen, bevor irgendetwas aus ihr gebaut wird.**
+Zwei Dinge tut dieses Skript: es bringt die Nutzlast in Ordnung, und es hängt einen
+kleinen Wächter in den Kopf, der die Tags zurückholt, die React ausgeräumt hat.
 
 
-`page.domain`
--------------
+1. `page.domain`
+----------------
 
 In der Nutzlast steht `page.domain`, und MyST füllt es beim statischen Bau mit der
 Origin seines eigenen Dev-Servers: `http://localhost:3000`, genau ein Vorkommen je
@@ -58,6 +60,37 @@ ausgeliefert daneben, und der Wächter unten wäre grün, weil er nur HTML ansie
 die Art Lücke, aus der die localhost-Sitemap entstanden ist.
 
 
+2. Der Kopf-Wächter
+-------------------
+
+Für die Tags selbst gibt es **keinen Platz in der Nutzlast**, und das ist gemessen, nicht
+vermutet: im Bundle nachgelesen ist `links()` in beiden Route-Modulen eine *Konstante*
+(die vier Stylesheets des Themes, `()=>[Cp]` bzw. `()=>[{rel:"stylesheet",…}]`), und der
+Meta-Erzeuger nimmt nur `origin`, `url`, `title`, `description`, `image`, `twitter` und
+`keywords` — kein Canonical, kein hreflang, kein `og:site_name`, `og:type`, `og:locale`.
+`og:url` käme heraus, aber beide Route-Module übergeben `origin:""` hart im Bundle, und
+`""` ist falsch, also pusht das Theme das Tag nie. Es gibt also schlicht kein Feld, das
+man setzen könnte; der Vergleich mit ds-ens Titel-Suffix (das aus `project.title` kommt,
+einem echten Feld) trägt hier nicht.
+
+Bleiben zwei Wege, und der Unterschied ist der Preis: ein Patch am minifizierten,
+fingerprinted Bundle — der bricht beim nächsten Theme-Update still, derselbe Grund, aus
+dem Punkt 10 der SEO-Notiz zurückgenommen wurde — oder ein kleiner Wächter, derselbe
+Griff, mit dem `lang="de"` seit dem 2026-10-16 hält. Der Wächter gewinnt: er kennt das
+Theme nicht, er kennt nur die Tags.
+
+Er trägt die Tags **seiner eigenen Seite** als Daten bei sich, ausgelesen aus dem Kopf,
+den die Schritte davor geschrieben haben. Eine Liste von Sollwerten hier im Skript wäre
+eine zweite Quelle der Wahrheit neben `hreflang.py`, `freshness.py`, `llms_txt.py` und
+den `sed`-Zeilen des Jobs und liefe irgendwann auseinander; so ist jedes Tag, das ein
+Schritt in den Kopf schreibt, von selbst mitgeschützt, sobald sein Muster in
+`GESCHUETZT` steht.
+
+`MutationObserver` auf `childList` des `<head>`, nicht eine einmalige Zuweisung: React
+räumt die Kopf-Kinder erst beim Hydrieren aus, und das passiert nach dem Parsen. Mit
+Wiedereintritts-Riegel, weil das Anhängen im Callback den Observer erneut auslöst.
+
+
 Die Falle, und warum hier nach jedem Schreiben geprüft wird
 -----------------------------------------------------------
 
@@ -80,8 +113,9 @@ der Browser danach daraus macht.
 Zweimal laufen
 --------------
 
-Idempotent: gesetzt wird nur, was noch nicht gesetzt ist, und ein zweiter Lauf schreibt
-keine Datei neu. Er prüft trotzdem alles.
+Idempotent. In der Nutzlast wird nur gesetzt, was noch nicht gesetzt ist. Der Wächter
+wird an seinem Erkennungszeichen erkannt und **ersetzt**, nicht ein zweites Mal
+angehängt: er trägt Daten, und die können sich geändert haben.
 """
 
 from __future__ import annotations
@@ -89,7 +123,100 @@ from __future__ import annotations
 import argparse
 import json
 import pathlib
+import re
 import sys
+
+# Erkennungszeichen des Kopf-Wächters. Ein zweiter Lauf ersetzt ihn daran.
+MARKER = "/*kopf-waechter*/"
+
+GUARD_RE = re.compile(r"<script>" + re.escape(MARKER) + r".*?</script>", re.S)
+
+# Die Tags, die die Hydration wegwirft und die der Wächter zurückholt, je als
+# (Muster im Kopf, Attribute, die die Identität des Tags ausmachen).
+#
+# Die Werte stehen *nicht* hier, sondern werden aus dem gebauten Kopf gelesen -- siehe
+# Abschnitt 2 des Docstrings.
+GESCHUETZT = (
+    (re.compile(r'<link\b[^>]*\brel="canonical"[^>]*>', re.I), ("rel",)),
+    (re.compile(r'<link\b[^>]*\bhreflang="[^"]*"[^>]*>', re.I), ("rel", "hreflang")),
+)
+
+ATTR_RE = re.compile(r'([a-zA-Z:_-]+)\s*=\s*"([^"]*)"')
+
+
+def head_slice(doc: str, f: pathlib.Path) -> str:
+    """Nur der Kopf. Der Rest des Dokuments trägt die Nutzlast -- die ganze Seite noch
+    einmal als JSON --, und ein Muster darauf fände Zeichenketten, die Daten sind."""
+    i = doc.find("</head>")
+    if i < 0:
+        sys.exit(f"FEHLER: {f} hat kein </head>")
+    return doc[:i]
+
+
+def collect_tags(head: str) -> list[dict]:
+    """Die geschützten Tags aus dem Kopf lesen, als Daten für den Wächter.
+
+    Je Tag: der Elementname, alle Attribute, und der Selektor, an dem der Wächter es im
+    hydrierten Kopf wiedererkennt. Der Selektor nennt nur die Identitätsattribute
+    (`rel`, `hreflang`, `property`, `name`), nicht `href` oder `content`: sonst würde ein
+    Tag mit falschem Wert nicht korrigiert, sondern ein zweites daneben gestellt.
+    """
+    tags: list[dict] = []
+    gesehen: set[str] = set()
+    for muster, ident in GESCHUETZT:
+        for m in muster.finditer(head):
+            tag = m.group(0)
+            name = "link" if tag.lower().startswith("<link") else "meta"
+            attrs = dict(ATTR_RE.findall(tag))
+            fehlend = [k for k in ident if k not in attrs]
+            if fehlend:
+                sys.exit(f"FEHLER: {tag} fehlt {fehlend} -- kein Selektor zu bauen")
+            sel = name + "".join(f'[{k}="{attrs[k]}"]' for k in ident)
+            if sel in gesehen:
+                sys.exit(
+                    f"FEHLER: zwei Tags mit demselben Selektor {sel} -- der Wächter"
+                    " könnte sie nicht auseinanderhalten"
+                )
+            gesehen.add(sel)
+            tags.append({"n": name, "s": sel, "a": attrs})
+    return tags
+
+
+def js_literal(obj) -> str:
+    """JSON als JavaScript-Literal innerhalb eines `<script>`.
+
+    Ein nacktes `<` könnte das Tag früh schließen, und U+2028/U+2029 sind in JSON
+    gewöhnliche Zeichen, in JavaScript aber Zeilenenden. Als `\\u`-Folgen liest JSON
+    dieselben Zeichen zurück.
+    """
+    out = json.dumps(obj, separators=(",", ":"), ensure_ascii=False)
+    return (
+        out.replace("<", "\\u003c").replace("\u2028", "\\u2028").replace("\u2029", "\\u2029")
+    )
+
+
+def guard_script(path: str, tags: list[dict]) -> str:
+    """Der Wächter: hängt an, was fehlt, und korrigiert, was falsch steht.
+
+    `location.pathname` wird gegen den Pfad geprüft, für den dieser Satz gebaut wurde.
+    Beim statischen Bau ist jeder Klick im Buch ein echter Seitenaufruf -- das Theme setzt
+    im `staticBuild`-Modus `reload` an seine Links, am 2026-10-29 nachgemessen: ein Marker
+    auf `window` überlebt keinen Kapitelwechsel --, der Fall tritt also nicht ein. Täte er
+    es doch, trägt die Seite *keine* Tags statt der falschen, und das ist die richtige
+    Richtung: ein Canonical, der auf die vorige Seite zeigt, ist schlimmer als keiner.
+    """
+    daten = js_literal({"p": path, "t": tags})
+    js = (
+        "(function(){var D=" + daten + ",b=false;"
+        'function p(){var x=location.pathname;return x.charAt(x.length-1)==="/"?x:x+"/"}'
+        "function f(){if(b||p()!==D.p)return;b=true;try{"
+        "for(var i=0;i<D.t.length;i++){var t=D.t[i],e=document.head.querySelector(t.s);"
+        "if(!e){e=document.createElement(t.n);document.head.appendChild(e)}"
+        "for(var k in t.a){if(e.getAttribute(k)!==t.a[k])e.setAttribute(k,t.a[k])}}"
+        "}finally{b=false}}f();"
+        "new MutationObserver(f).observe(document.head,{childList:true});})();"
+    )
+    return f"<script>{MARKER}{js}</script>"
 
 
 def read_payload(doc: str):
@@ -132,15 +259,7 @@ def edit_payload(doc: str, mutate) -> tuple[str, bool]:
     payload, start, end = found
     if not mutate(payload):
         return doc, False
-    # Kompakt neu serialisiert. Die drei Ersetzungen halten das JSON als
-    # JavaScript-Literal *innerhalb eines <script>* gültig: ein nacktes "<" könnte das
-    # Tag früh schließen, und U+2028/U+2029 sind in JSON gewöhnliche Zeichen, in
-    # JavaScript aber Zeilenenden. Als \u-Folgen liest JSON dieselben Zeichen zurück.
-    out = json.dumps(payload, separators=(",", ":"), ensure_ascii=False)
-    out = out.replace("<", "\\u003c").replace("\u2028", "\\u2028").replace(
-        "\u2029", "\\u2029"
-    )
-    return doc[:start] + out + doc[end:], True
+    return doc[:start] + js_literal(payload) + doc[end:], True
 
 
 def set_domain(doc: str, origin: str) -> tuple[str, bool]:
@@ -185,7 +304,12 @@ def set_json_domain(f: pathlib.Path, origin: str) -> bool:
     return True
 
 
-def check(root: pathlib.Path) -> int:
+def page_path(base: str, rel: pathlib.PurePath) -> str:
+    """Der Pfad, unter dem die Seite ausgeliefert wird -- mit Schrägstrich am Ende."""
+    return f"{base}/" if str(rel) == "." else f"{base}/{rel}/"
+
+
+def check(root: pathlib.Path, base: str) -> int:
     """Noch einmal über alles, nach dem Lauf."""
     pages = sorted(root.rglob("index.html"))
     if not pages:
@@ -199,12 +323,23 @@ def check(root: pathlib.Path) -> int:
     for f in rest:
         if "localhost:3000" in f.read_text(encoding="utf-8", errors="replace"):
             sys.exit(f"FEHLER: {f} nennt weiterhin localhost:3000")
-    n = 0
+    n = n_tags = 0
     for f in pages:
         doc = f.read_text(encoding="utf-8")
         whole(doc, f)
         if "localhost:3000" in doc:
             sys.exit(f"FEHLER: {f} nennt weiterhin localhost:3000")
+        # Der Wächter wird gegen den Kopf gerechnet, in dem er steht. Passt er nicht,
+        # hat nach ihm noch ein Schritt Tags geschrieben -- und die hielte er dann nicht.
+        tags = collect_tags(head_slice(doc, f))
+        if guard_script(page_path(base, f.parent.relative_to(root)), tags) not in doc:
+            sys.exit(
+                f"FEHLER: {f} trägt keinen Wächter, der zu ihrem Kopf passt -- hat ein"
+                " Schritt nach hydration.py noch Tags geschrieben?"
+            )
+        if not any(t["s"] == 'link[rel="canonical"]' for t in tags):
+            sys.exit(f"FEHLER: {f} hat keinen Canonical, den der Wächter halten könnte")
+        n_tags += len(tags)
         found = read_payload(doc)
         if not found:
             sys.exit(f"FEHLER: {f} hat keine Hydrations-Nutzlast")
@@ -223,6 +358,7 @@ def check(root: pathlib.Path) -> int:
         f"✓ {len(pages)} Seiten: Nutzlast lesbar, {n} mal page.domain als Origin; "
         f"kein localhost:3000 mehr, weder im HTML noch in {len(rest)} Seiten-JSON"
     )
+    print(f"✓ {n_tags} Tags in {len(pages)} Kopf-Wächtern, jeder passend zu seinem Kopf")
     return 0
 
 
@@ -238,7 +374,7 @@ def main() -> int:
     base = args.base.rstrip("/")
 
     if args.check:
-        return check(root)
+        return check(root, base)
 
     if not args.site:
         sys.exit("FEHLER: ohne --check ist die Site-URL nötig")
@@ -251,23 +387,32 @@ def main() -> int:
     if not pages:
         sys.exit(f"FEHLER: keine Seite unter {root}")
 
-    n_dom = 0
+    n_dom = n_tags = 0
     for f in pages:
         doc = f.read_text(encoding="utf-8")
+        rel = f.parent.relative_to(root)
+
         doc, geaendert = set_domain(doc, origin)
-        if not geaendert:
-            continue
+        n_dom += geaendert
+
+        tags = collect_tags(head_slice(doc, f))
+        script = guard_script(page_path(base, rel), tags)
+        if MARKER in doc:
+            doc = GUARD_RE.sub(lambda _: script, doc, count=1)
+        else:
+            doc = doc.replace("</head>", script + "</head>", 1)
+        n_tags += len(tags)
+
         whole(doc, f)
         f.write_text(doc, encoding="utf-8")
-        n_dom += 1
 
     n_json = sum(set_json_domain(f, origin) for f in sorted(root.glob("*.json")))
 
     print(
         f"hydration: {len(pages)} Seiten, page.domain auf {origin} "
-        f"({n_dom} Nutzlasten, {n_json} Seiten-JSON)"
+        f"({n_dom} Nutzlasten, {n_json} Seiten-JSON), {n_tags} Tags in den Wächtern"
     )
-    return check(root)
+    return check(root, base)
 
 
 if __name__ == "__main__":
