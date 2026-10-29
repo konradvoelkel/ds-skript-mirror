@@ -109,6 +109,13 @@ todo/seo-landingpage-2026-10-16.md.
 Was hier absichtlich fehlt
 --------------------------
 
+**Alles, was die Hydration anfasst, steht in tools/hydration.py.** Dieses Skript hier
+schreibt ins Markup; das ist richtig fuer alles, was ein Leser ohne JavaScript und ein
+einfacher Crawler sehen, aber der <head> gehoert zum React-Baum, und was die Hydration
+wegwirft, holt erst der Kopf-Waechter dort zurueck. Die fuenf Karten-Tags von Abschnitt 1
+sind so ein Fall; die zwei Schrift-Preloads von Abschnitt 2 sind keiner, denn ein Preload
+wirkt nur im ausgelieferten Dokument.
+
 ds-ens Fassung kuerzt zusaetzlich den Titel-Suffix und muss dafuer in die
 Hydrations-Nutzlast schreiben, weil das Theme den Titel daraus neu rendert. **Das ist
 hier nicht portiert** (Uebergabe aus ds-en, Abschnitt 7): ds-skripts Suffix ist
@@ -285,9 +292,15 @@ def keep_html_lang(doc: str, lang: str) -> tuple[str, bool]:
     ausgelieferten Seite -- ohne JavaScript "de", mit JavaScript "en". Ausgerechnet der
     Screenreader, fuer den das Attribut da ist, sieht also die falsche Sprache.
 
-    Ein MutationObserver statt einer einmaligen Zuweisung, weil das Zuruecksetzen nicht
-    nur beim ersten Laden passiert: das Theme ist ein Client-Router, und jeder Wechsel
-    zwischen zwei Kapiteln ohne Neuladen setzt das Attribut erneut.
+    Ein MutationObserver statt einer einmaligen Zuweisung, weil das Zuruecksetzen erst
+    beim Hydrieren passiert, also nach dem Parsen des Dokuments -- ein Skript im <head>
+    kaeme sonst zu frueh.
+
+    (Hier stand bis zum 2026-10-29 zusaetzlich, das Theme sei ein Client-Router und setze
+    das Attribut bei jedem Kapitelwechsel erneut. Nachgemessen stimmt das nicht: beim
+    statischen Bau setzt das Theme "reload" an seine Links, ein Klick im Buch ist ein
+    echter Seitenaufruf, und ein Marker auf window ueberlebt ihn nicht. Der Observer ist
+    trotzdem richtig, nur aus dem Grund im Absatz darueber.)
     """
     if MARKER_LANG in doc:
         return doc, True

@@ -115,6 +115,16 @@ Schritt in den Kopf schreibt, von selbst mitgeschützt, sobald sein Muster in
 räumt die Kopf-Kinder erst beim Hydrieren aus, und das passiert nach dem Parsen. Mit
 Wiedereintritts-Riegel, weil das Anhängen im Callback den Observer erneut auslöst.
 
+**Was der Wächter nicht zurückholt: die zwei Schrift-Preloads — und das ist eine
+Entscheidung, keine Lücke.** Ein Preload wirkt im *ausgelieferten* Dokument: es holt die
+Schrift auf Ebene eins, noch bevor das Stylesheet geparst ist, und genau darum geht es
+(siehe Abschnitt 2 von `head_meta.py`). Zum Zeitpunkt der Hydration sind beide `woff2`
+längst angefragt; ein Preload danach wieder einzuhängen bewirkt nichts, außer dass eine
+Messung grün aussieht. Sie stehen im Markup, dort wirken sie, dort bleiben sie — und
+`GESCHUETZT` führt sie deshalb nicht. Dasselbe gilt für das leere `keywords`-Tag aus
+Punkt 10 der SEO-Notiz, nur in der anderen Richtung: das baut das Theme von selbst
+wieder, und es herauszuhalten wäre ein Kampf um ein Tag, das niemand auswertet.
+
 
 Die Falle, und warum hier nach jedem Schreiben geprüft wird
 -----------------------------------------------------------
@@ -168,12 +178,13 @@ GESCHUETZT = (
     (
         re.compile(
             r'<meta\b[^>]*\bproperty="(?:og:url|og:site_name|og:type|og:locale'
-            r'|og:locale:alternate)"[^>]*>',
+            r'|og:locale:alternate|article:modified_time)"[^>]*>',
             re.I,
         ),
         ("property",),
     ),
     (re.compile(r'<meta\b[^>]*\bname="twitter:card"[^>]*>', re.I), ("name",)),
+    (re.compile(r'<link\b[^>]*\btype="text/markdown"[^>]*>', re.I), ("rel", "type")),
 )
 
 ATTR_RE = re.compile(r'([a-zA-Z:_-]+)\s*=\s*"([^"]*)"')
