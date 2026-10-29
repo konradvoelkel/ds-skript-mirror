@@ -315,6 +315,23 @@ def keep_html_lang(doc: str, lang: str) -> tuple[str, bool]:
     return doc.replace("</head>", script + "</head>", 1), False
 
 
+def mit_attributen(tag: str, zusatz: str) -> str:
+    """Attribute ans Ende eines Tags, mit dem schliessenden Schraegstrich dahinter.
+
+    `<img ... />` endet auf "/>", und wer nur das letzte Zeichen abschneidet und wieder
+    anhaengt, schiebt die neuen Attribute *hinter* den Schraegstrich: `... alt="x"/
+    loading="lazy">`. Ein Parser liest den Schraegstrich dann als Attributnamen, verzeiht
+    es zwar, aber ein Validator nicht -- und genau das stand vom 2026-10-16 bis zum
+    2026-10-29 im ausgelieferten HTML, auf jeder der 171 lazy gemachten Abbildungen.
+    Gefunden beim Messen von tools/image_dims.py, das dieselbe Stelle anfasst.
+    """
+    kern = tag[:-1].rstrip()
+    schraeg = ""
+    if kern.endswith("/"):
+        kern, schraeg = kern[:-1].rstrip(), "/"
+    return f"{kern} {zusatz}{schraeg}>"
+
+
 def lazy_load_figures(doc: str) -> tuple[str, set[str]]:
     """Jedes <img> in <main> ausser dem ersten verzoegert laden.
 
@@ -341,7 +358,7 @@ def lazy_load_figures(doc: str) -> tuple[str, set[str]]:
             lazied.add(src.group(1))
         if re.search(r"\bloading=", t, re.I):
             return t
-        return t[:-1].rstrip() + ' loading="lazy" decoding="async"' + t[-1]
+        return mit_attributen(t, 'loading="lazy" decoding="async"')
 
     main_new = re.sub(r"<img\b[^>]*?/?>", img_sub, main, flags=re.I)
     return doc[: m.start()] + main_new + doc[m.end() :], lazied
