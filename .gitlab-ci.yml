@@ -501,27 +501,6 @@ pages:
     # Umschreibungen oben, lieferte die Seite allen Browsern die alte Fassung aus, waehrend
     # curl ohne Accept-Encoding und jeder Blick ins Artefakt die neue zeigen -- derselbe
     # Fehlertyp wie die localhost-Sitemap und die Schriften hinter dem relativen url().
-    # --- PROBE, mit dem naechsten Commit wieder zu entfernen ----------------------------
-    # Am 2026-10-29 hat f7ccf9f ein _redirects mit 32 Rewrites (Status 200) ausgeliefert.
-    # GitLab hat alle 32 Regeln als "valid" gelistet (<pages-url>/_redirects) und trotzdem
-    # weiter mit 302 geantwortet. Die dokumentierte Vorfahrt der Dateien auf der Platte
-    # gilt also offenbar auch fuer ein Verzeichnis. Was damit offen bleibt, sind zwei
-    # Erklaerungen, und die trennt dieser Deploy:
-    #
-    #   Probe 1  Greift ein Rewrite ueberhaupt, wenn der Pfad mit nichts kollidiert?
-    #            /ds-skript/_probe-rewrite liefert den Inhalt von /kmeans/ -- oder 404.
-    #   Probe 2  Gewinnt eine Datei <name>.html gegen ein Verzeichnis <name>/index.html?
-    #            Davon haengt ab, ob es ueberhaupt einen Weg gibt, /ds-skript/kmeans mit
-    #            200 zu beantworten, oder ob der 302 hier eine Konstante ist.
-    #
-    # Nach den Seiten-Schritten und ihren Pruefungen, weil _probe-file/index.html sonst in
-    # jedes rglob("index.html") geraet. noindex an beiden Proben; sie leben einen Deploy.
-    - |
-      printf '%s\n' '/ds-skript/_probe-rewrite /ds-skript/kmeans/index.html 200' > public/_redirects
-      mkdir -p public/_probe-file
-      printf '%s' '<!doctype html><html lang="de"><head><meta name="robots" content="noindex"><title>Probe</title></head><body>PROBE-DATEI</body></html>' > public/_probe-file.html
-      printf '%s' '<!doctype html><html lang="de"><head><meta name="robots" content="noindex"><title>Probe</title></head><body>PROBE-VERZEICHNIS</body></html>' > public/_probe-file/index.html
-    # --- Ende der Probe -----------------------------------------------------------------
     - python3 tools/precompress.py public
     # Und nachmessen statt der Meldung zu glauben: --check packt jede .gz wieder aus und
     # vergleicht byteweise. Die vier Fehlerfaelle (veraltet, fehlend, defekt, verwaist) sind
