@@ -67,6 +67,14 @@ und nicht das fehlende Attribut, ist der Grund, warum ein Kapitel seinen ganzen
 Abbildungssatz vor dem load-Ereignis holt. Ein vorgeladenes Bild wird sofort geholt, was
 `loading` auch sagt; die zwei Tags widersprechen sich und das Preload gewinnt.
 
+**Und die Grenze, am 2026-10-29 nachgemessen:** das Attribut wirkt beim ersten Parsen und
+ist danach weg. Die Hydration dieses Themes schlaegt fehl (React #418) und rendert das
+ganze Dokument neu; im DOM von /kmeans/ traegt danach keine der elf Abbildungen mehr
+loading="lazy" (und auch keine Bildmasse, siehe image_dims.py). Das ist kein Grund, es
+zu lassen -- die Ersparnis liegt gerade in der Zeit vor der Hydration --, aber es heisst,
+dass die Wirkung nicht am gerenderten DOM nachzuweisen ist, sondern nur an den
+Anfragen.
+
 Das Preload wird deshalb fuer genau die Bilder entfernt, die lazy geworden sind, und
 bleibt fuer die zwei, die es haben sollen: das Logo (ausserhalb von <main>) und die
 erste Abbildung (LCP-Kandidat). Die Entfernung an die Menge der lazy gemachten URLs zu
