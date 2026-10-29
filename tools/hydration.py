@@ -12,10 +12,30 @@ diese geschrieben haben, aus dem Kopf zurück und baut daraus seinen Wächter. V
 Warum es dieses Skript gibt
 ---------------------------
 
-Der `<head>` gehört zum React-Baum. Remix rendert ihn bei der Hydration aus `<Meta/>`
-und `<Links/>` der Route-Module neu und ersetzt dabei die Kopf-Kinder durch seinen
-eigenen Satz. Alles, was wir nach dem Bau ins Markup geschrieben haben, ist in diesem
-Satz nicht enthalten und ist nach dem ersten Frame weg. Am 2026-10-20 im Browser
+Der `<head>` gehört zum React-Baum, und Remix hydriert das **ganze Dokument**. Alles, was
+wir nach dem Bau ins Markup geschrieben haben, ist nach dem ersten Frame weg.
+
+Der Grund ist schärfer, als hier bis zum 2026-10-29 stand (dort: „Remix rendert den Kopf
+aus `<Meta/>` und `<Links/>` neu"): **die Hydration schlägt fehl.** Die Konsole zeigt auf
+jeder Seite React-Fehler #418 — der servergerenderte Baum passt nicht zu dem, den der
+Client rendert —, und ein Fehlschlag ist kein Flicken, sondern ein vollständiges
+Neurendern des Dokuments. Das ist nicht unsere Schuld: mit einem Proxy, der eine
+bearbeitete `/orga/` ausliefert und alles andere vom echten Server holt, bleibt #418 auch
+dann, wenn jedes von uns ergänzte Kopf-Tag und alle vier Wächter-Skripte entfernt sind
+*und* die Nutzlast auf ihre gebauten Werte zurückgedreht ist (`page.domain` wieder
+`http://localhost:3000`, die Thumbnails wieder relativ). Es liegt im Theme
+(mystmd 1.11.0 + book-theme), siehe `todo/hydration-418-*.md`, falls das einmal
+untersucht wird.
+
+Die Folge geht über den Kopf hinaus, und das war der Irrtum eines ganzen Tages: auch
+`<main>` wird neu gerendert, also hält **kein** nachgetragenes Attribut irgendwo im
+Dokument. `image_dims.py` war am 2026-10-29 auf die Gegenannahme gebaut; gemessen trägt
+nach der Hydration keine der elf Abbildungen auf `/kmeans/` mehr `width`/`height`, und
+auch kein `loading="lazy"` aus `head_meta.py`. Deshalb gibt es neben `GESCHUETZT` jetzt
+`BEWAHRT`: Knoten, die der Wächter nur wieder einhängt. Die Reservierung selbst steht
+dort als **CSS** (`width` + `aspect-ratio` je Abbildung) und nicht als Attribut, denn ein
+Stylesheet im Kopf ist ein Knoten, den man zurückhängen kann -- 195 Attribute im Körper
+wären 195 Knoten, die man dauernd nachsetzen müsste. Am 2026-10-20 im Browser
 gemessen, am **2026-10-29 in der Google Search Console** an der gerenderten Fassung
 bestätigt (URL-Prüfung, „Gecrawlte Seite → HTML"): weg sind `rel=canonical`, `og:url`,
 `og:site_name`, `og:type`, `og:locale`(`:alternate`), `twitter:card`, alle drei
@@ -111,8 +131,8 @@ den `sed`-Zeilen des Jobs und liefe irgendwann auseinander; so ist jedes Tag, da
 Schritt in den Kopf schreibt, von selbst mitgeschützt, sobald sein Muster in
 `GESCHUETZT` steht.
 
-`MutationObserver` auf `childList` des `<head>`, nicht eine einmalige Zuweisung: React
-räumt die Kopf-Kinder erst beim Hydrieren aus, und das passiert nach dem Parsen. Mit
+`MutationObserver` auf `childList` des `<head>`, nicht eine einmalige Zuweisung: das
+Neurendern passiert nach dem Parsen, also nachdem dieses Skript gelaufen ist. Mit
 Wiedereintritts-Riegel, weil das Anhängen im Callback den Observer erneut auslöst.
 
 **Was der Wächter nicht zurückholt: die zwei Schrift-Preloads — und das ist eine
@@ -189,6 +209,18 @@ GESCHUETZT = (
 
 ATTR_RE = re.compile(r'([a-zA-Z:_-]+)\s*=\s*"([^"]*)"')
 
+# Knoten, die nicht korrigiert, sondern nur **wieder eingehängt** werden müssen: Elemente,
+# die das Theme überhaupt nicht kennt und also auch nicht falsch rendert. Der Wächter hält
+# sie als Referenz und hängt sie zurück, sobald sie aus dem Kopf verschwinden.
+#
+# Warum als Referenz und nicht als Daten wie bei GESCHUETZT: `bildmasse` ist das
+# Stylesheet aus image_dims.py und trägt auf der größten Seite rund 40 Regeln. Es noch
+# einmal in die Wächter-Nutzlast zu schreiben würde jede Seite ein zweites Mal damit
+# belasten, und es gibt nichts zu vergleichen -- es fehlt oder es ist da.
+BEWAHRT = ("bildmasse",)
+
+ID_RE = {i: re.compile(r'<[a-z]+\b[^>]*\bid="' + i + r'"', re.I) for i in BEWAHRT}
+
 
 def head_slice(doc: str, f: pathlib.Path) -> str:
     """Nur der Kopf. Der Rest des Dokuments trägt die Nutzlast -- die ganze Seite noch
@@ -241,8 +273,18 @@ def js_literal(obj) -> str:
     )
 
 
-def guard_script(path: str, tags: list[dict]) -> str:
-    """Der Wächter: hängt an, was fehlt, und korrigiert, was falsch steht.
+def bewahrte(head: str) -> list[str]:
+    """Die ids aus BEWAHRT, die in diesem Kopf überhaupt stehen.
+
+    Eine Seite ohne Abbildung hat kein `bildmasse`, und der Wächter soll dann auch nicht
+    danach greifen.
+    """
+    return [i for i, muster in ID_RE.items() if muster.search(head)]
+
+
+def guard_script(path: str, tags: list[dict], keep: list[str]) -> str:
+    """Der Wächter: hängt an, was fehlt, korrigiert, was falsch steht, und hängt zurück,
+    was ganz verschwunden ist.
 
     `location.pathname` wird gegen den Pfad geprüft, für den dieser Satz gebaut wurde.
     Beim statischen Bau ist jeder Klick im Buch ein echter Seitenaufruf -- das Theme setzt
@@ -251,14 +293,16 @@ def guard_script(path: str, tags: list[dict]) -> str:
     es doch, trägt die Seite *keine* Tags statt der falschen, und das ist die richtige
     Richtung: ein Canonical, der auf die vorige Seite zeigt, ist schlimmer als keiner.
     """
-    daten = js_literal({"p": path, "t": tags})
+    daten = js_literal({"p": path, "t": tags, "k": keep})
     js = (
-        "(function(){var D=" + daten + ",b=false;"
+        "(function(){var D=" + daten + ",b=false,K=[];"
+        "for(var j=0;j<D.k.length;j++){var n=document.getElementById(D.k[j]);if(n)K.push(n)}"
         'function p(){var x=location.pathname;return x.charAt(x.length-1)==="/"?x:x+"/"}'
         "function f(){if(b||p()!==D.p)return;b=true;try{"
         "for(var i=0;i<D.t.length;i++){var t=D.t[i],e=document.head.querySelector(t.s);"
         "if(!e){e=document.createElement(t.n);document.head.appendChild(e)}"
         "for(var k in t.a){if(e.getAttribute(k)!==t.a[k])e.setAttribute(k,t.a[k])}}"
+        "for(var j=0;j<K.length;j++){if(!K[j].isConnected)document.head.appendChild(K[j])}"
         "}finally{b=false}}f();"
         "new MutationObserver(f).observe(document.head,{childList:true});})();"
     )
@@ -395,7 +439,7 @@ def check(root: pathlib.Path, base: str) -> int:
     for f in rest:
         if "localhost:3000" in f.read_text(encoding="utf-8", errors="replace"):
             sys.exit(f"FEHLER: {f} nennt weiterhin localhost:3000")
-    n = n_tags = 0
+    n = n_tags = n_keep = 0
     for f in pages:
         doc = f.read_text(encoding="utf-8")
         whole(doc, f)
@@ -403,15 +447,24 @@ def check(root: pathlib.Path, base: str) -> int:
             sys.exit(f"FEHLER: {f} nennt weiterhin localhost:3000")
         # Der Wächter wird gegen den Kopf gerechnet, in dem er steht. Passt er nicht,
         # hat nach ihm noch ein Schritt Tags geschrieben -- und die hielte er dann nicht.
-        tags = collect_tags(head_slice(doc, f))
-        if guard_script(page_path(base, f.parent.relative_to(root)), tags) not in doc:
+        head = head_slice(doc, f)
+        tags = collect_tags(head)
+        keep = bewahrte(head)
+        if guard_script(page_path(base, f.parent.relative_to(root)), tags, keep) not in doc:
             sys.exit(
                 f"FEHLER: {f} trägt keinen Wächter, der zu ihrem Kopf passt -- hat ein"
                 " Schritt nach hydration.py noch Tags geschrieben?"
             )
+        for i in keep:
+            if head.find(f'id="{i}"') > head.find(MARKER):
+                sys.exit(
+                    f"FEHLER: {f}: {i} steht hinter dem Wächter -- der greift die"
+                    " bewahrten Knoten beim Parsen, dann wäre dieser nicht dabei"
+                )
         if not any(t["s"] == 'link[rel="canonical"]' for t in tags):
             sys.exit(f"FEHLER: {f} hat keinen Canonical, den der Wächter halten könnte")
         n_tags += len(tags)
+        n_keep += len(keep)
         found = read_payload(doc)
         if not found:
             sys.exit(f"FEHLER: {f} hat keine Hydrations-Nutzlast")
@@ -442,6 +495,7 @@ def check(root: pathlib.Path, base: str) -> int:
         f"kein localhost:3000 mehr, weder im HTML noch in {len(rest)} Seiten-JSON"
     )
     print(f"✓ {n_tags} Tags in {len(pages)} Kopf-Wächtern, jeder passend zu seinem Kopf")
+    print(f"✓ {n_keep} bewahrte Knoten, die der Wächter zurückhängt, wenn sie verschwinden")
     return 0
 
 
@@ -480,12 +534,18 @@ def main() -> int:
         doc, karte = absolute_card(doc, site, base)
         n_card += karte
 
-        tags = collect_tags(head_slice(doc, f))
-        script = guard_script(page_path(base, rel), tags)
+        head = head_slice(doc, f)
+        tags = collect_tags(head)
+        script = guard_script(page_path(base, rel), tags, bewahrte(head))
+        # Immer ans **Ende** des Kopfes, auch wenn schon einer drinsteht: der Wächter
+        # greift die bewahrten Knoten beim Parsen per id, also müssen sie vor ihm stehen.
+        # Ein Ersetzen an alter Stelle ließe ihn vor einem <style>, das ein späterer
+        # Schritt geschrieben hat -- dann wäre K leer und das Stylesheet ungeschützt.
+        # Bei einem frischen Bau fällt das nicht auf (dieses Skript läuft zuletzt); beim
+        # zweiten Lauf über ein fertiges Artefakt schon, und genau so gemessen.
         if MARKER in doc:
-            doc = GUARD_RE.sub(lambda _: script, doc, count=1)
-        else:
-            doc = doc.replace("</head>", script + "</head>", 1)
+            doc = GUARD_RE.sub("", doc, count=1)
+        doc = doc.replace("</head>", script + "</head>", 1)
         n_tags += len(tags)
 
         whole(doc, f)

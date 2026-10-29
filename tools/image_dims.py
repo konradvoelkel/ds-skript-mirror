@@ -16,22 +16,65 @@ sie stehen in der Bilddatei selbst, im Header. Also werden sie dort gelesen. Ein
 Pflegedatei waere hier nur eine zweite Wahrheit, die veralten kann.
 
 
-Warum Markup reicht und kein Waechter noetig ist
-------------------------------------------------
+Zwei Stellen, nicht eine: Attribute und ein Stylesheet
+------------------------------------------------------
 
-Der <head> dieses Themes wird bei der Hydration neu gerendert, nachgetragene Tags sind
-danach weg (tools/hydration.py). Fuer <main> gilt das **nicht**, und das ist gemessen,
-nicht angenommen: am 2026-10-29 lokal gegen dasselbe Bundle ein Bild in kmeans mit
-width/height und einem Erkennungsattribut versehen, ausgeliefert, im Browser
-nachgesehen -- nach der Hydration da, nach einem Zustandswechsel von React (Umschalten
-auf das dunkle Thema) da, nach Scrollen da. React korrigiert ein zusaetzliches Attribut
-am hydrierten Knoten nicht.
+Die Attribute allein halten nur bis zur Hydration, und das ist gemessen, nachdem ich am
+2026-10-29 das Gegenteil behauptet und ausgeliefert hatte. Die Hydration dieses Themes
+**schlaegt fehl** (React-Fehler #418 auf jeder Seite), und ein Fehlschlag ist kein
+Flicken, sondern ein vollstaendiges Neurendern des Dokuments -- Kopf *und* Koerper.
+Danach traegt auf /kmeans/ keine der elf Abbildungen mehr width/height, und auch kein
+loading="lazy" aus head_meta.py. Nachgemessen am ausgelieferten Stand, Fenster 1280x900,
+Bilder je 1,2 s verzoegert:
 
-Ein Kapitelwechsel laedt ohnehin ein neues Dokument: am selben Tag nachgemessen, ein
-Klick auf einen Kapitellink im Seitenstreifen erzeugt einen navigation-Eintrag in der
-Performance-Zeitleiste und loescht eine zuvor gesetzte Variable am window. Das Markup
-ist also bei jedem Seitenaufruf frisch vom Server -- derselbe Befund rechtfertigt
-nebenbei das loading="lazy" aus head_meta.py, das seit dem 2026-10-16 ungemessen lief.
+- Dokumenthoehe bei 450 ms: 20.120 px mit den Attributen, 13.866 px ohne sie. Die
+  Reservierung ist also echt.
+- Bei ~1,7 s bricht sie auf 14.354 px ein -- das ist das Neurendern -- und waechst dann
+  mit den ankommenden Bildern auf 20.955 px.
+- CLS: in beiden Fassungen **gleich** (0,2556, ein einziger Sprung bei 1,65 s). Der
+  Sprung gehoert der Hydration, nicht den Massen. Die Zahl "0,0961 auf 0", die hier
+  einmal stand, war in einem nicht angezeigten Browser-Fenster gemessen (innerWidth 0,
+  kein Layout, kein Sichtfeld) und ist falsch.
+
+Also eine zweite Stelle, die ein Neurendern nicht mitnimmt: ein <style id="bildmasse">
+im Kopf, je Abbildung eine Regel
+
+    img[src="..."]{width:1012px;aspect-ratio:1012/488}
+
+und der Kopf-Waechter aus hydration.py haengt dieses <style> zurueck, wenn React es
+ausraeumt (BEWAHRT dort -- als Knoten-Referenz, nicht als kopierte Daten). CSS ueberlebt
+den DOM-Neubau, denn es haengt nicht am Knoten, sondern am Selektor: egal wie oft React
+das <img> neu baut, der src bleibt und die Regel greift wieder.
+
+Warum `width` dazu noetig ist und `aspect-ratio` allein nicht genuegt: ein <img> ohne
+geladene Datei hat keine eigene Groesse, seine Breite ist dann null -- und null mal
+irgendein Verhaeltnis ist null. Erst `width` gibt die Breite, die das Theme mit
+`max-width:100%` wieder einfaengt, und `height:auto` rechnet daraus mit dem Verhaeltnis
+die Hoehe. Das ist genau, was die Attribute tun, nur als CSS gesagt.
+
+Die Attribute bleiben trotzdem: sie wirken ohne Stylesheet, also auch dann, wenn das
+<style> aus irgendeinem Grund nicht ankommt, und sie sind das, was ein Crawler ohne CSS
+sieht.
+
+Der Preis: rund 60 Zeichen je Abbildung im Kopf, auf der groessten Seite (38
+Abbildungen) also etwa 2,3 kB vor der Kompression. Der Waechter kopiert sie nicht, er
+haelt nur den Knoten.
+
+Konkurrenz im Stylesheet des Themes, nachgesehen statt angenommen: zu `img` gibt es dort
+genau `img,video{max-width:100%;height:auto}` -- das will man -- und zwei
+Tailwind-Hilfsklassen (`[&_img]:w-full`, `[&_img]:h-full`), die in keiner ausgelieferten
+Seite vorkommen (nachgezaehlt: null Treffer auf allen 32). **Zwei bekannte Grenzen:** eine
+Hoehe, die eine *Elternklasse* setzt, sieht dieses Skript nicht -- es liest nur das
+style-Attribut des Bildes selbst; und ein Selektor auf den src wirkt im ganzen Dokument,
+also auch auf ein gleiches Bild ausserhalb von <main>, dessen style-Attribut hier nie
+angesehen wurde. Beides verzerrt dann genauso wie der Lizenzknopf unten und faellt nur im
+Browser auf. Am 2026-10-29 nachgesehen: die Bilder in <main> und die der Navigation
+teilen keinen src.
+
+Gegengeprueft wurde das Stylesheet daran, dass es *nichts* sichtbar aendert: auf der
+Landingpage rendern alle drei Bilder mit dem Stylesheet genau wie ohne (72x36, 722x780
+und der Lizenzknopf 102x19 -- der bekommt ja keine Regel), auf kmeans alle elf
+(536x585, 722x796, ...).
 
 
 Was uebersprungen wird, und warum das keine Vorsicht ist, sondern Messung
@@ -73,7 +116,9 @@ Zweimal laufen
 --------------
 
 Idempotent: ein Bild, das die Attribute schon fuehrt, faellt unter Ausnahme 2 und wird
-nicht noch einmal angefasst. `--check` ist die Nachbedingung am gebauten Artefakt und
+nicht noch einmal angefasst; das <style> wird an seiner id erkannt und **ersetzt**, nicht
+ein zweites Mal angehaengt -- und seine Regeln stehen nicht an den Attributen, sondern an
+den Bilddateien, sonst waere der zweite Lauf ein leeres Stylesheet. `--check` ist die Nachbedingung am gebauten Artefakt und
 prueft nicht, was dieser Lauf getan hat, sondern was am Ende dasteht -- jedes Bild in
 <main> traegt entweder beide Attribute mit den Massen seiner Datei, oder es faellt unter
 eine der zwei Ausnahmen. Ein Bild mit falschen Massen ist dabei der eigentliche
@@ -96,6 +141,14 @@ from urllib.parse import unquote, urlparse
 
 IMG_TAG = re.compile(r"<img\b[^>]*?/?>", re.I)
 MAIN = re.compile(r"<main\b[^>]*>.*?</main>", re.S | re.I)
+
+# Das Stylesheet, das die Reservierung ueber das Neurendern hinweg traegt. Die id ist der
+# Griff, an dem der Waechter in hydration.py den Knoten haelt (BEWAHRT dort) und an dem
+# ein zweiter Lauf hier den Block ersetzt.
+STYLE_ID = "bildmasse"
+STYLE_RE = re.compile(
+    r'<style\b[^>]*\bid="' + STYLE_ID + r'"[^>]*>.*?</style>', re.S | re.I
+)
 
 
 # --- Die Masse aus dem Dateikopf lesen ---------------------------------------------
@@ -212,12 +265,26 @@ def quelle(src: str, seite: pathlib.Path, root: pathlib.Path, base: str) -> path
 # --- Das Markup --------------------------------------------------------------------
 
 
+def hoehe_im_stil(tag: str) -> bool:
+    """CSS setzt die Hoehe fest -- dann zieht eine Breite daneben das Bild breit."""
+    stil = re.search(r'\bstyle="([^"]*)"', tag, re.I)
+    return bool(stil and re.search(r"(^|[;\s])height\s*:", stil.group(1), re.I))
+
+
+def fremde_masse(tag: str) -> bool:
+    """Ein width/height, das keine reine Zahl ist: eine CSS-Laenge, wie das Theme sie ans
+    Logo schreibt (`height="2.25rem"`). Nichts, was dieses Skript geschrieben haette --
+    also auch nichts, worueber es urteilt."""
+    return any(
+        not t.isdigit() for t in re.findall(r'\b(?:width|height)="([^"]*)"', tag, re.I)
+    )
+
+
 def ausnahme(tag: str) -> str | None:
     """Der Grund, aus dem dieses <img> nicht vermasst wird -- oder None."""
     if re.search(r"\b(width|height)=", tag, re.I):
         return "Masse schon gesetzt"
-    stil = re.search(r'\bstyle="([^"]*)"', tag, re.I)
-    if stil and re.search(r"(^|[;\s])height\s*:", stil.group(1), re.I):
+    if hoehe_im_stil(tag):
         return "Hoehe im style"
     return None
 
@@ -275,6 +342,98 @@ def vermassen(
     return doc[: m.start()] + neu + doc[m.end() :], gesetzt, uebersprungen
 
 
+def regeln(
+    doc: str, seite: pathlib.Path, root: pathlib.Path, base: str
+) -> list[tuple[str, int, int]]:
+    """Je Abbildung in <main>, die Platz halten darf: (src, Breite, Hoehe), nach src sortiert.
+
+    Unabhaengig davon, ob *dieser* Lauf die Attribute geschrieben hat: beim zweiten Lauf
+    tragen alle Bilder ihre Masse schon, und ein Stylesheet, das daraus nichts mehr
+    ableiten koennte, waere beim naechsten Durchlauf leer. Zwei <img> mit demselben src
+    ergeben eine Regel.
+    """
+    m = MAIN.search(doc)
+    if not m:
+        sys.exit(f"FEHLER: {seite} hat kein <main>; nach dem HTML-Bau laufen lassen")
+
+    gefunden: dict[str, tuple[int, int]] = {}
+    for tag in IMG_TAG.findall(m.group(0)):
+        if hoehe_im_stil(tag) or fremde_masse(tag):
+            continue
+        src = re.search(r'\bsrc="([^"]*)"', tag, re.I)
+        if not src:
+            continue  # vermassen() bricht dafuer schon ab
+        datei = quelle(src.group(1), seite, root, base)
+        if datei is None or not datei.exists():
+            continue
+        try:
+            gefunden[src.group(1)] = masse(datei)
+        except ValueError as e:
+            sys.exit(f"FEHLER: {datei} (aus {seite}): {e}")
+    return [(s, *gefunden[s]) for s in sorted(gefunden)]
+
+
+def stilblock(satz: list[tuple[str, int, int]], seite: pathlib.Path) -> str:
+    """Der <style>-Block zu einem Satz Regeln, oder "" fuer eine Seite ohne Abbildung."""
+    if not satz:
+        return ""
+    for src, _, _ in satz:
+        if '"' in src or "<" in src or "\n" in src:
+            sys.exit(f"FEHLER: {seite}: {src!r} passt nicht in einen CSS-Selektor")
+    css = "".join(
+        f'img[src="{src}"]{{width:{w}px;aspect-ratio:{w}/{h}}}' for src, w, h in satz
+    )
+    return f'<style id="{STYLE_ID}">{css}</style>'
+
+
+def mit_stil(doc: str, seite: pathlib.Path, block: str) -> str:
+    """Den Block in den Kopf setzen, einen vorhandenen ersetzen, einen leeren entfernen.
+
+    Ans Ende des Kopfes, nach den Stylesheets des Themes: bei gleicher Spezifitaet
+    entscheidet die Reihenfolge, und `img[src="..."]` soll gegen eine gleich spezifische
+    Regel des Themes gewinnen.
+    """
+    vorhanden = STYLE_RE.search(doc)
+    if vorhanden:
+        return doc[: vorhanden.start()] + block + doc[vorhanden.end() :]
+    if not block:
+        return doc
+    i = doc.find("</head>")
+    if i < 0:
+        sys.exit(f"FEHLER: {seite} hat kein </head>")
+    return doc[:i] + block + doc[i:]
+
+
+def stil_pruefen(doc: str, seite: pathlib.Path, erwartet: str) -> int:
+    """Nachbedingung fuer das Stylesheet: genau der Block, der zu diesem <main> gehoert,
+    und er steht im Kopf. Gibt die Zahl der Regeln zurueck."""
+    gefunden = STYLE_RE.search(doc)
+    if not erwartet:
+        if gefunden:
+            sys.exit(
+                f"FEHLER: {seite} hat ein <style id=\"{STYLE_ID}\">, aber keine Abbildung,"
+                " fuer die Platz zu halten waere"
+            )
+        return 0
+    if not gefunden:
+        sys.exit(
+            f"FEHLER: {seite} hat kein <style id=\"{STYLE_ID}\"> -- nach der Hydration"
+            " haelt dann nichts mehr den Platz frei (die Attribute sind dann weg)"
+        )
+    if gefunden.group(0) != erwartet:
+        sys.exit(
+            f"FEHLER: {seite}: das <style id=\"{STYLE_ID}\"> passt nicht zu ihren"
+            " Abbildungen -- hat ein Schritt danach noch am Markup gedreht?"
+        )
+    kopf_ende = doc.find("</head>")
+    if kopf_ende < 0 or gefunden.start() > kopf_ende:
+        sys.exit(
+            f"FEHLER: {seite}: das <style id=\"{STYLE_ID}\"> steht nicht im Kopf -- dort"
+            " kann der Waechter es nicht zurueckhaengen"
+        )
+    return erwartet.count("img[src=")
+
+
 def pruefen(doc: str, seite: pathlib.Path, root: pathlib.Path, base: str) -> int:
     """Nachbedingung: jedes <img> in <main> traegt die Masse seiner Datei oder faellt
     unter eine der zwei Ausnahmen. Gibt die Zahl der geprueften Bilder zurueck."""
@@ -284,19 +443,10 @@ def pruefen(doc: str, seite: pathlib.Path, root: pathlib.Path, base: str) -> int
 
     geprueft = 0
     for tag in IMG_TAG.findall(m.group(0)):
-        stil = re.search(r'\bstyle="([^"]*)"', tag, re.I)
-        if stil and re.search(r"(^|[;\s])height\s*:", stil.group(1), re.I):
-            continue
-        # Eine CSS-Laenge als Attribut ("2.25rem", wie das Theme sie ans Logo schreibt)
-        # ist nichts, was dieses Skript je geschrieben haette, und der Schreiblauf fasst
-        # so ein Bild nicht an. Ohne diese Zeile waere die Pruefung dafuer dauerhaft rot,
-        # ohne dass ein Lauf sie heilen koennte -- derselbe Riegel, an dem head_meta.py
-        # schon einmal haengengeblieben ist.
-        fremd = [
-            t for t in re.findall(r'\b(?:width|height)="([^"]*)"', tag, re.I)
-            if not t.isdigit()
-        ]
-        if fremd:
+        # Dieselben zwei Grenzen wie beim Schreiben. Ohne die zweite waere die Pruefung
+        # am Logo dauerhaft rot, ohne dass ein Lauf sie heilen koennte -- derselbe
+        # Riegel, an dem head_meta.py schon einmal haengengeblieben ist.
+        if hoehe_im_stil(tag) or fremde_masse(tag):
             continue
         src = re.search(r'\bsrc="([^"]*)"', tag, re.I)
         datei = quelle(src.group(1), seite, root, base) if src else None
@@ -340,34 +490,48 @@ def main() -> None:
         sys.exit(f"FEHLER: unter {root} liegt keine index.html; nach dem HTML-Bau laufen lassen")
 
     if args.check:
-        geprueft = sum(
-            pruefen(f.read_text(encoding="utf-8"), f, root, base) for f in seiten
-        )
+        geprueft = n_regeln = 0
+        for f in seiten:
+            doc = f.read_text(encoding="utf-8")
+            geprueft += pruefen(doc, f, root, base)
+            n_regeln += stil_pruefen(
+                doc, f, stilblock(regeln(doc, f, root, base), f)
+            )
         if not geprueft:
             sys.exit(
                 "FEHLER: kein einziges Bild geprueft -- entweder ist <main> leer oder "
                 "die src-Pfade zeigen nicht mehr auf dieses Artefakt"
             )
         print(f"image_dims --check: {len(seiten)} Seiten, {geprueft} Abbildungen mit "
-              f"den Massen ihrer Datei")
+              f"den Massen ihrer Datei, {n_regeln} CSS-Regeln, die sie nach dem "
+              f"Neurendern halten")
         return
 
-    gesamt = 0
+    gesamt = n_regeln = 0
     uebersprungen: dict[str, int] = {}
     for f in seiten:
         doc = f.read_text(encoding="utf-8")
         neu, n, aus = vermassen(doc, f, root, base)
+        # Die Regeln aus dem *neuen* Markup, damit beide Stellen dasselbe sagen.
+        block = stilblock(regeln(neu, f, root, base), f)
+        neu = mit_stil(neu, f, block)
         if neu != doc:
             f.write_text(neu, encoding="utf-8")
         gesamt += n
+        n_regeln += block.count("img[src=")
         for grund, k in aus.items():
             uebersprungen[grund] = uebersprungen.get(grund, 0) + k
 
-    geprueft = sum(pruefen(f.read_text(encoding="utf-8"), f, root, base) for f in seiten)
+    geprueft = 0
+    for f in seiten:
+        doc = f.read_text(encoding="utf-8")
+        geprueft += pruefen(doc, f, root, base)
+        stil_pruefen(doc, f, stilblock(regeln(doc, f, root, base), f))
     rest = ", ".join(f"{k} {g}" for g, k in sorted(uebersprungen.items())) or "keine"
     print(
         f"image_dims: {len(seiten)} Seiten, {gesamt} Abbildungen vermasst, "
-        f"{geprueft} tragen die Masse ihrer Datei; uebersprungen: {rest}"
+        f"{geprueft} tragen die Masse ihrer Datei; {n_regeln} CSS-Regeln fuer die Zeit "
+        f"nach dem Neurendern; uebersprungen: {rest}"
     )
 
 
