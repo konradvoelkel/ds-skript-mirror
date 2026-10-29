@@ -333,6 +333,20 @@ pages:
     # Titel, der aus der Hydrations-Nutzlast neu gerendert wird), ist am 2026-10-16 lokal
     # gegen dasselbe Bundle gemessen: nach der Hydration und nach einer Navigation "de".
     - python3 tools/head_meta.py "$SITE" public --base "$BASE_URL" --lang de
+    # Die echten Pixelmasse als width/height an jede Abbildung, gegen den Layoutsprung.
+    # Ohne sie kennt der Browser das Seitenverhaeltnis erst, wenn die ersten Bytes des
+    # Bildes da sind; bis dahin ist die Abbildung null Pixel hoch, und alles darunter
+    # ruckt nach unten, sobald sie ankommt.
+    #
+    # Laeuft *nach* head_meta, und das ist keine Vorliebe: dort bekommen die Abbildungen
+    # ihr loading="lazy", und erst beides zusammen stellt die Lage eines Lesers her --
+    # ein verzoegert geladenes Bild ohne Masse ruckt genau in dem Moment, in dem er es
+    # erreicht. Am 2026-10-29 lokal gegen dasselbe Bundle gemessen, mit absichtlich
+    # verzoegert ausgelieferten Bildern: kmeans faengt bei 14.436 Pixel Dokumenthoehe an
+    # und waechst auf 20.903, waehrend die Bilder nachkommen; explorative-analyse-
+    # beispiele bei 18.516 gegen 36.143 am Ende. Mit den Massen steht die Hoehe von der
+    # ersten Zeichnung an, und der gemessene CLS auf kmeans faellt von 0,0961 auf 0.
+    - python3 tools/image_dims.py public --base "$BASE_URL"
     # Loest jeden url() der eingebundenen Stylesheets auf -- gegen die Datei, die im <link>
     # steht, nicht gegen eine, von der man annimmt, sie werde geladen. Genau diesen Schritt
     # hatte meine erste Pruefung uebersprungen; sie meldete "DA" an der fingerprinted Kopie,
@@ -378,6 +392,11 @@ pages:
     - python3 tools/hydration.py "$SITE" public --base "$BASE_URL"
     # Und wieder am gebauten public/ nachzaehlen statt dem Log zu glauben.
     - python3 tools/freshness.py --check public
+    # Dasselbe fuer die Abbildungsmasse, und bewusst hier unten: zwischen dem Schreiben
+    # und dieser Zeile liegen alle Schritte, die noch am Markup drehen. Geprueft wird
+    # nicht, was der Lauf getan hat, sondern was am Ende dasteht -- jede Abbildung mit
+    # den Massen *ihrer* Datei. Falsche Masse halten Platz frei, nur den falschen.
+    - python3 tools/image_dims.py public --base "$BASE_URL" --check
     # Kontrolle: bricht den Job ab, falls doch eine localhost-URL ueberlebt hat.
     # Als Block-Skalar, nicht als einzeilige Sequenz: eine unquotierte Zeile mit ": " darin
     # liest GitLab als Mapping statt als Kommando und lehnt die ganze Datei ab ("script config
