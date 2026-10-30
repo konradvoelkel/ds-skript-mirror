@@ -26,7 +26,7 @@ wann man ihm trauen darf.
 
 Die zweite Säule ist die *Programmierübung mit Python*. Wir arbeiten mit Spielzeugdaten, die klein
 genug sind, um sie ganz zu überblicken, und lernen daran Numpy, Scipy, Matplotlib, Pandas und
-Scikit-Learn kennen. Die Übungsblätter sind der Ort, an dem aus dem Lesen ein Können wird.
+scikit-learn kennen. Die Übungsblätter sind der Ort, an dem aus dem Lesen ein Können wird.
 
 Die dritte Säule sind *Algorithmen und Datenstrukturen*: Wir programmieren die wichtigsten
 Schätzer und Lernverfahren selbst nach, damit wir verstehen, was passiert, wenn man `model.fit()`

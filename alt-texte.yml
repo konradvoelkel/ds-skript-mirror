@@ -195,7 +195,7 @@ dimensionsreduktion.ipynb:
     - "Streudiagramm der ersten beiden Hauptkomponenten des Iris-Datensatzes, nach Art eingefärbt. Eine Gruppe liegt als kompakte Säule rechts, deutlich von den übrigen abgesetzt; die beiden anderen bilden links eine gemeinsame, diagonal verlaufende Wolke und überlappen in der Mitte."
     - "Dieselben Daten als räumliches Streudiagramm der ersten drei Hauptkomponenten. Die abgesetzte Gruppe bleibt klar für sich, die beiden anderen liegen nebeneinander und berühren sich; die dritte Komponente trennt sie nicht zusätzlich."
   "19601f2e-24a8-497d-a373-c5169def4ad4":
-    - "Dasselbe räumliche Streudiagramm der ersten drei Hauptkomponenten, diesmal von Scikit-learns PCA berechnet. Die Gruppen liegen identisch, nur ist das Bild entlang der ersten Komponente gespiegelt — das Vorzeichen einer Hauptkomponente ist nicht festgelegt."
+    - "Dasselbe räumliche Streudiagramm der ersten drei Hauptkomponenten, diesmal von scikit-learns PCA berechnet. Die Gruppen liegen identisch, nur ist das Bild entlang der ersten Komponente gespiegelt — das Vorzeichen einer Hauptkomponente ist nicht festgelegt."
   "7a603b55-2bb2-466b-96aa-cfdfe45b2e63":
     - "Zehn handgeschriebene Ziffern von 0 bis 9 nebeneinander, jede als grobes Graustufenbild von 8 mal 8 Pixeln aus dem Digits-Datensatz."
   "f30b6015":
@@ -219,7 +219,7 @@ lineare-regression.ipynb:
   "c9a19d1b":
     - "Streudiagramm Blütenblattfläche gegen Kelchblattlänge mit der orangen Regressionsgeraden. Die Punkte streuen deutlich breiter um die Gerade als im vorigen Beispiel; am linken Rand liegt eine dichte, senkrecht gestreckte Gruppe bei sehr kleiner Blütenblattfläche."
   "58a5aa14-5823-4ed0-9aa8-b96e67683d3a":
-    - "Dieselben Daten wie zuvor, mit zwei übereinandergelegten Anpassungen: der durchgezogenen Geraden von Scikit-learn und den grünen Punkten der Anpassung aus Scipy.stats. Beide liegen exakt aufeinander — die beiden Bibliotheken rechnen dasselbe."
+    - "Dieselben Daten wie zuvor, mit zwei übereinandergelegten Anpassungen: der durchgezogenen Geraden von scikit-learn und den grünen Punkten der Anpassung aus Scipy.stats. Beide liegen exakt aufeinander — die beiden Bibliotheken rechnen dasselbe."
   "e37b3f78-2e40-40f8-83c9-a3140ca9d8af":
     - "„Polynomiale Regression von Grad 1“: dieselbe Punktwolke, dieselbe Gerade, die Residuen wieder als senkrechte Strecken. Ein Polynom ersten Grades ist nichts anderes als die gewöhnliche lineare Regression, das Bild entspricht dem von oben."
   "bab4cae6-0c19-4d8d-995a-39a73680749c":
